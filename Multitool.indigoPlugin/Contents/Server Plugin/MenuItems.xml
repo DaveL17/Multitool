@@ -89,7 +89,7 @@ Note: Some devices may not respond to a beep request. (Requires API v1.11+)</Lab
     <Name>Device Ping</Name>
     <ConfigUI>
       <Field id="instructions" type="label">
-        <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log.".
+        <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log.
 
 Note: Some devices do not support ping requests. (Requires API v1.16+)</Label>
       </Field>

@@ -2,8 +2,6 @@
 # -*- coding: utf-8 -*-
 
 # TODO: There is no way to initiate debug logging.  Setting it with a state variable for now.
-# TODO: Add counters to inventories -- "There are XX action groups"...
-# TODO: List all devices, variables, Actions, etc.
 
 try:
     import indigo
