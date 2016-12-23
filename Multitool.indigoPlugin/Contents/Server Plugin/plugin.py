@@ -12,6 +12,12 @@ try:
 except ImportError, error:
     indigo.server.log(str(error))
 
+__author__    = "DaveL17"
+__build__     = ""
+__copyright__ = 'Copyright 2016 DaveL17'
+__license__   = "MIT"
+__title__     = 'Multitool Plugin for Indigo Home Control'
+__version__   = '1.0.01'
 
 class Plugin(indigo.PluginBase):
 
@@ -92,9 +98,9 @@ class Plugin(indigo.PluginBase):
             return True
 
         except StandardError as err:
-            indigo.server.log(unicode(u"Error sending ping.  Reason: {0}".format(err)), isError=True)
+            indigo.server.log(unicode(u"Error sending beep.  Reason: {0}".format(err)), isError=True)
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
-            err_msg_dict['showAlertText'] = u"Ping Error.\n\nReason: {0}".format(err)
+            err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
 
