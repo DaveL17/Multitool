@@ -1,175 +1,178 @@
 <?xml version="1.0"?>
 <MenuItems>
 
-  <MenuItem id="indigoProperties">
-    <Name>About Indigo</Name>
-    <CallbackMethod>indigoInformation</CallbackMethod>
-  </MenuItem>
+    <MenuItem id="indigoProperties">
+        <Name>About Indigo</Name>
+        <CallbackMethod>indigoInformation</CallbackMethod>
+    </MenuItem>
 
-  <MenuItem id="beepDevice">
-    <Name>Device Beep</Name>
-    <ConfigUI>
-      <Field id="instructions" type="label">
-        <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep.
+    <MenuItem id="beepDevice">
+        <Name>Device Beep</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep.
 
-Note: Some devices may not respond to a beep request. (Requires API v1.11+)</Label>
-      </Field>
-      <Field id="listOfDevices" type="menu">
-        <Label>Device:</Label>
-        <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
-      </Field>
-    </ConfigUI>
-    <CallbackMethod>deviceToBeep</CallbackMethod>
-  </MenuItem>
+                    Note: Some devices may not respond to a beep request. (Requires API v1.11+)
+                </Label>
+            </Field>
+            <Field id="listOfDevices" type="menu">
+                <Label>Device:</Label>
+                <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>deviceToBeep</CallbackMethod>
+    </MenuItem>
 
-  <MenuItem id="deviceDependencies">
-    <Name>Device Dependencies</Name>
-    <ConfigUI>
-      <Field id="instructions" type="label">
-        <Label>Select the device you would like to query for dependencies.</Label>
-      </Field>
-      <Field id="listOfDevices" type="menu">
-        <Label>Device:</Label>
-        <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
-      </Field>
-    </ConfigUI>
-    <CallbackMethod>deviceDependencies</CallbackMethod>
-  </MenuItem>
+    <MenuItem id="deviceDependencies">
+        <Name>Device Dependencies</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Select the device you would like to query for dependencies.</Label>
+            </Field>
+            <Field id="listOfDevices" type="menu">
+                <Label>Device:</Label>
+                <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>deviceDependencies</CallbackMethod>
+    </MenuItem>
 
-  <MenuItem id="deviceInventoryList">
-    <Name>Device Inventory</Name>
-    <ConfigUI>
-      <Field id="instructions" type="label">
-        <Label>Some filters are not available in all Indigo versions.</Label>
-      </Field>
-      <Field id="typeOfThing" type="menu" defaultValue="pickone">
-        <Label>Device Class:</Label>
-        <List>
-          <Option value="pickone">Pick One</Option>
-          <Option value="indigo.plugins">Everything</Option>
-          <Option value="indigo.dimmer">Dimmer Devices</Option>
-          <Option value="indigo.insteon">Insteon Devices</Option>
-          <Option value="indigo.controller">Insteon Controller Devices</Option>
-          <Option value="indigo.responder">Insteon Responder Devices</Option>
-          <Option value="indigo.iodevice">Input/Output Devices</Option>
-          <Option value="indigo.relay">Relay Devices</Option>
-          <Option value="indigo.sensor">Sensor Devices</Option>
-          <Option value="indigo.speedcontrol">Speed Control Devices (v6+)</Option>
-          <Option value="indigo.sprinkler">Sprinkler Devices</Option>
-          <Option value="indigo.thermostat">Thermostat Devices</Option>
-          <Option value="indigo.x10">X-10 Devices</Option>
-          <Option value="indigo.zwave">Z-Wave Devices</Option>
-          <Option value="Other">Other Devices</Option>
-        </List>
-        <CallbackMethod>deviceInventory</CallbackMethod>
-      </Field>
-      <Field id="customThingLabel" type="label" visibleBindingId="typeOfThing" visibleBindingValue="Other" defaultValue="">
-          <Label>Enter the filter criteria to use and then click Print the List. Examples:
-  com.mycompany.myplugin
-  com.company.plugin.xyzDeviceType</Label>
-      </Field>
-      <Field id="customThing" type="textfield" visibleBindingId="typeOfThing" visibleBindingValue="Other">
-          <Label>Criteria:</Label>
-      </Field>
-      <Field id="customThingButton" type="button" visibleBindingId="typeOfThing" visibleBindingValue="Other">
-        <Label> </Label>
-        <Title>Print the List</Title>
-        <CallbackMethod>deviceInventory</CallbackMethod>
-      </Field>
-<!-- The following spacerLabels are needed to ensure sufficient space for hidden controls to display without scrolling.-->
-      <Field id="spacerLabel1" type="label"/>
-      <Field id="spacerLabel2" type="label"/>
-      <Field id="spacerLabel3" type="label"/>
-      <Field id="spacerLabel4" type="label"/>
-      <Field id="spacerLabel5" type="label"/>
-    </ConfigUI>
-  </MenuItem>
+    <MenuItem id="deviceInventoryList">
+        <Name>Device Inventory</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Some filters are not available in all Indigo versions.</Label>
+            </Field>
+            <Field id="typeOfThing" type="menu" defaultValue="pickone">
+                <Label>Device Class:</Label>
+                <List>
+                    <Option value="pickone">Pick One</Option>
+                    <Option value="indigo.plugins">Everything</Option>
+                    <Option value="indigo.dimmer">Dimmer Devices</Option>
+                    <Option value="indigo.insteon">Insteon Devices</Option>
+                    <Option value="indigo.controller">Insteon Controller Devices</Option>
+                    <Option value="indigo.responder">Insteon Responder Devices</Option>
+                    <Option value="indigo.iodevice">Input/Output Devices</Option>
+                    <Option value="indigo.relay">Relay Devices</Option>
+                    <Option value="indigo.sensor">Sensor Devices</Option>
+                    <Option value="indigo.speedcontrol">Speed Control Devices (v6+)</Option>
+                    <Option value="indigo.sprinkler">Sprinkler Devices</Option>
+                    <Option value="indigo.thermostat">Thermostat Devices</Option>
+                    <Option value="indigo.x10">X-10 Devices</Option>
+                    <Option value="indigo.zwave">Z-Wave Devices</Option>
+                    <Option value="Other">Other Devices</Option>
+                </List>
+                <CallbackMethod>deviceInventory</CallbackMethod>
+            </Field>
+            <Field id="customThingLabel" type="label" visibleBindingId="typeOfThing" visibleBindingValue="Other" defaultValue="">
+                <Label>Enter the filter criteria to use and then click Print the List. Examples:
+                    com.mycompany.myplugin
+                    com.company.plugin.xyzDeviceType
+                </Label>
+            </Field>
+            <Field id="customThing" type="textfield" visibleBindingId="typeOfThing" visibleBindingValue="Other">
+                <Label>Criteria:</Label>
+            </Field>
+            <Field id="customThingButton" type="button" visibleBindingId="typeOfThing" visibleBindingValue="Other">
+                <Label/>
+                <Title>Print the List</Title>
+                <CallbackMethod>deviceInventory</CallbackMethod>
+            </Field>
+            <!-- The following spacerLabels are needed to ensure sufficient space for hidden controls to display without scrolling.-->
+            <Field id="spacerLabel1" type="label"/>
+            <Field id="spacerLabel2" type="label"/>
+            <Field id="spacerLabel3" type="label"/>
+            <Field id="spacerLabel4" type="label"/>
+            <Field id="spacerLabel5" type="label"/>
+        </ConfigUI>
+    </MenuItem>
 
-  <MenuItem id="pingDevice">
-    <Name>Device Ping</Name>
-    <ConfigUI>
-      <Field id="instructions" type="label">
-        <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log.
+    <MenuItem id="pingDevice">
+        <Name>Device Ping</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log.
 
-Note: Some devices do not support ping requests. (Requires API v1.16+)</Label>
-      </Field>
-      <Field id="listOfDevices" type="menu">
-        <Label>Device:</Label>
-        <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
-      </Field>
-    </ConfigUI>
-    <CallbackMethod>deviceToPing</CallbackMethod>
-  </MenuItem>
+                    Note: Some devices do not support ping requests. (Requires API v1.16+)
+                </Label>
+            </Field>
+            <Field id="listOfDevices" type="menu">
+                <Label>Device:</Label>
+                <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>deviceToPing</CallbackMethod>
+    </MenuItem>
 
-  <MenuItem id="printDict">
-    <Name>Object Dictionary</Name>
-    <CallbackMethod>resultsOutput</CallbackMethod>
-    <ConfigUI>
-      <Field id="instructions" type="label">
-        <Label>Select the class of item.</Label>
-      </Field>
-      <Field id="classOfThing" type="menu" method="dictToPrint">
-        <Label>Class:</Label>
-        <List>
-          <Option value="actionGroups">Action</Option>
-          <Option value="controlPages">Control Page</Option>
-          <Option value="devices">Device</Option>
-          <Option value="schedules">Schedule</Option>
-          <Option value="triggers">Trigger</Option>
-          <Option value="variables">Variable</Option>
-        </List>
-        <CallbackMethod>classToPrint</CallbackMethod>
-      </Field>
-      <Field id="thingToPrint" type="menu">
-        <Label>Item:</Label>
-        <List class="self" filter="" method="dictToPrint" dynamicReload="true"/>
-      </Field>
-    </ConfigUI>
-  </MenuItem>
+    <MenuItem id="printDict">
+        <Name>Object Dictionary</Name>
+        <CallbackMethod>resultsOutput</CallbackMethod>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Select the class of item.</Label>
+            </Field>
+            <Field id="classOfThing" type="menu" method="dictToPrint">
+                <Label>Class:</Label>
+                <List>
+                    <Option value="actionGroups">Action</Option>
+                    <Option value="controlPages">Control Page</Option>
+                    <Option value="devices">Device</Option>
+                    <Option value="schedules">Schedule</Option>
+                    <Option value="triggers">Trigger</Option>
+                    <Option value="variables">Variable</Option>
+                </List>
+                <CallbackMethod>classToPrint</CallbackMethod>
+            </Field>
+            <Field id="thingToPrint" type="menu">
+                <Label>Item:</Label>
+                <List class="self" filter="" method="dictToPrint" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+    </MenuItem>
 
-  <MenuItem id="installedPlugins">
-    <Name>Plugin Inventory</Name>
-    <CallbackMethod>installedPlugins</CallbackMethod>
-  </MenuItem>
+    <MenuItem id="installedPlugins">
+        <Name>Plugin Inventory</Name>
+        <CallbackMethod>installedPlugins</CallbackMethod>
+    </MenuItem>
 
-  <MenuItem id="runningPlugins">
-    <Name>Plugins Online</Name>
-    <CallbackMethod>runningPlugins</CallbackMethod>
-  </MenuItem>
+    <MenuItem id="runningPlugins">
+        <Name>Plugins Online</Name>
+        <CallbackMethod>runningPlugins</CallbackMethod>
+    </MenuItem>
 
-  <MenuItem id="removeAllDelayedActions">
-    <Name>Remove Delayed Actions</Name>
-    <ConfigUI>
-      <Field id="instructions" type="label">
-        <Label>Use this tool to remove all delayed actions that are currently scheduled.</Label>
-      </Field>
-      <Field id="space1" type="label">
-        <Label/>
-      </Field>
-      <Field id="cautions" type="label" fontColor="red">
-        <Label>CAUTION!! There is no undo.</Label>
-      </Field>
-    </ConfigUI>
-    <CallbackMethod>removeAllDelayedActions</CallbackMethod>
-  </MenuItem>
+    <MenuItem id="removeAllDelayedActions">
+        <Name>Remove Delayed Actions</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Use this tool to remove all delayed actions that are currently scheduled.</Label>
+            </Field>
+            <Field id="space1" type="label">
+                <Label/>
+            </Field>
+            <Field id="cautions" type="label" fontColor="red">
+                <Label>CAUTION!! There is no undo.</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>removeAllDelayedActions</CallbackMethod>
+    </MenuItem>
 
-  <MenuItem id="sendStatusRequest">
-    <Name>Send Status Request</Name>
-    <ConfigUI>
-      <Field id="instructions" type="label">
-        <Label>Select the device you would like to send the status request to.</Label>
-      </Field>
-      <Field id="listOfDevices" type="menu">
-        <Label>Device:</Label>
-        <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
-      </Field>
-    </ConfigUI>
-    <CallbackMethod>sendStatusRequest</CallbackMethod>
-  </MenuItem>
+    <MenuItem id="sendStatusRequest">
+        <Name>Send Status Request</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Select the device you would like to send the status request to.</Label>
+            </Field>
+            <Field id="listOfDevices" type="menu">
+                <Label>Device:</Label>
+                <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>sendStatusRequest</CallbackMethod>
+    </MenuItem>
 
-  <MenuItem id="getSerialPorts">
-    <Name>Serial Ports</Name>
-    <CallbackMethod>getSerialPorts</CallbackMethod>
-  </MenuItem>
+    <MenuItem id="getSerialPorts">
+        <Name>Serial Ports</Name>
+        <CallbackMethod>getSerialPorts</CallbackMethod>
+    </MenuItem>
 
 </MenuItems>
