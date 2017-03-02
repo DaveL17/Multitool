@@ -3,6 +3,9 @@
 
 # TODO: There is no way to initiate debug logging.  Setting it with a state variable for now.
 
+import inspect
+import logging
+
 try:
     import indigo
 except ImportError, error:
@@ -17,7 +20,7 @@ __build__     = ""
 __copyright__ = 'Copyright 2016 DaveL17'
 __license__   = "MIT"
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.01'
+__version__   = '1.0.07'
 
 class Plugin(indigo.PluginBase):
 
@@ -25,15 +28,20 @@ class Plugin(indigo.PluginBase):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
 
         self.error_msg_dict = indigo.Dict()
-        self.debug = False
+        self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
+        self.debugLevel = int(self.pluginPrefs.get('showDebugLevel', '20'))
+        self.indigo_log_handler.setLevel(self.debugLevel)
 
         # To enable remote PyCharm Debugging, uncomment the next line.
         # pydevd.settrace('localhost', port=5678, stdoutToServer=True, stderrToServer=True, suspend=False)
 
     def classToPrint(self, valuesDict, typeId):
-        self.debugLog(u"classToPrint")
+        """"""
+        self.logger.debug(u"Call to to classToPrint")
 
     def deviceDependencies(self, valuesDict, typeId):
+        """"""
+        self.logger.debug(u"Call to deviceDependencies")
         err_msg_dict = indigo.Dict()
 
         try:
@@ -43,12 +51,14 @@ class Plugin(indigo.PluginBase):
             return True
 
         except StandardError as err:
-            indigo.server.log(unicode(u"Error obtaining dependencies.  Reason: {0}".format(err)), isError=True)
+            self.logger.exception(u"Error obtaining dependencies.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Device dependencies Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
     def deviceInventory(self, valuesDict, typeId):
+        """"""
+        self.logger.debug(u"Call to deviceInventory")
         import datetime
 
         filter_item = ""
@@ -88,7 +98,8 @@ class Plugin(indigo.PluginBase):
         return valuesDict
 
     def deviceToBeep(self, valuesDict, typeId):
-        self.debugLog(u"deviceToBeep")
+        """"""
+        self.logger.debug(u"Call to deviceToBeep")
 
         err_msg_dict = indigo.Dict()
 
@@ -98,14 +109,15 @@ class Plugin(indigo.PluginBase):
             return True
 
         except StandardError as err:
-            indigo.server.log(unicode(u"Error sending beep.  Reason: {0}".format(err)), isError=True)
+            self.logger.exception(u"Error sending beep.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
 
     def deviceToPing(self, valuesDict, typeId):
-        self.debugLog(u"deviceToPing")
+        """"""
+        self.logger.debug(u"Call to deviceToPing")
 
         err_msg_dict = indigo.Dict()
 
@@ -116,27 +128,63 @@ class Plugin(indigo.PluginBase):
             return True
 
         except StandardError as err:
-            indigo.server.log(unicode(u"Error sending ping.  Reason: {0}".format(err)), isError=True)
+            self.logger.exception(u"Error sending ping.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Ping Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
         except Exception as err:
-            indigo.server.log(unicode(u"Error sending ping.  Reason: {0}".format(err)), isError=True)
+            self.logger.exception(u"Error sending ping.")
             err_msg_dict['listOfDevices'] = u"Please select a device that supports the Ping function."
             err_msg_dict['showAlertText'] = u"Ping Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
     def dictToPrint(self, typeId, valuesDict, targetId):
-        self.debugLog(u"dictToPrint")
+        """"""
+        self.logger.debug(u"Call to dictToPrint")
 
         if not valuesDict:
             return [("none", "None")]
         else:
             return [(thing.id, thing.name) for thing in getattr(indigo, valuesDict['classOfThing'])]
 
+    def getSerialPorts(self):
+        """"""
+        self.logger.debug(u"Call to getSerialPorts")
+        indigo.server.log(u"{0:=^80}".format(u" Current Serial Ports "))
+        indigo.server.log(unicode(indigo.server.getSerialPorts()))  # Also available: indigo.server.getSerialPorts(filter="indigo.ignoreBluetooth")
+
+    def indigoInformation(self):
+        """"""
+        self.logger.debug(u"Call to indigoInformation")
+        lat_long = indigo.server.getLatitudeAndLongitude()
+        lat     = lat_long[0]
+        long    = lat_long[1]
+        indigo.server.log(u"{0:=^80}".format(u" Indigo Status Information "))
+        indigo.server.log(u"Server Version: {0}".format(indigo.server.version))
+        indigo.server.log(u"API Version: {0}".format(indigo.server.apiVersion))
+        indigo.server.log(u"Server IP Address: {0}".format(indigo.server.address))
+        indigo.server.log(u"Install Path: {0}".format(indigo.server.getInstallFolderPath()))
+        indigo.server.log(u"Database: {0}/{1}".format(indigo.server.getDbFilePath(), indigo.server.getDbName()))
+        indigo.server.log(u"Port Number: {0}".format(indigo.server.portNum))
+        indigo.server.log(u"Latitude and Longitude: {0}/{1}".format(lat, long))
+
+        if indigo.server.connectionGood:
+            indigo.server.log(u"Connection Good.".format(indigo.server.connectionGood))
+        else:
+            indigo.server.log(u"Connection Bad.".format(indigo.server.connectionGood), isError=True)
+
+    def inspectMethod(self, valuesDict, typeId):
+        """"""
+        self.logger.debug(u"Call to inspectMethod")
+
+        method = getattr(self, valuesDict['listOfMethods'])
+        signature = inspect.getargspec(method)
+        indigo.server.log(u"self.{0}: {1}".format(valuesDict['listOfMethods'], signature))
+
     def installedPlugins(self):
-        # Credit: Jon (autolog)
+        """Credit: Jon (autolog)"""
+        self.logger.debug(u"Call to installedPlugins")
 
         import os
         import plistlib
@@ -171,10 +219,33 @@ class Plugin(indigo.PluginBase):
             indigo.server.log(u'{0}'.format(thing))
 
     def listOfDevices(self, valuesDict, typeId, targetId):
+        """"""
+        self.logger.debug(u"Call to listOfDevices")
 
         return [(dev.id, dev.name) for dev in indigo.devices]
 
+    def listOfMethods(self, valuesDict, typeId, targetId):
+        """"""
+        self.logger.debug(u"Call to listOfMethods")
+
+        list_of_attributes = []
+        for method in dir(self):
+            try:
+                inspect.getargspec(getattr(indigo.PluginBase, method))
+                list_of_attributes.append((method, method))
+            except (AttributeError, TypeError):
+                continue
+        return list_of_attributes
+
+    def removeAllDelayedActions(self, valuesDict, typeId):
+        """"""
+        self.logger.debug(u"Call to removeAllDelayedActions")
+        indigo.server.removeAllDelayedActions()
+        # return True
+
     def runningPlugins(self):
+        """"""
+        self.logger.debug(u"Call to runningPlugins")
         import subprocess
 
         ret = subprocess.Popen("/bin/ps -ef | grep 'MacOS/IndigoPluginHost' | grep -v grep", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate()[0]
@@ -182,15 +253,18 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"\n{0}".format(ret))
 
     def resultsOutput(self, valuesDict, caller):
+        """"""
+        self.logger.debug(u"Call to resultsOutput")
 
         thing = getattr(indigo, valuesDict['classOfThing'])[int(valuesDict['thingToPrint'])]
         indigo.server.log(u"{0:=^80}".format(u" {0} Dict ".format(thing.name)))
         indigo.server.log(u"\n{0}".format(thing))
         indigo.server.log(u"{0:=^80}".format(u""))
-
-        return True
+        # return True
 
     def sendStatusRequest(self, valuesDict, typeId):
+        """"""
+        self.logger.debug(u"Call to sendStatusRequest")
         err_msg_dict = indigo.Dict()
 
         try:
@@ -199,33 +273,15 @@ class Plugin(indigo.PluginBase):
             return True
 
         except StandardError as err:
-            indigo.server.log(unicode(u"Error sending status Request.  Reason: {0}".format(err)), isError=True)
+            self.logger.exception(u"Error sending status Request.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Status Request Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
-    def getSerialPorts(self):
-        indigo.server.log(u"{0:=^80}".format(u" Current Serial Ports "))
-        indigo.server.log(unicode(indigo.server.getSerialPorts()))  # Also available: indigo.server.getSerialPorts(filter="indigo.ignoreBluetooth")
+    def closedPrefsConfigUi(self, valuesDict, userCancelled):
+        """ User closes config menu. The validatePrefsConfigUI() method will
+        also be called."""
 
-    def indigoInformation(self):
-        lat_long = indigo.server.getLatitudeAndLongitude()
-        lat     = lat_long[0]
-        long    = lat_long[1]
-        indigo.server.log(u"{0:=^80}".format(u" Indigo Status Information "))
-        indigo.server.log(u"Server Version: {0}".format(indigo.server.version))
-        indigo.server.log(u"API Version: {0}".format(indigo.server.apiVersion))
-        indigo.server.log(u"Server IP Address: {0}".format(indigo.server.address))
-        indigo.server.log(u"Install Path: {0}".format(indigo.server.getInstallFolderPath()))
-        indigo.server.log(u"Database: {0}/{1}".format(indigo.server.getDbFilePath(), indigo.server.getDbName()))
-        indigo.server.log(u"Port Number: {0}".format(indigo.server.portNum))
-        indigo.server.log(u"Latitude and Longitude: {0}/{1}".format(lat, long))
-
-        if indigo.server.connectionGood:
-            indigo.server.log(u"Connection Good.".format(indigo.server.connectionGood))
-        else:
-            indigo.server.log(u"Connection Bad.".format(indigo.server.connectionGood), isError=True)
-
-    def removeAllDelayedActions(self, valuesDict, typeId):
-        indigo.server.removeAllDelayedActions()
-        return True
+        self.debugLevel = int(valuesDict['showDebugLevel'])
+        self.indigo_log_handler.setLevel(self.debugLevel)
+        self.logger.debug(u"Call to closedPrefsConfigUi")

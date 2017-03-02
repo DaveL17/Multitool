@@ -104,9 +104,22 @@
         <CallbackMethod>deviceToPing</CallbackMethod>
     </MenuItem>
 
+    <MenuItem id="methodSignature">
+        <Name>Method Signature</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Select the method that you would like to inspect.</Label>
+            </Field>
+            <Field id="listOfMethods" type="menu">
+                <Label>Method:</Label>
+                <List class="self" filter="" method="listOfMethods" dynamicReload="true"/>
+                <CallbackMethod>inspectMethod</CallbackMethod>
+            </Field>
+        </ConfigUI>
+    </MenuItem>
+
     <MenuItem id="printDict">
         <Name>Object Dictionary</Name>
-        <CallbackMethod>resultsOutput</CallbackMethod>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Select the class of item.</Label>
@@ -128,6 +141,7 @@
                 <List class="self" filter="" method="dictToPrint" dynamicReload="true"/>
             </Field>
         </ConfigUI>
+        <CallbackMethod>resultsOutput</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="installedPlugins">
