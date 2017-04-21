@@ -5,6 +5,7 @@
 
 import inspect
 import logging
+import sys
 
 try:
     import indigo
@@ -22,10 +23,20 @@ __license__   = "MIT"
 __title__     = 'Multitool Plugin for Indigo Home Control'
 __version__   = '1.0.07'
 
+
 class Plugin(indigo.PluginBase):
 
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
+
+        self.logger.info(u"")
+        self.logger.info(u"{0:=^80}".format(" Initializing New Plugin Session "))
+        self.logger.info(u"{0:<31} {1}".format("Plugin name:", pluginDisplayName))
+        self.logger.info(u"{0:<31} {1}".format("Plugin version:", pluginVersion))
+        self.logger.info(u"{0:<31} {1}".format("Plugin ID:", pluginId))
+        self.logger.info(u"{0:<31} {1}".format("Indigo version:", indigo.server.version))
+        self.logger.info(u"{0:<31} {1}".format("Python version:", sys.version.replace('\n', '')))
+        self.logger.info(u"{0:=^80}".format(""))
 
         self.error_msg_dict = indigo.Dict()
         self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
@@ -38,6 +49,13 @@ class Plugin(indigo.PluginBase):
     def classToPrint(self, valuesDict, typeId):
         """"""
         self.logger.debug(u"Call to to classToPrint")
+
+    def colorPicker(self, valuesDict, typeId):
+        if not valuesDict['chosenColor']:
+            valuesDict['chosenColor'] = "FF FF FF"
+        indigo.server.log(u"Raw: {0}".format(valuesDict['chosenColor']))
+        indigo.server.log(u"Hex: #{0}".format(valuesDict['chosenColor'].replace(' ', '')))
+        indigo.server.log(u"RGB: {0}".format(tuple([int(thing, 16) for thing in valuesDict['chosenColor'].split(' ')])))
 
     def deviceDependencies(self, valuesDict, typeId):
         """"""
@@ -181,6 +199,7 @@ class Plugin(indigo.PluginBase):
         method = getattr(self, valuesDict['listOfMethods'])
         signature = inspect.getargspec(method)
         indigo.server.log(u"self.{0}: {1}".format(valuesDict['listOfMethods'], signature))
+        indigo.server.log(u"Docstring: {0}".format(getattr(self, valuesDict['listOfMethods']).__doc__), isError=False)
 
     def installedPlugins(self):
         """Credit: Jon (autolog)"""
@@ -229,7 +248,7 @@ class Plugin(indigo.PluginBase):
         self.logger.debug(u"Call to listOfMethods")
 
         list_of_attributes = []
-        for method in dir(self):
+        for method in dir(indigo.PluginBase):
             try:
                 inspect.getargspec(getattr(indigo.PluginBase, method))
                 list_of_attributes.append((method, method))
@@ -260,7 +279,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"{0:=^80}".format(u" {0} Dict ".format(thing.name)))
         indigo.server.log(u"\n{0}".format(thing))
         indigo.server.log(u"{0:=^80}".format(u""))
-        # return True
+        return True
 
     def sendStatusRequest(self, valuesDict, typeId):
         """"""
@@ -285,3 +304,5 @@ class Plugin(indigo.PluginBase):
         self.debugLevel = int(valuesDict['showDebugLevel'])
         self.indigo_log_handler.setLevel(self.debugLevel)
         self.logger.debug(u"Call to closedPrefsConfigUi")
+        color = r"#{0}".format(valuesDict['color_test'].replace(' ', ''))
+        self.logger.info(color)

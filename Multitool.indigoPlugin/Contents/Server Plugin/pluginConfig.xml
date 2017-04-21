@@ -18,6 +18,9 @@
             <Option value="50">Critical Errors Only</Option>
         </List>
     </Field>
+	<Field id="color_test" type="colorpicker">
+		<Label>Color:</Label>
+	</Field>
     <Field id="space7" type="label" fontColor="black" alignWithControl="false" fontSize="small">
         <Label>Always be careful when posting debug output to the forums or other public places. You should review it to ensure that it doesn't contain sensitive information.
 

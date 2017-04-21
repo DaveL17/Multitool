@@ -6,6 +6,19 @@
         <CallbackMethod>indigoInformation</CallbackMethod>
     </MenuItem>
 
+    <MenuItem id="pickColor">
+        <Name>Color Picker</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Use this tool to identify color information.</Label>
+            </Field>
+            <Field id="chosenColor" type="colorPicker">
+                <Label>Color:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>colorPicker</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="beepDevice">
         <Name>Device Beep</Name>
         <ConfigUI>
