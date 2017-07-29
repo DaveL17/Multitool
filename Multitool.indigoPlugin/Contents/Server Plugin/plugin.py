@@ -208,6 +208,30 @@ class Plugin(indigo.PluginBase):
         else:
             return [(thing.id, thing.name) for thing in getattr(indigo, valuesDict['classOfThing'])]
 
+    def errorInventory(self, valuesDict, typeId):
+        """Create an inventory of error messages appearing in the Indigo Logs."""
+
+        # TODO: what if file already exists? Maybe a checkbox to 'retain old inventory' --> then result.txt, result1.txt, etc.
+
+        check_list = [' Err ', ' err ', 'Error', 'error']
+        log_folder = indigo.server.getInstallFolderPath() + "/Logs/"
+
+        with open(log_folder + 'error_inventory.txt', 'w') as outfile:
+
+            for filename in os.listdir(log_folder):
+                if filename.endswith(".txt") and filename != 'error_inventory.txt':
+                    with open(os.path.join(log_folder, filename), 'r') as f:
+                        log_file = f.read()
+
+                        for line in log_file.split('\n'):
+                            if any(item in line for item in check_list):
+                                outfile.write(line + "\n")
+                        else:
+                            continue
+
+        self.logger.info(u"Error message inventory saved to: {0}error_inventory.txt".format(log_folder))
+        return True
+
     def getSerialPorts(self):
         """"""
         self.logger.debug(u"Call to getSerialPorts")
@@ -278,30 +302,6 @@ class Plugin(indigo.PluginBase):
             except (AttributeError, TypeError):
                 continue
         return list_of_attributes
-
-    def errorInventory(self, valuesDict, typeId):
-        """Create an inventory of error messages appearing in the Indigo Logs."""
-
-        # TODO: what if file already exists? Maybe a checkbox to 'retain old inventory' --> then result.txt, result1.txt, etc.
-
-        check_list = [' Err ', ' err ', 'Error', 'error']
-        log_folder = indigo.server.getInstallFolderPath() + "/Logs/"
-
-        with open(log_folder + 'error_inventory.txt', 'w') as outfile:
-
-            for filename in os.listdir(log_folder):
-                if filename.endswith(".txt") and filename != 'error_inventory.txt':
-                    with open(os.path.join(log_folder, filename), 'r') as f:
-                        log_file = f.read()
-
-                        for line in log_file.split('\n'):
-                            if any(item in line for item in check_list):
-                                outfile.write(line + "\n")
-                        else:
-                            continue
-
-        self.logger.info(u"Error message inventory saved to: {0}error_inventory.txt".format(log_folder))
-        return True
 
     def removeAllDelayedActions(self, valuesDict, typeId):
         """"""
