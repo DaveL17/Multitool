@@ -1,7 +1,7 @@
-# Announcements
-The Announcements plugin is used to construct formatted strings for use with audio announcements.
+# Multitool
+The Multitool plugin is used to access specialized tools for Indigo administration.
 ####Installation
 To install this plugin, you must have direct control of your Indigo Server locally or through a VPN or screen share.  Simply 
-double-click on the Announcements.indigoPlugin file and the plugin will be automatically installed (if the Indigo Server is running).
+double-click on the Multitool.indigoPlugin file and the plugin will be automatically installed (if the Indigo Server is running).
 ####Usage
-The Announcements Plugin uses individual devices to store custom formatted strings for audio announcements. The strings are stored in custom device states.  For examaple, a device called Weather Announcements could contain various strings related to weather data.  There is no limit to the number of devices or number of announcements per device.  
+The Multitool Plugin uses individual plugin menu items to invoke things like "About Indigo" which prints server status information to the log, or "Object Dictionary" which prints the valuesDict for the selected object (action, device, etc.)
