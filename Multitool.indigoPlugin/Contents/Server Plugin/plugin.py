@@ -280,7 +280,7 @@ class Plugin(indigo.PluginBase):
         return list_of_attributes
 
     def errorInventory(self, valuesDict, typeId):
-        """"""
+        """Create an inventory of error messages appearing in the Indigo Logs."""
 
         # TODO: what if file already exists? Maybe a checkbox to 'retain old inventory' --> then result.txt, result1.txt, etc.
 
