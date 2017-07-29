@@ -5,6 +5,7 @@
 
 import inspect
 import logging
+import os
 import sys
 
 try:
@@ -18,7 +19,7 @@ except ImportError, error:
 
 __author__    = "DaveL17"
 __build__     = ""
-__copyright__ = 'Copyright 2016 DaveL17'
+__copyright__ = 'Copyright 2017 DaveL17'
 __license__   = "MIT"
 __title__     = 'Multitool Plugin for Indigo Home Control'
 __version__   = '1.0.07'
@@ -30,13 +31,13 @@ class Plugin(indigo.PluginBase):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
 
         self.logger.info(u"")
-        self.logger.info(u"{0:=^80}".format(" Initializing New Plugin Session "))
+        self.logger.info(u"{0:=^130}".format(" Initializing New Plugin Session "))
         self.logger.info(u"{0:<31} {1}".format("Plugin name:", pluginDisplayName))
         self.logger.info(u"{0:<31} {1}".format("Plugin version:", pluginVersion))
         self.logger.info(u"{0:<31} {1}".format("Plugin ID:", pluginId))
         self.logger.info(u"{0:<31} {1}".format("Indigo version:", indigo.server.version))
         self.logger.info(u"{0:<31} {1}".format("Python version:", sys.version.replace('\n', '')))
-        self.logger.info(u"{0:=^80}".format(""))
+        self.logger.info(u"{0:=^130}".format(""))
 
         self.error_msg_dict = indigo.Dict()
         self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
@@ -45,6 +46,26 @@ class Plugin(indigo.PluginBase):
 
         # To enable remote PyCharm Debugging, uncomment the next line.
         # pydevd.settrace('localhost', port=5678, stdoutToServer=True, stderrToServer=True, suspend=False)
+
+    def aboutIndigo(self):
+        """"""
+        self.logger.debug(u"Call to aboutIndigo")
+        lat_long = indigo.server.getLatitudeAndLongitude()
+        lat     = lat_long[0]
+        long    = lat_long[1]
+        indigo.server.log(u"{0:=^130}".format(u" Indigo Status Information "))
+        indigo.server.log(u"Server Version: {0}".format(indigo.server.version))
+        indigo.server.log(u"API Version: {0}".format(indigo.server.apiVersion))
+        indigo.server.log(u"Server IP Address: {0}".format(indigo.server.address))
+        indigo.server.log(u"Install Path: {0}".format(indigo.server.getInstallFolderPath()))
+        indigo.server.log(u"Database: {0}/{1}".format(indigo.server.getDbFilePath(), indigo.server.getDbName()))
+        indigo.server.log(u"Port Number: {0}".format(indigo.server.portNum))
+        indigo.server.log(u"Latitude and Longitude: {0}/{1}".format(lat, long))
+
+        if indigo.server.connectionGood:
+            indigo.server.log(u"Connection Good.".format(indigo.server.connectionGood))
+        else:
+            indigo.server.log(u"Connection Bad.".format(indigo.server.connectionGood), isError=True)
 
     def classToPrint(self, valuesDict, typeId):
         """"""
@@ -100,7 +121,7 @@ class Plugin(indigo.PluginBase):
 
             indigo.server.log(u"{0:=^{1}}".format(u" Inventory of '{0}' Devices ".format(filter_item), table_width))
             indigo.server.log(u"{0:<{1}} {2:<{3}} {4:<{5}} {6:<{7}}".format(u"ID", (x0 - 1), u"Addr", (x1 - 1), u"Name", (x2 - 1), u"Last Changed", x3))
-            indigo.server.log(u"{0}".format('=' * table_width))
+            indigo.server.log(u"{0}".format(u'=' * table_width))
 
             for thing in x:
                 indigo.server.log(u"{0:<{1}} {2:<{3}} {4:<{5}} {6:<{7}}".format(thing[0], (x0 - 1),
@@ -114,6 +135,27 @@ class Plugin(indigo.PluginBase):
                 indigo.server.log(u"No {0} devices found.".format(valuesDict['customThing']))
 
         return valuesDict
+
+    def deviceLastSuccessfulComm(self):
+        """"""
+        # Get the data we need
+        table = [(dev.id, dev.name, dev.lastSuccessfulComm) for dev in indigo.devices.iter()]
+
+        # Sort the data from newest to oldest
+        table = sorted(table, key=lambda (devId, name, comm): comm, reverse=True)
+
+        # Find the length of the longest device name
+        length = 0
+        for element in table:
+            if len(element[1]) > length:
+                length = len(element[1])
+
+        # Output the result
+        indigo.server.log(u"{0:=^{1}}".format(u" Device Last Successful Comm ", 100))
+        indigo.server.log(u"{id:<12}{name:<{length}}  {commTime}".format(id=u"ID", name=u"Name", commTime=u"Last Comm Success", length=length))
+        indigo.server.log(u"{0}".format(u'=' * 100))
+        for element in table:
+            indigo.server.log(u"{id:<14}{name:<{length}}  {commTime}".format(id=element[0], name=element[1], commTime=element[2], length=length))
 
     def deviceToBeep(self, valuesDict, typeId):
         """"""
@@ -172,26 +214,6 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"{0:=^80}".format(u" Current Serial Ports "))
         indigo.server.log(unicode(indigo.server.getSerialPorts()))  # Also available: indigo.server.getSerialPorts(filter="indigo.ignoreBluetooth")
 
-    def indigoInformation(self):
-        """"""
-        self.logger.debug(u"Call to indigoInformation")
-        lat_long = indigo.server.getLatitudeAndLongitude()
-        lat     = lat_long[0]
-        long    = lat_long[1]
-        indigo.server.log(u"{0:=^80}".format(u" Indigo Status Information "))
-        indigo.server.log(u"Server Version: {0}".format(indigo.server.version))
-        indigo.server.log(u"API Version: {0}".format(indigo.server.apiVersion))
-        indigo.server.log(u"Server IP Address: {0}".format(indigo.server.address))
-        indigo.server.log(u"Install Path: {0}".format(indigo.server.getInstallFolderPath()))
-        indigo.server.log(u"Database: {0}/{1}".format(indigo.server.getDbFilePath(), indigo.server.getDbName()))
-        indigo.server.log(u"Port Number: {0}".format(indigo.server.portNum))
-        indigo.server.log(u"Latitude and Longitude: {0}/{1}".format(lat, long))
-
-        if indigo.server.connectionGood:
-            indigo.server.log(u"Connection Good.".format(indigo.server.connectionGood))
-        else:
-            indigo.server.log(u"Connection Bad.".format(indigo.server.connectionGood), isError=True)
-
     def inspectMethod(self, valuesDict, typeId):
         """"""
         self.logger.debug(u"Call to inspectMethod")
@@ -233,9 +255,10 @@ class Plugin(indigo.PluginBase):
 
                     plugin_name_list.append((cf_bundle_identifier, cf_bundle_display_name))
 
-        indigo.server.log(u"{0:=^80}".format(u" Installed Plugins "))
+        indigo.server.log(u"{0:=^130}".format(u" Installed Plugins "))
         for thing in plugin_name_list:
             indigo.server.log(u'{0}'.format(thing))
+        indigo.server.log(u"{0:=^130}".format(u" Code Credit: Autolog "))
 
     def listOfDevices(self, valuesDict, typeId, targetId):
         """"""
@@ -255,6 +278,30 @@ class Plugin(indigo.PluginBase):
             except (AttributeError, TypeError):
                 continue
         return list_of_attributes
+
+    def errorInventory(self, valuesDict, typeId):
+        """"""
+
+        # TODO: what if file already exists? Maybe a checkbox to 'retain old inventory' --> then result.txt, result1.txt, etc.
+
+        check_list = [' Err ', ' err ', 'Error', 'error']
+        log_folder = indigo.server.getInstallFolderPath() + "/Logs/"
+
+        with open(log_folder + 'error_inventory.txt', 'w') as outfile:
+
+            for filename in os.listdir(log_folder):
+                if filename.endswith(".txt") and filename != 'error_inventory.txt':
+                    with open(os.path.join(log_folder, filename), 'r') as f:
+                        log_file = f.read()
+
+                        for line in log_file.split('\n'):
+                            if any(item in line for item in check_list):
+                                outfile.write(line + "\n")
+                        else:
+                            continue
+
+        self.logger.info(u"Error message inventory saved to: {0}error_inventory.txt".format(log_folder))
+        return True
 
     def removeAllDelayedActions(self, valuesDict, typeId):
         """"""
@@ -295,6 +342,37 @@ class Plugin(indigo.PluginBase):
             self.logger.exception(u"Error sending status Request.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Status Request Error.\n\nReason: {0}".format(err)
+            return False, valuesDict, err_msg_dict
+
+    def speakString(self, valuesDict, typeId):
+        """"""
+        self.logger.debug(u"Call to speakString")
+        err_msg_dict = indigo.Dict()
+
+        try:
+            indigo.server.log(u"{0:=^80}".format(u" Speaking "))
+            indigo.server.log(self.substitute(valuesDict['thingToSpeak']))
+            indigo.server.speak(self.substitute(valuesDict['thingToSpeak']))
+            return True
+
+        except StandardError as err:
+            self.logger.exception(u"Error sending status Request.")
+            err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
+            err_msg_dict['showAlertText'] = u"Status Request Error.\n\nReason: {0}".format(err)
+            return False, valuesDict, err_msg_dict
+
+    def substitutionTest(self, valuesDict, typeId):
+        """"""
+        err_msg_dict = indigo.Dict()
+        substitutionText = valuesDict['thingToSubstitute']
+        result = self.substitute(substitutionText)
+
+        if result:
+            indigo.server.log(result)
+            return True, valuesDict
+        else:
+            err_msg_dict['thingToSubstitute'] = u"Invalid substitution string."
+            err_msg_dict['showAlertText'] = u"Substitution Error.\n\nYour substitution string is invalid. See the Indigo log for available information."
             return False, valuesDict, err_msg_dict
 
     def closedPrefsConfigUi(self, valuesDict, userCancelled):

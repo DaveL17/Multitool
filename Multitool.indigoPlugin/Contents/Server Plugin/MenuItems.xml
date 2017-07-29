@@ -3,7 +3,7 @@
 
     <MenuItem id="indigoProperties">
         <Name>About Indigo</Name>
-        <CallbackMethod>indigoInformation</CallbackMethod>
+        <CallbackMethod>aboutIndigo</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="pickColor">
@@ -100,6 +100,11 @@
         </ConfigUI>
     </MenuItem>
 
+    <MenuItem id="deviceLastComm">
+        <Name>Device Last Comm</Name>
+        <CallbackMethod>deviceLastSuccessfulComm</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="pingDevice">
         <Name>Device Ping</Name>
         <ConfigUI>
@@ -117,11 +122,21 @@
         <CallbackMethod>deviceToPing</CallbackMethod>
     </MenuItem>
 
+    <MenuItem id="errorInventory">
+        <Name>Error Inventory</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Create an inventory of all error messages from Indigo log files and save result.txt file in the Indgio Logs folder.</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>errorInventory</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="methodSignature">
         <Name>Method Signature</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Select the method that you would like to inspect.</Label>
+                <Label>Select the method that you would like to inspect. Note that some of these methods are designed to only be available within a plugin environment and you may not be able to access them from within an Indigo scripting shell.</Label>
             </Field>
             <Field id="listOfMethods" type="menu">
                 <Label>Method:</Label>
@@ -200,6 +215,32 @@
     <MenuItem id="getSerialPorts">
         <Name>Serial Ports</Name>
         <CallbackMethod>getSerialPorts</CallbackMethod>
+    </MenuItem>
+
+    <MenuItem id="speakString">
+        <Name>Speak String</Name>
+        <CallbackMethod>speakString</CallbackMethod>
+            <ConfigUI>
+                <Field id="speakStringLabel" type="Label">
+                    <Label>Enter the text to speak.  The text field supports device and variable substitutions: %%d:DEVID:STATENAME%% and %%v:VARID%%</Label>
+                </Field>
+                <Field id="thingToSpeak" type="textfield">
+                    <Label>Thing to Speak:</Label>
+                </Field>
+            </ConfigUI>
+    </MenuItem>
+
+    <MenuItem id="substitutionTest">
+        <Name>Substitution Test</Name>
+        <CallbackMethod>substitutionTest</CallbackMethod>
+            <ConfigUI>
+                <Field id="substitutionTextLabel" type="Label">
+                    <Label>Enter the text to substitute.  The text field supports device and variable substitutions: %%d:DEVID:STATENAME%% and %%v:VARID%%.</Label>
+                </Field>
+                <Field id="thingToSubstitute" type="textfield">
+                    <Label>Substitution String:</Label>
+                </Field>
+            </ConfigUI>
     </MenuItem>
 
 </MenuItems>
