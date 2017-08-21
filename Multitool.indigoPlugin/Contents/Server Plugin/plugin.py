@@ -218,16 +218,15 @@ class Plugin(indigo.PluginBase):
 
         with open(log_folder + 'error_inventory.txt', 'w') as outfile:
 
-            for filename in os.listdir(log_folder):
-                if filename.endswith(".txt") and filename != 'error_inventory.txt':
-                    with open(os.path.join(log_folder, filename), 'r') as f:
-                        log_file = f.read()
+            for root, sub, files in os.walk(log_folder):
+                for filename in files:
+                    if filename.endswith((".log", ".txt")) and filename != 'error_inventory.txt':
+                        with open(os.path.join(root, filename), "r") as infile:
+                            log_file = infile.read()
 
-                        for line in log_file.split('\n'):
-                            if any(item in line for item in check_list):
-                                outfile.write(line + "\n")
-                        else:
-                            continue
+                            for line in log_file.split('\n'):
+                                if any(item in line for item in check_list):
+                                    outfile.write("{0:<130}{1}\n".format(root + filename, line))
 
         self.logger.info(u"Error message inventory saved to: {0}error_inventory.txt".format(log_folder))
         return True
