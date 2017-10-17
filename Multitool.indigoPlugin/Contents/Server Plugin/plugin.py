@@ -1,12 +1,13 @@
 #! /usr/bin/env python2.6
 # -*- coding: utf-8 -*-
 
-# TODO: There is no way to initiate debug logging.  Setting it with a state variable for now.
+# TODO: There is no way to initiate debug logging.  Setting it with a state variable for now. When it's time, use the template.
+# TODO: Setup update notifications. When it's time, use the template.
 
+import DLFramework
 import inspect
 import logging
 import os
-import sys
 
 try:
     import indigo
@@ -14,15 +15,15 @@ except ImportError, error:
     indigo.server.log(str(error))
 try:
     import pydevd
-except ImportError, error:
-    indigo.server.log(str(error))
+except ImportError:
+    pass
 
 __author__    = "DaveL17"
 __build__     = ""
 __copyright__ = 'Copyright 2017 DaveL17'
 __license__   = "MIT"
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.07'
+__version__   = '1.0.08'
 
 
 class Plugin(indigo.PluginBase):
@@ -30,29 +31,28 @@ class Plugin(indigo.PluginBase):
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
 
-        self.logger.info(u"")
-        self.logger.info(u"{0:=^130}".format(" Initializing New Plugin Session "))
-        self.logger.info(u"{0:<31} {1}".format("Plugin name:", pluginDisplayName))
-        self.logger.info(u"{0:<31} {1}".format("Plugin version:", pluginVersion))
-        self.logger.info(u"{0:<31} {1}".format("Plugin ID:", pluginId))
-        self.logger.info(u"{0:<31} {1}".format("Indigo version:", indigo.server.version))
-        self.logger.info(u"{0:<31} {1}".format("Python version:", sys.version.replace('\n', '')))
-        self.logger.info(u"{0:=^130}".format(""))
+        self.dlf = DLFramework.Fogbert(self)
+
+        # Print pluginEnvironment information when plugin is first started
+        self.dlf.pluginEnvironment()
 
         self.error_msg_dict = indigo.Dict()
         self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
         self.debugLevel = int(self.pluginPrefs.get('showDebugLevel', '20'))
         self.indigo_log_handler.setLevel(self.debugLevel)
 
-        # To enable remote PyCharm Debugging, uncomment the next line.
-        # pydevd.settrace('localhost', port=5678, stdoutToServer=True, stderrToServer=True, suspend=False)
+        # try:
+        #     pydevd.settrace('localhost', port=5678, stdoutToServer=True, stderrToServer=True, suspend=False)
+        # except:
+        #     pass
+
 
     def aboutIndigo(self):
         """"""
         self.logger.debug(u"Call to aboutIndigo")
         lat_long = indigo.server.getLatitudeAndLongitude()
-        lat     = lat_long[0]
-        long    = lat_long[1]
+        lat      = lat_long[0]
+        long     = lat_long[1]
         indigo.server.log(u"{0:=^130}".format(u" Indigo Status Information "))
         indigo.server.log(u"Server Version: {0}".format(indigo.server.version))
         indigo.server.log(u"API Version: {0}".format(indigo.server.apiVersion))
@@ -152,7 +152,7 @@ class Plugin(indigo.PluginBase):
 
         # Output the result
         indigo.server.log(u"{0:=^{1}}".format(u" Device Last Successful Comm ", 100))
-        indigo.server.log(u"{id:<12}{name:<{length}}  {commTime}".format(id=u"ID", name=u"Name", commTime=u"Last Comm Success", length=length))
+        indigo.server.log(u"{id:<14}{name:<{length}}  {commTime}".format(id=u"ID", name=u"Name", commTime=u"Last Comm Success", length=length))
         indigo.server.log(u"{0}".format(u'=' * 100))
         for element in table:
             indigo.server.log(u"{id:<14}{name:<{length}}  {commTime}".format(id=element[0], name=element[1], commTime=element[2], length=length))
