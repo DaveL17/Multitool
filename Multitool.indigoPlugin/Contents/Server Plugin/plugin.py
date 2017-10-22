@@ -1,14 +1,23 @@
 #! /usr/bin/env python2.6
 # -*- coding: utf-8 -*-
 
+""" docstring placeholder """
+
+# =================================== TO DO ===================================
+
 # TODO: There is no way to initiate debug logging.  Setting it with a state variable for now. When it's time, use the template.
 # TODO: Setup update notifications. When it's time, use the template.
+# TODO: kDefaultPluginPrefs
 
-import DLFramework
+# ================================== IMPORTS ==================================
+
+# Built-in modules
 import inspect
 import logging
 import os
 
+# Third-party modules
+# from DLFramework import indigoPluginUpdateChecker
 try:
     import indigo
 except ImportError, error:
@@ -18,12 +27,21 @@ try:
 except ImportError:
     pass
 
-__author__    = "DaveL17"
-__build__     = ""
-__copyright__ = 'Copyright 2017 DaveL17'
-__license__   = "MIT"
+# My modules
+import DLFramework as dlf
+
+# =================================== HEADER ==================================
+
+__author__    = dlf.DLFramework.__author__
+__copyright__ = dlf.DLFramework.__copyright__
+__license__   = dlf.DLFramework.__license__
+__build__     = dlf.DLFramework.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.08'
+__version__   = '1.0.09'
+
+# =============================================================================
+
+# kDefaultPluginPrefs = {}
 
 
 class Plugin(indigo.PluginBase):
@@ -31,15 +49,23 @@ class Plugin(indigo.PluginBase):
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
 
-        self.dlf = DLFramework.Fogbert(self)
-
-        # Print pluginEnvironment information when plugin is first started
-        self.dlf.pluginEnvironment()
-
         self.error_msg_dict = indigo.Dict()
         self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
         self.debugLevel = int(self.pluginPrefs.get('showDebugLevel', '20'))
         self.indigo_log_handler.setLevel(self.debugLevel)
+
+        # ====================== Initialize DLFramework =======================
+
+        self.dlf = dlf.DLFramework.Fogbert(self)
+
+        # Log pluginEnvironment information when plugin is first started
+        self.dlf.pluginEnvironment()
+
+        # Convert old debugLevel scale (low, medium, high) to new scale (1, 2, 3).
+        if not 0 < self.pluginPrefs.get('showDebugLevel', 1) <= 3:
+            self.pluginPrefs['showDebugLevel'] = self.dlf.convertDebugLevel(self.pluginPrefs['showDebugLevel'])
+
+        # =====================================================================
 
         # try:
         #     pydevd.settrace('localhost', port=5678, stdoutToServer=True, stderrToServer=True, suspend=False)

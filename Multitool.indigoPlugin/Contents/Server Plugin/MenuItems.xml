@@ -7,7 +7,7 @@
     </MenuItem>
 
     <MenuItem id="pickColor">
-        <Name>Color Picker</Name>
+        <Name>Color Picker...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Use this tool to identify color information.</Label>
@@ -20,7 +20,7 @@
     </MenuItem>
 
     <MenuItem id="beepDevice">
-        <Name>Device Beep</Name>
+        <Name>Device Beep...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep.
@@ -37,7 +37,7 @@
     </MenuItem>
 
     <MenuItem id="deviceDependencies">
-        <Name>Device Dependencies</Name>
+        <Name>Device Dependencies...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to query for dependencies.</Label>
@@ -51,7 +51,7 @@
     </MenuItem>
 
     <MenuItem id="deviceInventoryList">
-        <Name>Device Inventory</Name>
+        <Name>Device Inventory...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Some filters are not available in all Indigo versions.</Label>
@@ -106,7 +106,7 @@
     </MenuItem>
 
     <MenuItem id="pingDevice">
-        <Name>Device Ping</Name>
+        <Name>Device Ping...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log.
@@ -123,7 +123,7 @@
     </MenuItem>
 
     <MenuItem id="errorInventory">
-        <Name>Error Inventory</Name>
+        <Name>Error Inventory...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Create an inventory of all error messages from Indigo log files and save result.txt file in the Indgio Logs folder.</Label>
@@ -133,7 +133,7 @@
     </MenuItem>
 
     <MenuItem id="methodSignature">
-        <Name>Method Signature</Name>
+        <Name>Method Signature...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Select the method that you would like to inspect. Note that some of these methods are designed to only be available within a plugin environment and you may not be able to access them from within an Indigo scripting shell.</Label>
@@ -147,7 +147,7 @@
     </MenuItem>
 
     <MenuItem id="printDict">
-        <Name>Object Dictionary</Name>
+        <Name>Object Dictionary...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Select the class of item.</Label>
@@ -183,7 +183,7 @@
     </MenuItem>
 
     <MenuItem id="removeAllDelayedActions">
-        <Name>Remove Delayed Actions</Name>
+        <Name>Remove Delayed Actions...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Use this tool to remove all delayed actions that are currently scheduled.</Label>
@@ -199,7 +199,7 @@
     </MenuItem>
 
     <MenuItem id="sendStatusRequest">
-        <Name>Send Status Request</Name>
+        <Name>Send Status Request...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to send the status request to.</Label>
@@ -218,7 +218,7 @@
     </MenuItem>
 
     <MenuItem id="speakString">
-        <Name>Speak String</Name>
+        <Name>Speak String...</Name>
         <CallbackMethod>speakString</CallbackMethod>
             <ConfigUI>
                 <Field id="speakStringLabel" type="Label">
@@ -231,7 +231,7 @@
     </MenuItem>
 
     <MenuItem id="substitutionTest">
-        <Name>Substitution Test</Name>
+        <Name>Substitution Test...</Name>
         <CallbackMethod>substitutionTest</CallbackMethod>
             <ConfigUI>
                 <Field id="substitutionTextLabel" type="Label">
