@@ -1,28 +1,48 @@
 #! /usr/bin/env python2.6
 # -*- coding: utf-8 -*-
 
-# TODO: There is no way to initiate debug logging.  Setting it with a state variable for now.
+""" docstring placeholder """
 
+# =================================== TO DO ===================================
+
+# TODO: There is no way to initiate debug logging.  Setting it with a state variable for now. When it's time, use the template.
+# TODO: Setup update notifications. When it's time, use the template.
+# TODO: kDefaultPluginPrefs
+
+# ================================== IMPORTS ==================================
+
+# Built-in modules
 import inspect
 import logging
 import os
 import sys
 
+# Third-party modules
+# from DLFramework import indigoPluginUpdateChecker
 try:
     import indigo
 except ImportError, error:
     indigo.server.log(str(error))
 try:
     import pydevd
-except ImportError, error:
-    indigo.server.log(str(error))
+except ImportError:
+    pass
 
-__author__    = "DaveL17"
-__build__     = ""
-__copyright__ = 'Copyright 2017 DaveL17'
-__license__   = "MIT"
+# My modules
+import DLFramework.DLFramework as Dave
+
+# =================================== HEADER ==================================
+
+__author__    = Dave.__author__
+__copyright__ = Dave.__copyright__
+__license__   = Dave.__license__
+__build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.07'
+__version__   = '1.0.09'
+
+# =============================================================================
+
+# kDefaultPluginPrefs = {}
 
 
 class Plugin(indigo.PluginBase):
@@ -30,29 +50,36 @@ class Plugin(indigo.PluginBase):
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
 
-        self.logger.info(u"")
-        self.logger.info(u"{0:=^130}".format(" Initializing New Plugin Session "))
-        self.logger.info(u"{0:<31} {1}".format("Plugin name:", pluginDisplayName))
-        self.logger.info(u"{0:<31} {1}".format("Plugin version:", pluginVersion))
-        self.logger.info(u"{0:<31} {1}".format("Plugin ID:", pluginId))
-        self.logger.info(u"{0:<31} {1}".format("Indigo version:", indigo.server.version))
-        self.logger.info(u"{0:<31} {1}".format("Python version:", sys.version.replace('\n', '')))
-        self.logger.info(u"{0:=^130}".format(""))
-
         self.error_msg_dict = indigo.Dict()
         self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
         self.debugLevel = int(self.pluginPrefs.get('showDebugLevel', '20'))
         self.indigo_log_handler.setLevel(self.debugLevel)
 
-        # To enable remote PyCharm Debugging, uncomment the next line.
-        # pydevd.settrace('localhost', port=5678, stdoutToServer=True, stderrToServer=True, suspend=False)
+        # ====================== Initialize DLFramework =======================
+
+        self.Fogbert = Dave.Fogbert(self)
+
+        # Log pluginEnvironment information when plugin is first started
+        self.Fogbert.pluginEnvironment()
+
+        # Convert old debugLevel scale (low, medium, high) to new scale (1, 2, 3).
+        if not 0 < self.pluginPrefs.get('showDebugLevel', 1) <= 3:
+            self.pluginPrefs['showDebugLevel'] = self.Fogbert.convertDebugLevel(self.pluginPrefs['showDebugLevel'])
+
+        # =====================================================================
+
+        # try:
+        #     pydevd.settrace('localhost', port=5678, stdoutToServer=True, stderrToServer=True, suspend=False)
+        # except:
+        #     pass
+
 
     def aboutIndigo(self):
         """"""
         self.logger.debug(u"Call to aboutIndigo")
         lat_long = indigo.server.getLatitudeAndLongitude()
-        lat     = lat_long[0]
-        long    = lat_long[1]
+        lat      = lat_long[0]
+        long     = lat_long[1]
         indigo.server.log(u"{0:=^130}".format(u" Indigo Status Information "))
         indigo.server.log(u"Server Version: {0}".format(indigo.server.version))
         indigo.server.log(u"API Version: {0}".format(indigo.server.apiVersion))
@@ -77,6 +104,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"Raw: {0}".format(valuesDict['chosenColor']))
         indigo.server.log(u"Hex: #{0}".format(valuesDict['chosenColor'].replace(' ', '')))
         indigo.server.log(u"RGB: {0}".format(tuple([int(thing, 16) for thing in valuesDict['chosenColor'].split(' ')])))
+        return True
 
     def deviceDependencies(self, valuesDict, typeId):
         """"""
@@ -152,7 +180,7 @@ class Plugin(indigo.PluginBase):
 
         # Output the result
         indigo.server.log(u"{0:=^{1}}".format(u" Device Last Successful Comm ", 100))
-        indigo.server.log(u"{id:<12}{name:<{length}}  {commTime}".format(id=u"ID", name=u"Name", commTime=u"Last Comm Success", length=length))
+        indigo.server.log(u"{id:<14}{name:<{length}}  {commTime}".format(id=u"ID", name=u"Name", commTime=u"Last Comm Success", length=length))
         indigo.server.log(u"{0}".format(u'=' * 100))
         for element in table:
             indigo.server.log(u"{id:<14}{name:<{length}}  {commTime}".format(id=element[0], name=element[1], commTime=element[2], length=length))
@@ -207,6 +235,39 @@ class Plugin(indigo.PluginBase):
             return [("none", "None")]
         else:
             return [(thing.id, thing.name) for thing in getattr(indigo, valuesDict['classOfThing'])]
+
+    def environmentPath(self):
+        """ """
+
+        indigo.server.log(u"{0:=^130}".format(u" Current System Path "))
+        for p in sys.path:
+            indigo.server.log(p)
+        indigo.server.log(u"{0:=^130}".format(u" (Sorted) "))
+        for p in sorted(sys.path):
+            indigo.server.log(p)
+
+    def errorInventory(self, valuesDict, typeId):
+        """Create an inventory of error messages appearing in the Indigo Logs."""
+
+        # TODO: what if file already exists? Maybe a checkbox to 'retain old inventory' --> then result.txt, result1.txt, etc.
+
+        check_list = [' Err ', ' err ', 'Error', 'error']
+        log_folder = indigo.server.getInstallFolderPath() + "/Logs/"
+
+        with open(log_folder + 'error_inventory.txt', 'w') as outfile:
+
+            for root, sub, files in os.walk(log_folder):
+                for filename in files:
+                    if filename.endswith((".log", ".txt")) and filename != 'error_inventory.txt':
+                        with open(os.path.join(root, filename), "r") as infile:
+                            log_file = infile.read()
+
+                            for line in log_file.split('\n'):
+                                if any(item in line for item in check_list):
+                                    outfile.write("{0:<130}{1}\n".format(root + filename, line))
+
+        self.logger.info(u"Error message inventory saved to: {0}error_inventory.txt".format(log_folder))
+        return True
 
     def getSerialPorts(self):
         """"""
@@ -278,30 +339,6 @@ class Plugin(indigo.PluginBase):
             except (AttributeError, TypeError):
                 continue
         return list_of_attributes
-
-    def errorInventory(self, valuesDict, typeId):
-        """Create an inventory of error messages appearing in the Indigo Logs."""
-
-        # TODO: what if file already exists? Maybe a checkbox to 'retain old inventory' --> then result.txt, result1.txt, etc.
-
-        check_list = [' Err ', ' err ', 'Error', 'error']
-        log_folder = indigo.server.getInstallFolderPath() + "/Logs/"
-
-        with open(log_folder + 'error_inventory.txt', 'w') as outfile:
-
-            for filename in os.listdir(log_folder):
-                if filename.endswith(".txt") and filename != 'error_inventory.txt':
-                    with open(os.path.join(log_folder, filename), 'r') as f:
-                        log_file = f.read()
-
-                        for line in log_file.split('\n'):
-                            if any(item in line for item in check_list):
-                                outfile.write(line + "\n")
-                        else:
-                            continue
-
-        self.logger.info(u"Error message inventory saved to: {0}error_inventory.txt".format(log_folder))
-        return True
 
     def removeAllDelayedActions(self, valuesDict, typeId):
         """"""
@@ -379,8 +416,11 @@ class Plugin(indigo.PluginBase):
         """ User closes config menu. The validatePrefsConfigUI() method will
         also be called."""
 
-        self.debugLevel = int(valuesDict['showDebugLevel'])
-        self.indigo_log_handler.setLevel(self.debugLevel)
-        self.logger.debug(u"Call to closedPrefsConfigUi")
-        color = r"#{0}".format(valuesDict['color_test'].replace(' ', ''))
-        self.logger.info(color)
+        if not userCancelled:
+            self.debugLevel = int(valuesDict.get('showDebugLevel', '10'))
+            self.indigo_log_handler.setLevel(self.debugLevel)
+            self.logger.debug(u"Call to closedPrefsConfigUi")
+            color = r"#{0}".format(valuesDict['color_test'].replace(' ', ''))
+            self.logger.info(color)
+
+            return valuesDict
