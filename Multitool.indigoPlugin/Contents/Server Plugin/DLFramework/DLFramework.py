@@ -52,7 +52,7 @@ class Fogbert(object):
             string-based setting to account for older plugin versions. Over time, this
             method will become obsolete and should be deprecated.
             """
-            self.plugin.debugLog(u"DLFramework somethingElse method called.")
+            self.plugin.debugLog(u"DLFramework convertDebugLevel method called.")
 
             # If the debug value is High/Medium/Low, it is the old style. Covert it to 3/2/1
             if debug_val in ["High", "Medium", "Low"]:
@@ -65,10 +65,18 @@ class Fogbert(object):
             
             return debug_val
             
+        def lauchWebPage(self, url):
+            """
+            The launchWebPage method is used to direct a call to the registered
+            default browser and open the page referenced by the parameter 'URL'.
+            """
+            import webbrowser
+            
+            webbrowser.open(url)
 
 class Formatter(object):
         """ 
-        The Formatter class contains methods to provide unique custom data
+        The Formatter class contains methods to provide unique custom data	
         formats as needed.
         """
             

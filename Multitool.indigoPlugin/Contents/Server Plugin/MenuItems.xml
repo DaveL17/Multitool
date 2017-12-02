@@ -122,6 +122,11 @@
         <CallbackMethod>deviceToPing</CallbackMethod>
     </MenuItem>
 
+    <MenuItem id="environmentPath">
+        <Name>Environment Path</Name>
+        <CallbackMethod>environmentPath</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="errorInventory">
         <Name>Error Inventory...</Name>
         <ConfigUI>

@@ -15,6 +15,7 @@
 import inspect
 import logging
 import os
+import sys
 
 # Third-party modules
 # from DLFramework import indigoPluginUpdateChecker
@@ -28,14 +29,14 @@ except ImportError:
     pass
 
 # My modules
-import DLFramework as dlf
+import DLFramework.DLFramework as Dave
 
 # =================================== HEADER ==================================
 
-__author__    = dlf.DLFramework.__author__
-__copyright__ = dlf.DLFramework.__copyright__
-__license__   = dlf.DLFramework.__license__
-__build__     = dlf.DLFramework.__build__
+__author__    = Dave.__author__
+__copyright__ = Dave.__copyright__
+__license__   = Dave.__license__
+__build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
 __version__   = '1.0.09'
 
@@ -56,14 +57,14 @@ class Plugin(indigo.PluginBase):
 
         # ====================== Initialize DLFramework =======================
 
-        self.dlf = dlf.DLFramework.Fogbert(self)
+        self.Fogbert = Dave.Fogbert(self)
 
         # Log pluginEnvironment information when plugin is first started
-        self.dlf.pluginEnvironment()
+        self.Fogbert.pluginEnvironment()
 
         # Convert old debugLevel scale (low, medium, high) to new scale (1, 2, 3).
         if not 0 < self.pluginPrefs.get('showDebugLevel', 1) <= 3:
-            self.pluginPrefs['showDebugLevel'] = self.dlf.convertDebugLevel(self.pluginPrefs['showDebugLevel'])
+            self.pluginPrefs['showDebugLevel'] = self.Fogbert.convertDebugLevel(self.pluginPrefs['showDebugLevel'])
 
         # =====================================================================
 
@@ -103,6 +104,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"Raw: {0}".format(valuesDict['chosenColor']))
         indigo.server.log(u"Hex: #{0}".format(valuesDict['chosenColor'].replace(' ', '')))
         indigo.server.log(u"RGB: {0}".format(tuple([int(thing, 16) for thing in valuesDict['chosenColor'].split(' ')])))
+        return True
 
     def deviceDependencies(self, valuesDict, typeId):
         """"""
@@ -233,6 +235,16 @@ class Plugin(indigo.PluginBase):
             return [("none", "None")]
         else:
             return [(thing.id, thing.name) for thing in getattr(indigo, valuesDict['classOfThing'])]
+
+    def environmentPath(self):
+        """ """
+
+        indigo.server.log(u"{0:=^130}".format(u" Current System Path "))
+        for p in sys.path:
+            indigo.server.log(p)
+        indigo.server.log(u"{0:=^130}".format(u" (Sorted) "))
+        for p in sorted(sys.path):
+            indigo.server.log(p)
 
     def errorInventory(self, valuesDict, typeId):
         """Create an inventory of error messages appearing in the Indigo Logs."""
@@ -404,8 +416,11 @@ class Plugin(indigo.PluginBase):
         """ User closes config menu. The validatePrefsConfigUI() method will
         also be called."""
 
-        self.debugLevel = int(valuesDict['showDebugLevel'])
-        self.indigo_log_handler.setLevel(self.debugLevel)
-        self.logger.debug(u"Call to closedPrefsConfigUi")
-        color = r"#{0}".format(valuesDict['color_test'].replace(' ', ''))
-        self.logger.info(color)
+        if not userCancelled:
+            self.debugLevel = int(valuesDict.get('showDebugLevel', '10'))
+            self.indigo_log_handler.setLevel(self.debugLevel)
+            self.logger.debug(u"Call to closedPrefsConfigUi")
+            color = r"#{0}".format(valuesDict['color_test'].replace(' ', ''))
+            self.logger.info(color)
+
+            return valuesDict
