@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<PluginConfig>
+
+	<Field id="infoLabel0" type="label">
+		<Label>Multitool Plugin</Label>
+	</Field>
+
+	<Field id="infoLabel1" type="label" fontSize="small">
+		<Label>Developed by DaveL17</Label>
+	</Field>
+
+    <!-- Notifications Template -->
+    <Template file="DLFramework/template_notifications.xml"/>
+
+    <!-- Debugging Template -->
+    <Template file="DLFramework/template_debugging.xml"/>
+
+</PluginConfig>

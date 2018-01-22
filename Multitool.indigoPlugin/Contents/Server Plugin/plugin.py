@@ -9,6 +9,7 @@
 # TODO: Setup update notifications. When it's time, use the template.
 # TODO: kDefaultPluginPrefs
 
+
 # ================================== IMPORTS ==================================
 
 # Built-in modules
@@ -18,7 +19,7 @@ import os
 import sys
 
 # Third-party modules
-# from DLFramework import indigoPluginUpdateChecker
+from DLFramework import indigoPluginUpdateChecker
 try:
     import indigo
 except ImportError, error:
@@ -38,7 +39,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.09'
+__version__   = '1.0.11'
 
 # =============================================================================
 
@@ -50,9 +51,12 @@ class Plugin(indigo.PluginBase):
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
 
+        updater_url = "https://davel17.github.io/Multitool/Multitool_version.html"
+        self.updater = indigoPluginUpdateChecker.updateChecker(self, updater_url)
+
         self.error_msg_dict = indigo.Dict()
         self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
-        self.debugLevel = int(self.pluginPrefs.get('showDebugLevel', '20'))
+        self.debugLevel = int(self.pluginPrefs.get('showDebugLevel', '30'))
         self.indigo_log_handler.setLevel(self.debugLevel)
 
         # ====================== Initialize DLFramework =======================
@@ -61,10 +65,6 @@ class Plugin(indigo.PluginBase):
 
         # Log pluginEnvironment information when plugin is first started
         self.Fogbert.pluginEnvironment()
-
-        # Convert old debugLevel scale (low, medium, high) to new scale (1, 2, 3).
-        if not 0 < self.pluginPrefs.get('showDebugLevel', 1) <= 3:
-            self.pluginPrefs['showDebugLevel'] = self.Fogbert.convertDebugLevel(self.pluginPrefs['showDebugLevel'])
 
         # =====================================================================
 
@@ -98,7 +98,20 @@ class Plugin(indigo.PluginBase):
         """"""
         self.logger.debug(u"Call to to classToPrint")
 
+    def closedPrefsConfigUi(self, valuesDict, userCancelled):
+        """ User closes config menu. The validatePrefsConfigUI() method will
+        also be called."""
+        self.logger.debug(u"Call to closedPrefsConfigUi")
+
+        if not userCancelled:
+            self.debugLevel = int(valuesDict.get('showDebugLevel', '20'))
+            self.indigo_log_handler.setLevel(self.debugLevel)
+            self.logger.debug(u"Call to closedPrefsConfigUi")
+
+            return valuesDict
+
     def colorPicker(self, valuesDict, typeId):
+        """"""
         if not valuesDict['chosenColor']:
             valuesDict['chosenColor'] = "FF FF FF"
         indigo.server.log(u"Raw: {0}".format(valuesDict['chosenColor']))
@@ -118,7 +131,7 @@ class Plugin(indigo.PluginBase):
             return True
 
         except StandardError as err:
-            self.logger.exception(u"Error obtaining dependencies.")
+            self.logger.critical(u"Error obtaining dependencies.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Device dependencies Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
@@ -196,33 +209,43 @@ class Plugin(indigo.PluginBase):
             indigo.device.beep(int(valuesDict['listOfDevices']), suppressLogging=False)
             return True
 
+        except ValueError as err:
+            err_msg_dict['listOfDevices'] = u"You must select a device to receive the beep request"
+            err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: No device selected."
+            return False, valuesDict, err_msg_dict
+
         except StandardError as err:
-            self.logger.exception(u"Error sending beep.")
+            self.logger.critical(u"Error sending beep request.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
-
 
     def deviceToPing(self, valuesDict, typeId):
         """"""
         self.logger.debug(u"Call to deviceToPing")
 
+        dev_id = int(valuesDict['listOfDevices'])
         err_msg_dict = indigo.Dict()
 
         try:
-            indigo.server.log(u"{0:=^80}".format(u" Pinging device: {0} ".format(indigo.devices[int(valuesDict['listOfDevices'])].name)))
-            result = indigo.device.ping(int(valuesDict['listOfDevices']), suppressLogging=False)
-            indigo.server.log(unicode(result))
-            return True
+            if indigo.devices[dev_id].enabled:
+                indigo.server.log(u"{0:=^80}".format(u" Pinging device: {0} ".format(indigo.devices[dev_id].name)))
+                result = indigo.device.ping(dev_id, suppressLogging=False)
+                indigo.server.log(unicode(result))
+                return True
+            else:
+                err_msg_dict['listOfDevices'] = u"A disabled device can not respond to a ping request."
+                err_msg_dict['showAlertText'] = u"Ping Error.\n\nDevice [{0}] cannot respond to a ping because it is disabled.".format(indigo.devices[dev_id].name)
+                return False, valuesDict, err_msg_dict
 
         except StandardError as err:
-            self.logger.exception(u"Error sending ping.")
+            self.logger.critical(u"Error sending ping.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Ping Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
         except Exception as err:
-            self.logger.exception(u"Error sending ping.")
+            self.logger.critical(u"Error sending ping.")
             err_msg_dict['listOfDevices'] = u"Please select a device that supports the Ping function."
             err_msg_dict['showAlertText'] = u"Ping Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
@@ -268,6 +291,66 @@ class Plugin(indigo.PluginBase):
 
         self.logger.info(u"Error message inventory saved to: {0}error_inventory.txt".format(log_folder))
         return True
+
+    def generatorDeviceList(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """Returns a list of plugin devices."""
+        self.logger.debug(u"generatorDeviceList() called.")
+
+        return self.Fogbert.deviceList(filter=None)
+
+    def generatorEnabledDeviceList(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """Returns a list of plugin devices."""
+        self.logger.debug(u"generatorDeviceList() called.")
+
+        return self.Fogbert.deviceListEnabled(filter=None)
+
+    def generatorDevVar(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """This method collects IDs and names for all Indigo devices and
+        variables. It creates a list of the form:
+        [(dev.id, dev.name), (var.id, var.name)].
+        """
+        self.logger.debug(u"generatorDevVar() called.")
+
+        return self.Fogbert.deviceAndVariableList()
+
+    def generatorStateOrValue(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """The generatorStateOrValue() method returns a list to populate the relevant
+        device states or variable value to populate a menu control."""
+        self.logger.debug(u"generatorStateOrValue() called.")
+
+        try:
+            id_number = int(valuesDict['devVarMenu'])
+
+            if id_number in indigo.devices.keys():
+                state_list = [(state, state) for state in indigo.devices[id_number].states if not state.endswith('.ui')]
+                state_list.remove(('onOffState', 'onOffState'))
+                return state_list
+
+            elif id_number in indigo.variables.keys():
+                return [('value', 'Value')]
+
+        except (KeyError, ValueError):
+            return [(0, 'Pick a Device or Variable')]
+
+    def generatorSubstitutions(self, valuesDict, typeId="", targetId=0):
+        """The generatorSubstitutions function is used with the Substitution Generator.
+        It is the callback that's used to create the Indigo substitution
+        construct."""
+        self.logger.debug(u"generatorSubstitutions() called.")
+
+        dev_var_id    = valuesDict['devVarMenu']
+        dev_var_value = valuesDict['generatorStateOrValue']
+
+        if int(valuesDict['devVarMenu']) in indigo.devices.keys():
+            indigo.server.log(u"Indigo Device Substitution: %%d:{0}:{1}%%".format(dev_var_id, dev_var_value))
+
+        else:
+            indigo.server.log(u"Indigo Variable Substitution: %%v:{0}%%".format(dev_var_id))
+
+        valuesDict['devVarMenu'] = ''
+        valuesDict['generatorStateOrValue'] = ''
+
+        return valuesDict
 
     def getSerialPorts(self):
         """"""
@@ -321,12 +404,6 @@ class Plugin(indigo.PluginBase):
             indigo.server.log(u'{0}'.format(thing))
         indigo.server.log(u"{0:=^130}".format(u" Code Credit: Autolog "))
 
-    def listOfDevices(self, valuesDict, typeId, targetId):
-        """"""
-        self.logger.debug(u"Call to listOfDevices")
-
-        return [(dev.id, dev.name) for dev in indigo.devices]
-
     def listOfMethods(self, valuesDict, typeId, targetId):
         """"""
         self.logger.debug(u"Call to listOfMethods")
@@ -339,6 +416,13 @@ class Plugin(indigo.PluginBase):
             except (AttributeError, TypeError):
                 continue
         return list_of_attributes
+
+    def refreshFields(self, filter="", typeId="", targetId=0):
+        """The refreshFields() method is a dummy callback used solely to fire
+        other actions that require a callback be run. It performs no other
+        function."""
+        self.logger.debug(u"refreshFields() called.")
+        pass
 
     def removeAllDelayedActions(self, valuesDict, typeId):
         """"""
@@ -376,7 +460,7 @@ class Plugin(indigo.PluginBase):
             return True
 
         except StandardError as err:
-            self.logger.exception(u"Error sending status Request.")
+            self.logger.critical(u"Error sending status Request.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Status Request Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
@@ -393,12 +477,12 @@ class Plugin(indigo.PluginBase):
             return True
 
         except StandardError as err:
-            self.logger.exception(u"Error sending status Request.")
+            self.logger.critical(u"Error sending status Request.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Status Request Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
-    def substitutionTest(self, valuesDict, typeId):
+    def substitutionGenerator(self, valuesDict, typeId):
         """"""
         err_msg_dict = indigo.Dict()
         substitutionText = valuesDict['thingToSubstitute']
@@ -411,16 +495,3 @@ class Plugin(indigo.PluginBase):
             err_msg_dict['thingToSubstitute'] = u"Invalid substitution string."
             err_msg_dict['showAlertText'] = u"Substitution Error.\n\nYour substitution string is invalid. See the Indigo log for available information."
             return False, valuesDict, err_msg_dict
-
-    def closedPrefsConfigUi(self, valuesDict, userCancelled):
-        """ User closes config menu. The validatePrefsConfigUI() method will
-        also be called."""
-
-        if not userCancelled:
-            self.debugLevel = int(valuesDict.get('showDebugLevel', '10'))
-            self.indigo_log_handler.setLevel(self.debugLevel)
-            self.logger.debug(u"Call to closedPrefsConfigUi")
-            color = r"#{0}".format(valuesDict['color_test'].replace(' ', ''))
-            self.logger.info(color)
-
-            return valuesDict

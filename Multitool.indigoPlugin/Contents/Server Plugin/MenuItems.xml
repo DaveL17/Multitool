@@ -23,14 +23,11 @@
         <Name>Device Beep...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep.
-
-                    Note: Some devices may not respond to a beep request. (Requires API v1.11+)
-                </Label>
+                <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep. Note: Some devices may not respond to a beep request. Only enabled devices are displayed.</Label>
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
+                <List class="self" filter="" method="generatorEnabledDeviceList" dynamicReload="true"/>
             </Field>
         </ConfigUI>
         <CallbackMethod>deviceToBeep</CallbackMethod>
@@ -44,7 +41,7 @@
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
+                <List class="self" filter="" method="generatorDeviceList" dynamicReload="true"/>
             </Field>
         </ConfigUI>
         <CallbackMethod>deviceDependencies</CallbackMethod>
@@ -109,14 +106,11 @@
         <Name>Device Ping...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log.
-
-                    Note: Some devices do not support ping requests. (Requires API v1.16+)
-                </Label>
+                <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log. Note: Some devices do not support ping requests. Only enabled devices are displayed.</Label>
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
+                <List class="self" filter="" method="generatorEnabledDeviceList" dynamicReload="true"/>
             </Field>
         </ConfigUI>
         <CallbackMethod>deviceToPing</CallbackMethod>
@@ -131,7 +125,7 @@
         <Name>Error Inventory...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Create an inventory of all error messages from Indigo log files and save result.txt file in the Indgio Logs folder.</Label>
+                <Label>Create an inventory of all error messages from Indigo log files and save error_inventory.txt file in the Indgio Logs folder.</Label>
             </Field>
         </ConfigUI>
         <CallbackMethod>errorInventory</CallbackMethod>
@@ -211,7 +205,7 @@
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="listOfDevices" dynamicReload="true"/>
+                <List class="self" filter="" method="generatorDeviceList" dynamicReload="true"/>
             </Field>
         </ConfigUI>
         <CallbackMethod>sendStatusRequest</CallbackMethod>
@@ -235,17 +229,39 @@
             </ConfigUI>
     </MenuItem>
 
-    <MenuItem id="substitutionTest">
-        <Name>Substitution Test...</Name>
-        <CallbackMethod>substitutionTest</CallbackMethod>
-            <ConfigUI>
-                <Field id="substitutionTextLabel" type="Label">
-                    <Label>Enter the text to substitute.  The text field supports device and variable substitutions: %%d:DEVID:STATENAME%% and %%v:VARID%%.</Label>
-                </Field>
-                <Field id="thingToSubstitute" type="textfield">
-                    <Label>Substitution String:</Label>
-                </Field>
-            </ConfigUI>
+    <MenuItem id="substitutionGenerator">
+        <Name>Substitution Generator...</Name>
+        <CallbackMethod>substitutionGenerator</CallbackMethod>
+        <ConfigUI>
+
+            <Field id="subGeneratorLabel" type="label" alignText="right">
+                <Label>Substitution Generator</Label>
+            </Field>
+
+            <Field id="substitutionTextLabel" type="Label">
+                <Label>Select a device or variable from the first dropdown list and then select the device state or variable value from the second dropdown list.</Label>
+            </Field>
+
+            <Field id="subGeneratorSeparator" type="separator"/>
+
+            <Field id="devVarMenu" type="menu" tooltip="Please select a device or variable.">
+                <Label>Device / Variable</Label>
+                <List class="self" filter="" method="generatorDevVar" dynamicReload="true"/>
+                <CallbackMethod>refreshFields</CallbackMethod>
+            </Field>
+
+            <Field id="generatorStateOrValue" type="menu" tooltip="Please select a device state or variable value.">
+                <Label>State / Value</Label>
+                <List class="self" filter="" method="generatorStateOrValue" dynamicReload="true"/>
+            </Field>
+
+            <Field id="subGeneratorButton" type="button" tooltip="Generate the substitution.">
+                <Label/>
+                <Title>Generate Substitution</Title>
+                <CallbackMethod>generatorSubstitutions</CallbackMethod>
+            </Field>
+
+        </ConfigUI>
     </MenuItem>
 
 </MenuItems>
