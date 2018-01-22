@@ -23,12 +23,11 @@
         <Name>Device Beep...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep. Note: Some devices may not respond to a beep request. (Requires API v1.11+)
-                </Label>
+                <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep. Note: Some devices may not respond to a beep request. Only enabled devices are displayed.</Label>
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="generatorDeviceList" dynamicReload="true"/>
+                <List class="self" filter="" method="generatorEnabledDeviceList" dynamicReload="true"/>
             </Field>
         </ConfigUI>
         <CallbackMethod>deviceToBeep</CallbackMethod>
@@ -107,14 +106,11 @@
         <Name>Device Ping...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log.
-
-                    Note: Some devices do not support ping requests. (Requires API v1.16+)
-                </Label>
+                <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log. Note: Some devices do not support ping requests. Only enabled devices are displayed.</Label>
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="generatorDeviceList" dynamicReload="true"/>
+                <List class="self" filter="" method="generatorEnabledDeviceList" dynamicReload="true"/>
             </Field>
         </ConfigUI>
         <CallbackMethod>deviceToPing</CallbackMethod>
@@ -129,7 +125,7 @@
         <Name>Error Inventory...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Create an inventory of all error messages from Indigo log files and save result.txt file in the Indgio Logs folder.</Label>
+                <Label>Create an inventory of all error messages from Indigo log files and save error_inventory.txt file in the Indgio Logs folder.</Label>
             </Field>
         </ConfigUI>
         <CallbackMethod>errorInventory</CallbackMethod>

@@ -18,7 +18,7 @@ import os
 import sys
 
 # Third-party modules
-# from DLFramework import indigoPluginUpdateChecker
+from DLFramework import indigoPluginUpdateChecker
 try:
     import indigo
 except ImportError, error:
@@ -49,6 +49,9 @@ class Plugin(indigo.PluginBase):
 
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
+
+        updater_url = "https://davel17.github.io/Multitool/Multitool_version.html"
+        self.updater = indigoPluginUpdateChecker.updateChecker(self, updater_url)
 
         self.error_msg_dict = indigo.Dict()
         self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
@@ -97,8 +100,7 @@ class Plugin(indigo.PluginBase):
     def closedPrefsConfigUi(self, valuesDict, userCancelled):
         """ User closes config menu. The validatePrefsConfigUI() method will
         also be called."""
-
-        indigo.server.log(unicode(valuesDict))
+        self.logger.debug(u"Call to closedPrefsConfigUi")
 
         if not userCancelled:
             self.debugLevel = int(valuesDict.get('showDebugLevel', '20'))
@@ -206,24 +208,34 @@ class Plugin(indigo.PluginBase):
             indigo.device.beep(int(valuesDict['listOfDevices']), suppressLogging=False)
             return True
 
+        except ValueError as err:
+            err_msg_dict['listOfDevices'] = u"You must select a device to receive the beep request"
+            err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: No device selected."
+            return False, valuesDict, err_msg_dict
+
         except StandardError as err:
-            self.logger.critical(u"Error sending beep.")
+            self.logger.critical(u"Error sending beep request.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
-
 
     def deviceToPing(self, valuesDict, typeId):
         """"""
         self.logger.debug(u"Call to deviceToPing")
 
+        dev_id = int(valuesDict['listOfDevices'])
         err_msg_dict = indigo.Dict()
 
         try:
-            indigo.server.log(u"{0:=^80}".format(u" Pinging device: {0} ".format(indigo.devices[int(valuesDict['listOfDevices'])].name)))
-            result = indigo.device.ping(int(valuesDict['listOfDevices']), suppressLogging=False)
-            indigo.server.log(unicode(result))
-            return True
+            if indigo.devices[dev_id].enabled:
+                indigo.server.log(u"{0:=^80}".format(u" Pinging device: {0} ".format(indigo.devices[dev_id].name)))
+                result = indigo.device.ping(dev_id, suppressLogging=False)
+                indigo.server.log(unicode(result))
+                return True
+            else:
+                err_msg_dict['listOfDevices'] = u"A disabled device can not respond to a ping request."
+                err_msg_dict['showAlertText'] = u"Ping Error.\n\nDevice [{0}] cannot respond to a ping because it is disabled.".format(indigo.devices[dev_id].name)
+                return False, valuesDict, err_msg_dict
 
         except StandardError as err:
             self.logger.critical(u"Error sending ping.")
@@ -284,6 +296,12 @@ class Plugin(indigo.PluginBase):
         self.logger.debug(u"generatorDeviceList() called.")
 
         return self.Fogbert.deviceList(filter=None)
+
+    def generatorEnabledDeviceList(self, filter="", valuesDict=None, typeId="", targetId=0):
+        """Returns a list of plugin devices."""
+        self.logger.debug(u"generatorDeviceList() called.")
+
+        return self.Fogbert.deviceListEnabled(filter=None)
 
     def generatorDevVar(self, filter="", valuesDict=None, typeId="", targetId=0):
         """This method collects IDs and names for all Indigo devices and

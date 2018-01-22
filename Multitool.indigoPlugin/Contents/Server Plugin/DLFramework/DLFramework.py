@@ -76,6 +76,17 @@ class Fogbert(object):
             [devices_list.append((dev.id, dev.name)) for dev in indigo.devices.iter(filter)]
             return devices_list
 
+        def deviceListEnabled(self, filter=None):
+            """
+            Returns a list of tuples containing Indigo devices for use in
+            config dialogs (etc.) Returns enabled devices only.
+
+            :return: [(ID, "Name"), (ID, "Name")]
+            """
+            devices_list = [('None', 'None')]
+            [devices_list.append((dev.id, dev.name)) for dev in indigo.devices.iter(filter) if dev.enabled]
+            return devices_list
+
         def variableList(self):
             """
             Returns a list of tuples containing Indigo variables for use in
