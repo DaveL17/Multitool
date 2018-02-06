@@ -5,8 +5,6 @@
 
 # =================================== TO DO ===================================
 
-# TODO: There is no way to initiate debug logging.  Setting it with a state variable for now. When it's time, use the template.
-# TODO: Setup update notifications. When it's time, use the template.
 # TODO: kDefaultPluginPrefs
 
 
@@ -39,7 +37,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.14'
+__version__   = '1.0.15'
 
 # =============================================================================
 
@@ -51,7 +49,7 @@ class Plugin(indigo.PluginBase):
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
 
-        updater_url = "https://davel17.github.io/Multitool/Multitool_version.html"
+        updater_url = "https://raw.githubusercontent.com/DaveL17/Multitool/master/Multitool_version.html"
         self.updater = indigoPluginUpdateChecker.updateChecker(self, updater_url)
 
         self.error_msg_dict = indigo.Dict()
@@ -73,13 +71,18 @@ class Plugin(indigo.PluginBase):
         # except:
         #     pass
 
+    def checkVersionNow(self):
+        """ The checkVersionNow() method will call the Indigo Plugin Update
+        Checker based on a user request. """
+
+        self.updater.checkVersionNow()
 
     def aboutIndigo(self):
         """"""
         self.logger.debug(u"Call to aboutIndigo")
         lat_long = indigo.server.getLatitudeAndLongitude()
-        lat      = lat_long[0]
-        long     = lat_long[1]
+        latitude      = lat_long[0]
+        longitude     = lat_long[1]
         indigo.server.log(u"{0:=^130}".format(u" Indigo Status Information "))
         indigo.server.log(u"Server Version: {0}".format(indigo.server.version))
         indigo.server.log(u"API Version: {0}".format(indigo.server.apiVersion))
@@ -87,7 +90,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"Install Path: {0}".format(indigo.server.getInstallFolderPath()))
         indigo.server.log(u"Database: {0}/{1}".format(indigo.server.getDbFilePath(), indigo.server.getDbName()))
         indigo.server.log(u"Port Number: {0}".format(indigo.server.portNum))
-        indigo.server.log(u"Latitude and Longitude: {0}/{1}".format(lat, long))
+        indigo.server.log(u"Latitude and Longitude: {0}/{1}".format(latitude, longitude))
 
         if indigo.server.connectionGood:
             indigo.server.log(u"Connection Good.".format(indigo.server.connectionGood))
@@ -112,6 +115,7 @@ class Plugin(indigo.PluginBase):
 
     def colorPicker(self, valuesDict, typeId):
         """"""
+        self.logger.debug(u"Call to colorPicker")
         if not valuesDict['chosenColor']:
             valuesDict['chosenColor'] = "FF FF FF"
         indigo.server.log(u"Raw: {0}".format(valuesDict['chosenColor']))
@@ -179,6 +183,8 @@ class Plugin(indigo.PluginBase):
 
     def deviceLastSuccessfulComm(self):
         """"""
+        self.logger.debug(u"Call to deviceLastSuccessfulComm")
+
         # Get the data we need
         table = [(dev.id, dev.name, dev.lastSuccessfulComm) for dev in indigo.devices.iter()]
 
@@ -209,7 +215,7 @@ class Plugin(indigo.PluginBase):
             indigo.device.beep(int(valuesDict['listOfDevices']), suppressLogging=False)
             return True
 
-        except ValueError as err:
+        except ValueError:
             err_msg_dict['listOfDevices'] = u"You must select a device to receive the beep request"
             err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: No device selected."
             return False, valuesDict, err_msg_dict
@@ -261,6 +267,7 @@ class Plugin(indigo.PluginBase):
 
     def environmentPath(self):
         """ """
+        self.logger.debug(u"Call to environmentPath")
 
         indigo.server.log(u"{0:=^130}".format(u" Current System Path "))
         for p in sys.path:
@@ -271,6 +278,7 @@ class Plugin(indigo.PluginBase):
 
     def errorInventory(self, valuesDict, typeId):
         """Create an inventory of error messages appearing in the Indigo Logs."""
+        self.logger.debug(u"Call to errorInventory")
 
         # TODO: what if file already exists? Maybe a checkbox to 'retain old inventory' --> then result.txt, result1.txt, etc.
 
@@ -355,6 +363,8 @@ class Plugin(indigo.PluginBase):
     def getSerialPorts(self):
         """"""
         self.logger.debug(u"Call to getSerialPorts")
+
+        self.logger.debug(u"Call to getSerialPorts")
         indigo.server.log(u"{0:=^80}".format(u" Current Serial Ports "))
         indigo.server.log(unicode(indigo.server.getSerialPorts()))  # Also available: indigo.server.getSerialPorts(filter="indigo.ignoreBluetooth")
 
@@ -368,7 +378,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"Docstring: {0}".format(getattr(self, valuesDict['listOfMethods']).__doc__), isError=False)
 
     def installedPlugins(self):
-        """Credit: Jon (autolog)"""
+        """"""
         self.logger.debug(u"Call to installedPlugins")
 
         import os
@@ -442,6 +452,7 @@ class Plugin(indigo.PluginBase):
     def resultsOutput(self, valuesDict, caller):
         """"""
         self.logger.debug(u"Call to resultsOutput")
+        self.logger.debug(u"Caller: {0}".format(caller))
 
         thing = getattr(indigo, valuesDict['classOfThing'])[int(valuesDict['thingToPrint'])]
         indigo.server.log(u"{0:=^80}".format(u" {0} Dict ".format(thing.name)))
@@ -484,9 +495,11 @@ class Plugin(indigo.PluginBase):
 
     def substitutionGenerator(self, valuesDict, typeId):
         """"""
+        self.logger.debug(u"Call to substitutionGenerator")
+
         err_msg_dict = indigo.Dict()
-        substitutionText = valuesDict['thingToSubstitute']
-        result = self.substitute(substitutionText)
+        substitution_text = valuesDict['thingToSubstitute']
+        result = self.substitute(substitution_text)
 
         if result:
             indigo.server.log(result)

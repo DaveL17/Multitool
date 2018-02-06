@@ -1,6 +1,13 @@
 <?xml version="1.0"?>
 <MenuItems>
 
+    <MenuItem id="checkVersionNow">
+        <Name>Check for Plugin Updates</Name>
+        <CallbackMethod>checkVersionNow</CallbackMethod>
+    </MenuItem>
+
+    <MenuItem id="separator1" type="separator"/>
+
     <MenuItem id="indigoProperties">
         <Name>About Indigo</Name>
         <CallbackMethod>aboutIndigo</CallbackMethod>
