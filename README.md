@@ -1,4 +1,4 @@
-# Multitool Plugin
+![Multitool Logo](https://github.com/DaveL17/Multitool/wiki/img/img_multitoolLogo.png)  
 An eclectic set of tools and reports.
 
 #### Installation
