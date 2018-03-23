@@ -168,7 +168,7 @@
                     <Option value="triggers">Trigger</Option>
                     <Option value="variables">Variable</Option>
                 </List>
-                <CallbackMethod>classToPrint</CallbackMethod>
+                <CallbackMethod>__dummyCallback__</CallbackMethod>
             </Field>
             <Field id="thingToPrint" type="menu">
                 <Label>Item:</Label>
@@ -236,6 +236,28 @@
             </ConfigUI>
     </MenuItem>
 
+    <MenuItem id="subscribeToChanges">
+        <Name>Subscribe to Changes...</Name>
+        <CallbackMethod>subscribedToChanges</CallbackMethod>
+            <ConfigUI>
+                <Field id="subscribeToChangesLabel" type="Label">
+                    <Label>The Subscribe to Changes tool only subscribes to object updates (not objects created or deleted). If initially disabled, enabling subscriptions (or vice versa) will cause a plugin restart to effect the change. This in normal.</Label>
+                </Field>
+                <Field id="subscriptionChangeLabel" type="Label" fontColor="red">
+                    <Label>It's recommended that you disable subscriptions when you're done using the tool in order to reduce traffic between the server and plugin.</Label>
+                </Field>
+                <Field id="enableSubscribeToChanges" type="checkbox">
+                    <Label>Subscribe to Changes:</Label>
+                </Field>
+                <Field id="subscribedDevices" type="textfield">
+                    <Label>Subscribed Devices:</Label>
+                </Field>
+                <Field id="subscribedDevicesLabel" type="Label" alignWithControl="true">
+                    <Label>Enter a list of devices to subscribe to. The list should be Indigo device and/or variable IDs (separated by a comma). Subscriptions to other object types are not supported.</Label>
+                </Field>
+            </ConfigUI>
+    </MenuItem>
+
     <MenuItem id="substitutionGenerator">
         <Name>Substitution Generator...</Name>
         <CallbackMethod>substitutionGenerator</CallbackMethod>
@@ -254,7 +276,7 @@
             <Field id="devVarMenu" type="menu" tooltip="Please select a device or variable.">
                 <Label>Device / Variable</Label>
                 <List class="self" filter="" method="generatorDevVar" dynamicReload="true"/>
-                <CallbackMethod>refreshFields</CallbackMethod>
+                <CallbackMethod>__dummyCallback__</CallbackMethod>
             </Field>
 
             <Field id="generatorStateOrValue" type="menu" tooltip="Please select a device state or variable value.">

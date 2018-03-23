@@ -16,4 +16,13 @@
     <!-- Debugging Template -->
     <Template file="DLFramework/template_debugging.xml"/>
 
+    <!-- Hidden Controls -->
+	<Field id="enableSubscribeToChanges" type="checkbox" defaultValue="false" hidden="true">
+		<Label>Enable Subscribe to Changes</Label>
+	</Field>
+
+	<Field id="subscribedDevices" type="textfield" defaultValue="" hidden="true">
+		<Label>Subscribed Devices</Label>
+	</Field>
+
 </PluginConfig>

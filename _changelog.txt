@@ -1,0 +1,9 @@
+Multitool Change Log
+
+1.0.16
+- Adds Subscribe to Changes tool for devices and variables.
+- Improves code commenting and adds Sphinx compatibility to docstrings.
+- Code refinements.
+
+1.0.15
+- Adds menu item to check for plugin updates.

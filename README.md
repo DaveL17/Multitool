@@ -14,3 +14,9 @@ to invoke things like "About Indigo" which prints server
 status information to the log, or "Object Dictionary"
 which prints the valuesDict for the selected object
 (action, device, etc.)
+
+Notes: The Multitool plugin does not require Internet access in 
+order to work, but the plugin does require Internet access to check
+for plugin software updates.  These features are not required to 
+use the plugin.
+
