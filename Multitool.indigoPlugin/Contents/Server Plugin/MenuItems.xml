@@ -138,8 +138,22 @@
         <CallbackMethod>errorInventory</CallbackMethod>
     </MenuItem>
 
+    <MenuItem id="indigoServerMethods">
+        <Name>Methods - Indigo Server...</Name>
+        <ConfigUI>
+            <Field id="instructions" type="label">
+                <Label>Selecting a method from the list will cause the method name to be printed to the log. Note that these methods cannot be inspected because they are not Python methods.</Label>
+            </Field>
+            <Field id="listOfServerMethods" type="menu">
+                <Label>Method:</Label>
+                <List class="self" filter="" method="listOfServerMethods" dynamicReload="true"/>
+                <CallbackMethod>logServerMethod</CallbackMethod>
+            </Field>
+        </ConfigUI>
+    </MenuItem>
+
     <MenuItem id="methodSignature">
-        <Name>Method Signature...</Name>
+        <Name>Methods - Plugin Base...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
                 <Label>Select the method that you would like to inspect. Note that some of these methods are designed to only be available within a plugin environment and you may not be able to access them from within an Indigo scripting shell.</Label>
@@ -212,7 +226,7 @@
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="generatorDeviceList" dynamicReload="true"/>
+                <List class="self" filter="" method="generatorDeviceList"/>
             </Field>
         </ConfigUI>
         <CallbackMethod>sendStatusRequest</CallbackMethod>

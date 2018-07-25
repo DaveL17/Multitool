@@ -36,7 +36,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.16'
+__version__   = '1.0.19'
 
 # =============================================================================
 
@@ -47,6 +47,9 @@ class Plugin(indigo.PluginBase):
 
     def __init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs):
         indigo.PluginBase.__init__(self, pluginId, pluginDisplayName, pluginVersion, pluginPrefs)
+
+        self.pluginIsInitializing = True
+        self.pluginIsShuttingDown = False
 
         updater_url = "https://raw.githubusercontent.com/DaveL17/Multitool/master/Multitool_version.html"
         self.updater = indigoPluginUpdateChecker.updateChecker(self, updater_url)
@@ -77,10 +80,11 @@ class Plugin(indigo.PluginBase):
         # except:
         #     pass
 
+        self.pluginIsInitializing = False
+
 # Indigo Methods ==============================================================
     def closedPrefsConfigUi(self, valuesDict, userCancelled):
-        """ User closes config menu. The validatePrefsConfigUI() method will
-        also be called."""
+
         self.logger.debug(u"Call to closedPrefsConfigUi")
 
         if not userCancelled:
@@ -740,6 +744,28 @@ class Plugin(indigo.PluginBase):
                 continue
         return list_of_attributes
 
+    def listOfServerMethods(self, valuesDict, typeId, targetId):
+        """
+        Generate a list of Indigo Server methods
+
+        The listOfServerMethods method will generate a list of Indigo methods available
+        for review. It is used to populate the list of methods control for the Indigo
+        Server Method... tool.
+
+        -----
+
+        :return:
+        """
+
+        self.logger.debug(u"Call to listOfServerMethods")
+
+        return [(method, method) for method in dir(indigo.server)]
+
+    def logServerMethod(self, valuesDict, typeId):
+
+        method_to_call = getattr(indigo.server, valuesDict['listOfServerMethods'])
+        indigo.server.log(inspect.getdoc(method_to_call))
+
     def removeAllDelayedActions(self, valuesDict, typeId):
         """
         Removes all delayed actions from the Indigo server
@@ -754,7 +780,6 @@ class Plugin(indigo.PluginBase):
 
         self.logger.debug(u"Call to removeAllDelayedActions")
         indigo.server.removeAllDelayedActions()
-        # return True
 
     def runningPlugins(self):
         """

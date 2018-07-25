@@ -1,5 +1,15 @@
 Multitool Change Log
 
+1.0.19
+- Adds tool to list indigo.server methods.
+
+1.0.18
+- Fixes bug in naming of PluginConfig.xml (which caused problems on systems set
+  up as case sensitive.
+
+1.0.17
+- Increments API version requirement to API 2.0.
+
 1.0.16
 - Adds Subscribe to Changes tool for devices and variables.
 - Improves code commenting and adds Sphinx compatibility to docstrings.
