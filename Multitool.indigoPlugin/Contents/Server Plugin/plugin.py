@@ -36,7 +36,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.19'
+__version__   = '1.0.20'
 
 # =============================================================================
 
@@ -82,7 +82,9 @@ class Plugin(indigo.PluginBase):
 
         self.pluginIsInitializing = False
 
-# Indigo Methods ==============================================================
+    # =============================================================================
+    # ============================== Indigo Methods ===============================
+    # =============================================================================
     def closedPrefsConfigUi(self, valuesDict, userCancelled):
 
         self.logger.debug(u"Call to closedPrefsConfigUi")
@@ -94,6 +96,7 @@ class Plugin(indigo.PluginBase):
 
             return valuesDict
 
+    # =============================================================================
     def deviceUpdated(self, origDev, newDev):
 
         # Call the base implementation first just to make sure all the right
@@ -113,7 +116,7 @@ class Plugin(indigo.PluginBase):
             if origDev.id in subscribed_items:
 
                 # Attribute changes
-                exclude_list = ['globalProps', 'lastChanged', 'lastSuccessfulComm', 'ownerProps', 'states']
+                exclude_list = ('globalProps', 'lastChanged', 'lastSuccessfulComm', 'ownerProps', 'states')
                 attrib_list = [attr for attr in dir(origDev) if not callable(getattr(origDev, attr)) and '__' not in attr and attr not in exclude_list]
                 attrib_dict = {attrib: (getattr(origDev, attrib), getattr(newDev, attrib)) for attrib in attrib_list if getattr(origDev, attrib) != getattr(newDev, attrib)}
 
@@ -128,6 +131,7 @@ class Plugin(indigo.PluginBase):
                 if len(attrib_dict) > 0 or len(state_dict) > 0 or len(props_dict) > 0:
                     indigo.server.log(u"\nDevice Changes: [{0}]\n{1:<8}{2}\n{3:<8}{4}\n{5:<8}{6}".format(newDev.name, 'Attr:', attrib_dict, 'Props', props_dict, 'States', state_dict))
 
+    # =============================================================================
     def getMenuActionConfigUiValues(self, menuId):
 
         # Grab the setting values for the Subscribe to Changes tool
@@ -142,6 +146,7 @@ class Plugin(indigo.PluginBase):
         else:
             return indigo.Dict()
 
+    # =============================================================================
     def variableUpdated(self, origVar, newVar):
 
         # Call the base implementation first just to make sure all the right
@@ -161,7 +166,7 @@ class Plugin(indigo.PluginBase):
             if origVar.id in subscribed_items:
 
                 # Attribute changes
-                exclude_list = ['globalProps', 'lastChanged', 'lastSuccessfulComm']
+                exclude_list = ('globalProps', 'lastChanged', 'lastSuccessfulComm')
                 attrib_list = [attr for attr in dir(origVar) if not callable(getattr(origVar, attr)) and '__' not in attr and attr not in exclude_list]
                 attrib_dict = {attrib: (getattr(origVar, attrib), getattr(newVar, attrib)) for attrib in attrib_list if getattr(origVar, attrib) != getattr(newVar, attrib)}
 
@@ -173,11 +178,14 @@ class Plugin(indigo.PluginBase):
                 if len(attrib_dict) > 0 or len(val_dict):
                     indigo.server.log(u"\nVariable Changes: [{0}]\n{1:<8}{2}\n{3:<8}{4}".format(newVar.name, 'Attr:', attrib_dict, 'Value', val_dict))
 
+    # =============================================================================
     def validatePrefsConfigUi(self, valuesDict):
 
         return True, valuesDict
 
-# Plugin Methods ==========================================================
+    # =============================================================================
+    # ============================== Plugin Methods ===============================
+    # =============================================================================
     def __dummyCallback__(self, valuesDict, typeId):
         """
         Dummy callback to cause refresh of dialog elements
@@ -192,6 +200,7 @@ class Plugin(indigo.PluginBase):
 
         pass
 
+    # =============================================================================
     def checkVersionNow(self):
         """
         Process user request to determine if there's a new version of the plugin
@@ -205,6 +214,7 @@ class Plugin(indigo.PluginBase):
 
         self.updater.checkVersionNow()
 
+    # =============================================================================
     def aboutIndigo(self):
         """
         Prints information about the Indigo environment to the events log
@@ -236,6 +246,7 @@ class Plugin(indigo.PluginBase):
         else:
             indigo.server.log(u"Connection Bad.".format(indigo.server.connectionGood), isError=True)
 
+    # =============================================================================
     def colorPicker(self, valuesDict, typeId):
         """
         Print color information to the Indigo events log
@@ -256,6 +267,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"RGB: {0}".format(tuple([int(thing, 16) for thing in valuesDict['chosenColor'].split(' ')])))
         return True
 
+    # =============================================================================
     def deviceDependencies(self, valuesDict, typeId):
         """
         Print a list of device dependencies to the Indigo events log
@@ -283,6 +295,7 @@ class Plugin(indigo.PluginBase):
             err_msg_dict['showAlertText'] = u"Device dependencies Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
+    # =============================================================================
     def deviceInventory(self, valuesDict, typeId):
         """
         Print an inventory of Indigo devices to the Indigo events log
@@ -334,6 +347,7 @@ class Plugin(indigo.PluginBase):
 
         return valuesDict
 
+    # =============================================================================
     def deviceLastSuccessfulComm(self):
         """
         Print information on the last successful communication with a device
@@ -367,6 +381,7 @@ class Plugin(indigo.PluginBase):
         for element in table:
             indigo.server.log(u"{id:<14}{name:<{length}}  {commTime}".format(id=element[0], name=element[1], commTime=element[2], length=length))
 
+    # =============================================================================
     def deviceToBeep(self, valuesDict, typeId):
         """
         Send a beep request to a device
@@ -400,6 +415,7 @@ class Plugin(indigo.PluginBase):
             err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
+    # =============================================================================
     def deviceToPing(self, valuesDict, typeId):
         """
         Send a ping request to a device
@@ -441,6 +457,7 @@ class Plugin(indigo.PluginBase):
             err_msg_dict['showAlertText'] = u"Ping Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
+    # =============================================================================
     def dictToPrint(self, typeId, valuesDict, targetId):
         """
         Return a list of Indigo objects for inspection
@@ -462,6 +479,7 @@ class Plugin(indigo.PluginBase):
         else:
             return [(thing.id, thing.name) for thing in getattr(indigo, valuesDict['classOfThing'])]
 
+    # =============================================================================
     def environmentPath(self):
         """
         Print the Indigo server's environment path variable to the Indigo Events log
@@ -484,6 +502,7 @@ class Plugin(indigo.PluginBase):
         for p in sorted(sys.path):
             indigo.server.log(p)
 
+    # =============================================================================
     def errorInventory(self, valuesDict, typeId):
         """
         Create an inventory of error messages appearing in the Indigo Logs.
@@ -501,7 +520,7 @@ class Plugin(indigo.PluginBase):
 
         # TODO: what if file already exists? Maybe a checkbox to 'retain old inventory' --> then result.txt, result1.txt, etc.
 
-        check_list = [' Err ', ' err ', 'Error', 'error']
+        check_list = (' Err ', ' err ', 'Error', 'error')
         log_folder = indigo.server.getInstallFolderPath() + "/Logs/"
 
         with open(log_folder + 'error_inventory.txt', 'w') as outfile:
@@ -519,6 +538,7 @@ class Plugin(indigo.PluginBase):
         self.logger.info(u"Error message inventory saved to: {0}error_inventory.txt".format(log_folder))
         return True
 
+    # =============================================================================
     def generatorDeviceList(self, filter="", valuesDict=None, typeId="", targetId=0):
         """
         Returns a list of plugin devices.
@@ -536,6 +556,7 @@ class Plugin(indigo.PluginBase):
 
         return self.Fogbert.deviceList(filter=None)
 
+    # =============================================================================
     def generatorEnabledDeviceList(self, filter="", valuesDict=None, typeId="", targetId=0):
         """
         Returns a list of enabled plugin devices.
@@ -553,6 +574,7 @@ class Plugin(indigo.PluginBase):
 
         return self.Fogbert.deviceListEnabled(filter=None)
 
+    # =============================================================================
     def generatorDevVar(self, filter="", valuesDict=None, typeId="", targetId=0):
         """
         Return a list of Indigo devices and variables
@@ -571,6 +593,7 @@ class Plugin(indigo.PluginBase):
 
         return self.Fogbert.deviceAndVariableList()
 
+    # =============================================================================
     def generatorStateOrValue(self, filter="", valuesDict=None, typeId="", targetId=0):
         """
         Return a list of device states and variable values
@@ -599,6 +622,7 @@ class Plugin(indigo.PluginBase):
         except (KeyError, ValueError):
             return [(0, 'Pick a Device or Variable')]
 
+    # =============================================================================
     def generatorSubstitutions(self, valuesDict, typeId="", targetId=0):
         """
         Generate the construct for an Indigo substitution
@@ -627,6 +651,7 @@ class Plugin(indigo.PluginBase):
 
         return valuesDict
 
+    # =============================================================================
     def getSerialPorts(self):
         """
         Print a list of serial ports to the Indigo events log
@@ -645,6 +670,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"{0:=^80}".format(u" Current Serial Ports "))
         indigo.server.log(unicode(indigo.server.getSerialPorts()))  # Also available: indigo.server.getSerialPorts(filter="indigo.ignoreBluetooth")
 
+    # =============================================================================
     def inspectMethod(self, valuesDict, typeId):
         """
         Print the signature of an Indigo method to the Indigo events log
@@ -672,6 +698,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"self.{0}: {1}".format(valuesDict['listOfMethods'], signature))
         indigo.server.log(u"Docstring: {0}".format(getattr(self, valuesDict['listOfMethods']).__doc__), isError=False)
 
+    # =============================================================================
     def installedPlugins(self):
         """
         Print a list of installed plugins to the Indigo events log
@@ -692,9 +719,8 @@ class Plugin(indigo.PluginBase):
 
         plugin_name_list = []
         indigo_install_path = indigo.server.getInstallFolderPath()
-        plugin_folders = ['Plugins', 'Plugins (Disabled)']
 
-        for plugin_folder in plugin_folders:
+        for plugin_folder in ('Plugins', 'Plugins (Disabled)'):
             plugins_list = os.listdir(indigo_install_path + '/' + plugin_folder)
 
             for plugin in plugins_list:
@@ -720,6 +746,7 @@ class Plugin(indigo.PluginBase):
             indigo.server.log(u'{0}'.format(thing))
         indigo.server.log(u"{0:=^130}".format(u" Code Credit: Autolog "))
 
+    # =============================================================================
     def listOfMethods(self, valuesDict, typeId, targetId):
         """
         Generate a list of Indigo methods for inspection
@@ -744,6 +771,7 @@ class Plugin(indigo.PluginBase):
                 continue
         return list_of_attributes
 
+    # =============================================================================
     def listOfServerMethods(self, valuesDict, typeId, targetId):
         """
         Generate a list of Indigo Server methods
@@ -761,11 +789,13 @@ class Plugin(indigo.PluginBase):
 
         return [(method, method) for method in dir(indigo.server)]
 
+    # =============================================================================
     def logServerMethod(self, valuesDict, typeId):
 
         method_to_call = getattr(indigo.server, valuesDict['listOfServerMethods'])
         indigo.server.log(inspect.getdoc(method_to_call))
 
+    # =============================================================================
     def removeAllDelayedActions(self, valuesDict, typeId):
         """
         Removes all delayed actions from the Indigo server
@@ -781,6 +811,7 @@ class Plugin(indigo.PluginBase):
         self.logger.debug(u"Call to removeAllDelayedActions")
         indigo.server.removeAllDelayedActions()
 
+    # =============================================================================
     def runningPlugins(self):
         """
         Print a list of running pluings to the Indigo events log
@@ -807,6 +838,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"\n{0:=^120}".format(u" Running Plugins (/bin/ps -ef) "))
         indigo.server.log(u"\n{0}\n\n{1}".format(u"  uid - pid - parent pid - recent CPU usage - process start time - controlling tty - elapsed CPU usage - associated command", ret))
 
+    # =============================================================================
     def resultsOutput(self, valuesDict, caller):
         """
         Print an Indigo object's properties dict to the Indigo events log
@@ -829,6 +861,7 @@ class Plugin(indigo.PluginBase):
         indigo.server.log(u"{0:=^80}".format(u""))
         return True
 
+    # =============================================================================
     def sendStatusRequest(self, valuesDict, typeId):
         """
         Send a status request to an Indigo object
@@ -857,6 +890,7 @@ class Plugin(indigo.PluginBase):
             err_msg_dict['showAlertText'] = u"Status Request Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
+    # =============================================================================
     def speakString(self, valuesDict, typeId):
         """
         Speak a string
@@ -885,6 +919,7 @@ class Plugin(indigo.PluginBase):
             err_msg_dict['showAlertText'] = u"Status Request Error.\n\nReason: {0}".format(err)
             return False, valuesDict, err_msg_dict
 
+    # =============================================================================
     def subscribedToChanges(self, valuesDict, typeId):
         """
         Save Subscribe To Changes menu item configuration to plugin prefs for storage.
@@ -918,6 +953,7 @@ class Plugin(indigo.PluginBase):
 
         return True
 
+    # =============================================================================
     def substitutionGenerator(self, valuesDict, typeId):
         """
         Generate an Indigo substitution string
@@ -951,3 +987,4 @@ class Plugin(indigo.PluginBase):
             err_msg_dict['thingToSubstitute'] = u"Invalid substitution string."
             err_msg_dict['showAlertText'] = u"Substitution Error.\n\nYour substitution string is invalid. See the Indigo log for available information."
             return False, valuesDict, err_msg_dict
+    # =============================================================================

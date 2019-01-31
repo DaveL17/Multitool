@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.20
+- Changes Python lists to tuples where possible to increase performance.
+
 1.0.19
 - Adds tool to list indigo.server methods.
 
