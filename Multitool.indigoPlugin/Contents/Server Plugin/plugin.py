@@ -35,7 +35,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.20'
+__version__   = '1.0.22'
 
 # =============================================================================
 
@@ -89,6 +89,10 @@ class Plugin(indigo.PluginBase):
             self.debugLevel = int(valuesDict.get('showDebugLevel', '20'))
             self.indigo_log_handler.setLevel(self.debugLevel)
             self.logger.debug(u"Call to closedPrefsConfigUi")
+
+            # Ensure that self.pluginPrefs includes any recent changes.
+            for k in valuesDict:
+                self.pluginPrefs[k] = valuesDict[k]
 
             return valuesDict
 

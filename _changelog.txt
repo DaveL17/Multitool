@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.22
+- Syncronize self.pluginPrefs in closedPrefsConfigUi().
+
 1.0.21
 - Removes plugin update checker.
 
