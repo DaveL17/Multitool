@@ -16,7 +16,6 @@ import os
 import sys
 
 # Third-party modules
-from DLFramework import indigoPluginUpdateChecker
 try:
     import indigo
 except ImportError, error:
@@ -50,9 +49,6 @@ class Plugin(indigo.PluginBase):
 
         self.pluginIsInitializing = True
         self.pluginIsShuttingDown = False
-
-        updater_url = "https://raw.githubusercontent.com/DaveL17/Multitool/master/Multitool_version.html"
-        self.updater = indigoPluginUpdateChecker.updateChecker(self, updater_url)
 
         self.error_msg_dict = indigo.Dict()
         self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
@@ -199,20 +195,6 @@ class Plugin(indigo.PluginBase):
         """
 
         pass
-
-    # =============================================================================
-    def checkVersionNow(self):
-        """
-        Process user request to determine if there's a new version of the plugin
-
-        The checkVersionNow() method will call the Indigo Plugin Update Checker based
-        on a user request.
-
-        -----
-
-        """
-
-        self.updater.checkVersionNow()
 
     # =============================================================================
     def aboutIndigo(self):
