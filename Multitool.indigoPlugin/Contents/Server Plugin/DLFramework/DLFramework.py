@@ -36,14 +36,14 @@ class Fogbert(object):
             self.plugin.debugLog(u"DLFramework pluginEnvironment method called.")
 
             indigo.server.log(u"")
-            indigo.server.log(u"{0:=^130}".format(" Initializing New Plugin Session "))
+            indigo.server.log(u"{0:{1}^130}".format(" Initializing New Plugin Session ", u"="))
             indigo.server.log(u"{0:<31} {1}".format("Plugin name:", self.plugin.pluginDisplayName))
             indigo.server.log(u"{0:<31} {1}".format("Plugin version:", self.plugin.pluginVersion))
             indigo.server.log(u"{0:<31} {1}".format("Plugin ID:", self.plugin.pluginId))
             indigo.server.log(u"{0:<31} {1}".format("Indigo version:", indigo.server.version))
             indigo.server.log(u"{0:<31} {1}".format("Python version:", sys.version.replace('\n', '')))
             indigo.server.log(u"{0:<31} {1}".format("Mac OS Version:", platform.mac_ver()[0]))
-            indigo.server.log(u"{0:=^130}".format(""))
+            indigo.server.log(u"{0:{1}^130}".format("", u"="))
 
         def convertDebugLevel(self, debug_val):
             """
@@ -120,7 +120,7 @@ class Fogbert(object):
             webbrowser.open(url)
 
         def generatorStateOrValue(self, id):
-            """The generatorStateOrValue() method returns a list to populate the relevant
+            """The generator_state_or_value() method returns a list to populate the relevant
             device states or variable value to populate a menu control."""
 
             try:

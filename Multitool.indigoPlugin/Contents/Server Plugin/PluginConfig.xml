@@ -10,9 +10,6 @@
 		<Label>Developed by DaveL17</Label>
 	</Field>
 
-    <!-- Notifications Template -->
-    <Template file="DLFramework/template_notifications.xml"/>
-
     <!-- Debugging Template -->
     <Template file="DLFramework/template_debugging.xml"/>
 

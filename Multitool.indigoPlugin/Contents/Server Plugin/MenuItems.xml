@@ -1,16 +1,11 @@
 <?xml version="1.0"?>
 <MenuItems>
 
-    <MenuItem id="checkVersionNow">
-        <Name>Check for Plugin Updates</Name>
-        <CallbackMethod>checkVersionNow</CallbackMethod>
-    </MenuItem>
-
     <MenuItem id="separator1" type="separator"/>
 
     <MenuItem id="indigoProperties">
         <Name>About Indigo</Name>
-        <CallbackMethod>aboutIndigo</CallbackMethod>
+        <CallbackMethod>about_indigo</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="pickColor">
@@ -23,7 +18,7 @@
                 <Label>Color:</Label>
             </Field>
         </ConfigUI>
-        <CallbackMethod>colorPicker</CallbackMethod>
+        <CallbackMethod>color_picker</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="beepDevice">
@@ -34,13 +29,13 @@
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="generatorEnabledDeviceList" dynamicReload="true"/>
+                <List class="self" filter="" method="generator_enabled_device_list" dynamicReload="true"/>
             </Field>
         </ConfigUI>
-        <CallbackMethod>deviceToBeep</CallbackMethod>
+        <CallbackMethod>device_to_beep</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="deviceDependencies">
+    <MenuItem id="device_dependencies">
         <Name>Device Dependencies...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
@@ -48,10 +43,17 @@
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="generatorDeviceList" dynamicReload="true"/>
+                <List class="self" filter="" method="generator_device_list" dynamicReload="true"/>
             </Field>
+
+            <Field id="subGeneratorButton" type="button" tooltip="List the dependencies.">
+                <Label/>
+                <Title>List Dependencies</Title>
+                <CallbackMethod>device_dependencies</CallbackMethod>
+            </Field>
+            <ButtonTitle>Close</ButtonTitle>
+
         </ConfigUI>
-        <CallbackMethod>deviceDependencies</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="deviceInventoryList">
@@ -79,7 +81,7 @@
                     <Option value="indigo.zwave">Z-Wave Devices</Option>
                     <Option value="Other">Other Devices</Option>
                 </List>
-                <CallbackMethod>deviceInventory</CallbackMethod>
+                <CallbackMethod>device_inventory</CallbackMethod>
             </Field>
             <Field id="customThingLabel" type="label" visibleBindingId="typeOfThing" visibleBindingValue="Other" defaultValue="">
                 <Label>Enter the filter criteria to use and then click Print the List. Examples:
@@ -93,7 +95,7 @@
             <Field id="customThingButton" type="button" visibleBindingId="typeOfThing" visibleBindingValue="Other">
                 <Label/>
                 <Title>Print the List</Title>
-                <CallbackMethod>deviceInventory</CallbackMethod>
+                <CallbackMethod>device_inventory</CallbackMethod>
             </Field>
             <!-- The following spacerLabels are needed to ensure sufficient space for hidden controls to display without scrolling.-->
             <Field id="spacerLabel1" type="label"/>
@@ -106,7 +108,7 @@
 
     <MenuItem id="deviceLastComm">
         <Name>Device Last Comm</Name>
-        <CallbackMethod>deviceLastSuccessfulComm</CallbackMethod>
+        <CallbackMethod>device_last_successful_comm</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="pingDevice">
@@ -115,39 +117,57 @@
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log. Note: Some devices do not support ping requests. Only enabled devices are displayed.</Label>
             </Field>
+
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="generatorEnabledDeviceList" dynamicReload="true"/>
+                <List class="self" filter="" method="generator_enabled_device_list" dynamicReload="true"/>
             </Field>
+
+            <Field id="subGeneratorButton" type="button" tooltip="Ping the device.">
+                <Label/>
+                <Title>Send Ping</Title>
+                <CallbackMethod>device_to_ping</CallbackMethod>
+            </Field>
+
         </ConfigUI>
-        <CallbackMethod>deviceToPing</CallbackMethod>
+        <ButtonTitle>Close</ButtonTitle>
     </MenuItem>
 
-    <MenuItem id="environmentPath">
+    <MenuItem id="environment_path">
         <Name>Environment Path</Name>
-        <CallbackMethod>environmentPath</CallbackMethod>
+        <CallbackMethod>environment_path</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="errorInventory">
+    <MenuItem id="error_inventory">
         <Name>Error Inventory...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Create an inventory of all error messages from Indigo log files and save error_inventory.txt file in the Indgio Logs folder.</Label>
+                <Label>Create an inventory of all error messages from Indigo log files and save a file called error_inventory.txt to the active Indigo Logs folder.</Label>
             </Field>
         </ConfigUI>
-        <CallbackMethod>errorInventory</CallbackMethod>
+        <CallbackMethod>error_inventory</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="indigoServerMethods">
-        <Name>Methods - Indigo Server...</Name>
+    <MenuItem id="indigo_inventory">
+        <Name>Indigo Inventory</Name>
+        <CallbackMethod>indigo_inventory</CallbackMethod>
+    </MenuItem>
+
+    <MenuItem id="indigoSignature">
+        <Name>Methods - Indigo Base...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
-                <Label>Selecting a method from the list will cause the method name to be printed to the log. Note that these methods cannot be inspected because they are not Python methods.</Label>
+                <Label>Select an Indigo class and then select a method from within that class. When you select the method, the signature will be printed to the Indigo log. This tool exposes everything--including many things you will never have a reason to call.</Label>
             </Field>
-            <Field id="listOfServerMethods" type="menu">
+            <Field id="list_of_indigo_classes" type="menu">
+                <Label>Class:</Label>
+                <List class="self" filter="x" method="list_of_indigo_classes" dynamicReload="true"/>
+                <CallbackMethod>__dummyCallback__</CallbackMethod>
+            </Field>
+            <Field id="list_of_indigo_methods" type="menu">
                 <Label>Method:</Label>
-                <List class="self" filter="" method="listOfServerMethods" dynamicReload="true"/>
-                <CallbackMethod>logServerMethod</CallbackMethod>
+                <List class="self" filter="" method="list_of_indigo_methods" dynamicReload="true"/>
+                <CallbackMethod>log_of_method</CallbackMethod>
             </Field>
         </ConfigUI>
     </MenuItem>
@@ -158,10 +178,10 @@
             <Field id="instructions" type="label">
                 <Label>Select the method that you would like to inspect. Note that some of these methods are designed to only be available within a plugin environment and you may not be able to access them from within an Indigo scripting shell.</Label>
             </Field>
-            <Field id="listOfMethods" type="menu">
+            <Field id="list_of_plugin_methods" type="menu">
                 <Label>Method:</Label>
-                <List class="self" filter="" method="listOfMethods" dynamicReload="true"/>
-                <CallbackMethod>inspectMethod</CallbackMethod>
+                <List class="self" filter="" method="list_of_plugin_methods" dynamicReload="true"/>
+                <CallbackMethod>inspect_method</CallbackMethod>
             </Field>
         </ConfigUI>
     </MenuItem>
@@ -169,10 +189,12 @@
     <MenuItem id="printDict">
         <Name>Object Dictionary...</Name>
         <ConfigUI>
+
             <Field id="instructions" type="label">
-                <Label>Select the class of item.</Label>
+                <Label>Select the class and and item from the class.</Label>
             </Field>
-            <Field id="classOfThing" type="menu" method="dictToPrint">
+
+            <Field id="classOfThing" type="menu" method="dict_to_print">
                 <Label>Class:</Label>
                 <List>
                     <Option value="actionGroups">Action</Option>
@@ -184,25 +206,33 @@
                 </List>
                 <CallbackMethod>__dummyCallback__</CallbackMethod>
             </Field>
+
             <Field id="thingToPrint" type="menu">
                 <Label>Item:</Label>
-                <List class="self" filter="" method="dictToPrint" dynamicReload="true"/>
+                <List class="self" filter="" method="dict_to_print" dynamicReload="true"/>
             </Field>
-        </ConfigUI>
-        <CallbackMethod>resultsOutput</CallbackMethod>
+
+            <Field id="subGeneratorButton" type="button" tooltip="Speak the string.">
+                <Label/>
+                <Title>Print Dict</Title>
+                <CallbackMethod>results_output</CallbackMethod>
+            </Field>
+
+            </ConfigUI>
+            <ButtonTitle>Close</ButtonTitle>
     </MenuItem>
 
-    <MenuItem id="installedPlugins">
+    <MenuItem id="installed_plugins">
         <Name>Plugin Inventory</Name>
-        <CallbackMethod>installedPlugins</CallbackMethod>
+        <CallbackMethod>installed_plugins</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="runningPlugins">
+    <MenuItem id="running_plugins">
         <Name>Plugins Online</Name>
-        <CallbackMethod>runningPlugins</CallbackMethod>
+        <CallbackMethod>running_plugins</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="removeAllDelayedActions">
+    <MenuItem id="remove_all_delayed_actions">
         <Name>Remove Delayed Actions...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
@@ -215,10 +245,10 @@
                 <Label>CAUTION!! There is no undo.</Label>
             </Field>
         </ConfigUI>
-        <CallbackMethod>removeAllDelayedActions</CallbackMethod>
+        <CallbackMethod>remove_all_delayed_actions</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="sendStatusRequest">
+    <MenuItem id="send_status_request">
         <Name>Send Status Request...</Name>
         <ConfigUI>
             <Field id="instructions" type="label">
@@ -226,55 +256,81 @@
             </Field>
             <Field id="listOfDevices" type="menu">
                 <Label>Device:</Label>
-                <List class="self" filter="" method="generatorDeviceList"/>
+                <List class="self" filter="" method="generator_device_list"/>
             </Field>
         </ConfigUI>
-        <CallbackMethod>sendStatusRequest</CallbackMethod>
+        <CallbackMethod>send_status_request</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="getSerialPorts">
+    <MenuItem id="get_serial_ports">
         <Name>Serial Ports</Name>
-        <CallbackMethod>getSerialPorts</CallbackMethod>
+            <ConfigUI>
+
+                <Field id="getSerialPortsLabel" type="Label">
+                    <Label>List serial ports known to the Indigo server. To include any Bluetooth ports, uncheck the Ignore Bluetooth button.</Label>
+                </Field>
+
+                <Field id="ignoreBluetooth" type="checkbox" defaultValue="true" tooltip="Speak the string.">
+                    <Label>Ignore Bluetooth:</Label>
+                </Field>
+
+            </ConfigUI>
+        <CallbackMethod>get_serial_ports</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="speakString">
+    <MenuItem id="speak_string">
         <Name>Speak String...</Name>
-        <CallbackMethod>speakString</CallbackMethod>
             <ConfigUI>
+
                 <Field id="speakStringLabel" type="Label">
                     <Label>Enter the text to speak.  The text field supports device and variable substitutions: %%d:DEVID:STATENAME%% and %%v:VARID%%</Label>
                 </Field>
+
                 <Field id="thingToSpeak" type="textfield">
                     <Label>Thing to Speak:</Label>
                 </Field>
+
+                <Field id="subGeneratorButton" type="button" tooltip="Speak the string.">
+                    <Label/>
+                    <Title>Speak String</Title>
+                    <CallbackMethod>speak_string</CallbackMethod>
+                </Field>
+
             </ConfigUI>
+            <ButtonTitle>Close</ButtonTitle>
     </MenuItem>
 
     <MenuItem id="subscribeToChanges">
         <Name>Subscribe to Changes...</Name>
-        <CallbackMethod>subscribedToChanges</CallbackMethod>
+        <CallbackMethod>subscribed_to_changes</CallbackMethod>
             <ConfigUI>
+
                 <Field id="subscribeToChangesLabel" type="Label">
-                    <Label>The Subscribe to Changes tool only subscribes to object updates (not objects created or deleted). If initially disabled, enabling subscriptions (or vice versa) will cause a plugin restart to effect the change. This in normal.</Label>
+                    <Label>The Subscribe to Changes tool only subscribes to object updates (not objects created or deleted). Enabling or disabling subscriptions will cause a plugin restart to effect the change. This in normal.</Label>
                 </Field>
+
                 <Field id="subscriptionChangeLabel" type="Label" fontColor="red">
-                    <Label>It's recommended that you disable subscriptions when you're done using the tool in order to reduce traffic between the server and plugin.</Label>
+                    <Label>It's recommended that you return here to disable subscriptions when you're done using the tool in order to reduce traffic between the server and plugin.</Label>
                 </Field>
+
                 <Field id="enableSubscribeToChanges" type="checkbox">
                     <Label>Subscribe to Changes:</Label>
                 </Field>
+
                 <Field id="subscribedDevices" type="textfield">
                     <Label>Subscribed Devices:</Label>
                 </Field>
+
                 <Field id="subscribedDevicesLabel" type="Label" alignWithControl="true">
                     <Label>Enter a list of devices to subscribe to. The list should be Indigo device and/or variable IDs (separated by a comma). Subscriptions to other object types are not supported.</Label>
                 </Field>
+
             </ConfigUI>
     </MenuItem>
 
-    <MenuItem id="substitutionGenerator">
+    <MenuItem id="substitution_generator">
         <Name>Substitution Generator...</Name>
-        <CallbackMethod>substitutionGenerator</CallbackMethod>
+        <CallbackMethod>substitution_generator</CallbackMethod>
         <ConfigUI>
 
             <Field id="subGeneratorLabel" type="label" alignText="right">
@@ -289,22 +345,23 @@
 
             <Field id="devVarMenu" type="menu" tooltip="Please select a device or variable.">
                 <Label>Device / Variable</Label>
-                <List class="self" filter="" method="generatorDevVar" dynamicReload="true"/>
+                <List class="self" filter="" method="generator_dev_var" dynamicReload="true"/>
                 <CallbackMethod>__dummyCallback__</CallbackMethod>
             </Field>
 
-            <Field id="generatorStateOrValue" type="menu" tooltip="Please select a device state or variable value.">
+            <Field id="generator_state_or_value" type="menu" tooltip="Please select a device state or variable value.">
                 <Label>State / Value</Label>
-                <List class="self" filter="" method="generatorStateOrValue" dynamicReload="true"/>
+                <List class="self" filter="" method="generator_state_or_value" dynamicReload="true"/>
             </Field>
 
             <Field id="subGeneratorButton" type="button" tooltip="Generate the substitution.">
                 <Label/>
                 <Title>Generate Substitution</Title>
-                <CallbackMethod>generatorSubstitutions</CallbackMethod>
+                <CallbackMethod>generator_substitutions</CallbackMethod>
             </Field>
 
         </ConfigUI>
+        <ButtonTitle>Close</ButtonTitle>
     </MenuItem>
 
 </MenuItems>
