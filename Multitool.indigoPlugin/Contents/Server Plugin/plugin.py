@@ -44,7 +44,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.23'
+__version__   = '1.0.24'
 
 # =============================================================================
 
@@ -154,6 +154,18 @@ class Plugin(indigo.PluginBase):
 
         else:
             return indigo.Dict()
+
+    # =============================================================================
+    def sendDevicePing(self, dev_id=0, suppress_logging=False):
+
+        indigo.server.log(u"Multitool Plugin devices do not support the ping function.")
+        return {'result': 'Failure'}
+
+    # =============================================================================
+    def startup(self):
+
+        # =========================== Audit Indigo Version ============================
+        self.Fogbert.audit_server_version(min_ver=7)
 
     # =============================================================================
     def variableUpdated(self, orig_var, new_var):
@@ -296,7 +308,6 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def device_inventory(self, values_dict=None, type_id=""):
-        # TODO: change to "Indigo Inventory" with options to list devices, triggers, schedules, all, etc.
         """
         Print an inventory of Indigo devices to the Indigo events log
 

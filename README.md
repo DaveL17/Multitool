@@ -1,4 +1,6 @@
-![Multitool Logo](https://github.com/DaveL17/Multitool/wiki/img/img_multitoolLogo.png)  
+# ![Logo](https://github.com/DaveL17/Multitool/wiki/img/img_multitoolLogo.png)  
+# ![shield](https://img.shields.io/github/release/DaveL17/Multitool.svg)
+
 An eclectic set of tools and reports.
 
 #### Installation

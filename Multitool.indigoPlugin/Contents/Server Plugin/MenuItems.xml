@@ -11,6 +11,7 @@
     <MenuItem id="pickColor">
         <Name>Color Picker...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Use this tool to identify color information.</Label>
             </Field>
@@ -24,6 +25,7 @@
     <MenuItem id="beepDevice">
         <Name>Device Beep...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep. Note: Some devices may not respond to a beep request. Only enabled devices are displayed.</Label>
             </Field>
@@ -38,6 +40,7 @@
     <MenuItem id="device_dependencies">
         <Name>Device Dependencies...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to query for dependencies.</Label>
             </Field>
@@ -59,6 +62,7 @@
     <MenuItem id="deviceInventoryList">
         <Name>Device Inventory...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Some filters are not available in all Indigo versions.</Label>
             </Field>
@@ -114,6 +118,7 @@
     <MenuItem id="pingDevice">
         <Name>Device Ping...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log. Note: Some devices do not support ping requests. Only enabled devices are displayed.</Label>
             </Field>
@@ -141,8 +146,9 @@
     <MenuItem id="error_inventory">
         <Name>Error Inventory...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
-                <Label>Create an inventory of all error messages from Indigo log files and save a file called error_inventory.txt to the active Indigo Logs folder.</Label>
+                <Label>Create an inventory of all error messages from Indigo log files and save a file called 'Multitool Plugin Error Inventory _X_.txt to the active Indigo Logs folder (where _X_ will be incremented based on the number of error invetory files in the active directory.)</Label>
             </Field>
         </ConfigUI>
         <CallbackMethod>error_inventory</CallbackMethod>
@@ -156,6 +162,7 @@
     <MenuItem id="indigoSignature">
         <Name>Methods - Indigo Base...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select an Indigo class and then select a method from within that class. When you select the method, the signature will be printed to the Indigo log. This tool exposes everything--including many things you will never have a reason to call.</Label>
             </Field>
@@ -175,6 +182,7 @@
     <MenuItem id="methodSignature">
         <Name>Methods - Plugin Base...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the method that you would like to inspect. Note that some of these methods are designed to only be available within a plugin environment and you may not be able to access them from within an Indigo scripting shell.</Label>
             </Field>
@@ -189,6 +197,7 @@
     <MenuItem id="printDict">
         <Name>Object Dictionary...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
             <Field id="instructions" type="label">
                 <Label>Select the class and and item from the class.</Label>
@@ -235,6 +244,7 @@
     <MenuItem id="remove_all_delayed_actions">
         <Name>Remove Delayed Actions...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Use this tool to remove all delayed actions that are currently scheduled.</Label>
             </Field>
@@ -251,6 +261,7 @@
     <MenuItem id="send_status_request">
         <Name>Send Status Request...</Name>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to send the status request to.</Label>
             </Field>
@@ -265,6 +276,7 @@
     <MenuItem id="get_serial_ports">
         <Name>Serial Ports</Name>
             <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
                 <Field id="getSerialPortsLabel" type="Label">
                     <Label>List serial ports known to the Indigo server. To include any Bluetooth ports, uncheck the Ignore Bluetooth button.</Label>
@@ -281,6 +293,7 @@
     <MenuItem id="speak_string">
         <Name>Speak String...</Name>
             <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
                 <Field id="speakStringLabel" type="Label">
                     <Label>Enter the text to speak.  The text field supports device and variable substitutions: %%d:DEVID:STATENAME%% and %%v:VARID%%</Label>
@@ -304,6 +317,7 @@
         <Name>Subscribe to Changes...</Name>
         <CallbackMethod>subscribed_to_changes</CallbackMethod>
             <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
                 <Field id="subscribeToChangesLabel" type="Label">
                     <Label>The Subscribe to Changes tool only subscribes to object updates (not objects created or deleted). Enabling or disabling subscriptions will cause a plugin restart to effect the change. This in normal.</Label>
@@ -332,6 +346,7 @@
         <Name>Substitution Generator...</Name>
         <CallbackMethod>substitution_generator</CallbackMethod>
         <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
             <Field id="subGeneratorLabel" type="label" alignText="right">
                 <Label>Substitution Generator</Label>
