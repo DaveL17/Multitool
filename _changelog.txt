@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.25
+- Removes all references to legacy version checking.
+
 1.0.24
 - Ensures plugin is compatible with the Indigo server version.
 - Standardizes SupportURL behavior across all functions.
