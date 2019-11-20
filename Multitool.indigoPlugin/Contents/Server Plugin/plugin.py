@@ -18,6 +18,7 @@ use when developing plugins for Indigo.
 import datetime
 import inspect
 import logging
+import operator
 import os
 import plistlib
 import subprocess
@@ -44,7 +45,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.25'
+__version__   = '1.0.26'
 
 # =============================================================================
 
@@ -67,6 +68,7 @@ class Plugin(indigo.PluginBase):
         # ====================== Initialize DLFramework =======================
 
         self.Fogbert = Dave.Fogbert(self)
+        self.Eval = Dave.evalExpr(self)
 
         # Log pluginEnvironment information when plugin is first started
         self.Fogbert.pluginEnvironment()
@@ -198,6 +200,51 @@ class Plugin(indigo.PluginBase):
 
                 if len(attrib_dict) > 0 or len(val_dict):
                     indigo.server.log(u"\nVariable Changes: [{0}]\n{1:<8}{2}\n{3:<8}{4}".format(new_var.name, 'Attr:', attrib_dict, 'Value', val_dict))
+
+    # =============================================================================
+    def validateActionConfigUi(self, action_dict, type_id, device_id):
+
+        error_msg_dict = indigo.Dict()
+
+        # ========================== Modify Numeric Variable ==========================
+        if type_id == "modify_numeric_variable":
+            var = indigo.variables[int(action_dict['list_of_variables'])]
+            expr = action_dict['modifier']
+
+            try:
+                float(var.value)
+            except ValueError:
+                error_msg_dict['list_of_variables'] = u"The variable value must be a real number."
+                error_msg_dict['showAlertText'] = u"Variable Value Error.\n\nThe variable value must be a real number."
+                return False, action_dict, error_msg_dict
+
+            try:
+                self.Eval.eval_expr(var.value + expr)
+            except (SyntaxError, TypeError):
+                error_msg_dict['modifier'] = u"Please enter a valid formula. Click the help icon below (?) for details."
+                error_msg_dict['showAlertText'] = u"Formula Error.\n\nThe formula you have entered is invalid. Click the help icon below (?) for details."
+                return False, action_dict, error_msg_dict
+
+        # =========================== Modify Time Variable ============================
+        if type_id == "modify_time_variable":
+            var = indigo.variables[int(action_dict['list_of_variables'])]
+
+            try:
+                datetime.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
+            except ValueError:
+                error_msg_dict['list_of_variables'] = u"The variable value must be a POSIX timestamp."
+                error_msg_dict['showAlertText'] = u"Variable Value Error.\n\nThe variable value must be a POSIX timestamp of the value:\nYYYY-MM-DD HH:MM:SS.FFFFFF."
+                return False, action_dict, error_msg_dict
+
+            for val in ('days', 'hours', 'minutes', 'seconds'):
+                try:
+                    float(action_dict[val])
+                except ValueError:
+                    error_msg_dict[val] = u"The value must be a real number."
+                    error_msg_dict['showAlertText'] = u"Value Error.\n\nThe value must be a real number."
+                    return False, action_dict, error_msg_dict
+
+        return True, action_dict
 
     # =============================================================================
     def validatePrefsConfigUi(self, values_dict):
@@ -580,6 +627,28 @@ class Plugin(indigo.PluginBase):
         return self.Fogbert.deviceList(filter=None)
 
     # =============================================================================
+    def generator_variable_list(self, filter_item="", values_dict=None, type_id="", target_id=0):
+        """
+        Returns a list of plugin variables.
+
+        The generator_device_list method passes a list of Indigo devices to the calling
+        control. It is a connector to the generator which is located in the DLFramework
+        module.
+
+        -----
+
+        :param filter_item:
+        :param values_dict:
+        :param type_id:
+        :param target_id:
+        :return:
+        """
+
+        self.logger.debug(u"generator_variable_list() called.")
+
+        return self.Fogbert.variableList()
+
+    # =============================================================================
     def generator_enabled_device_list(self, filter_item="", values_dict=None, type_id="", target_id=0):
         """
         Returns a list of enabled plugin devices.
@@ -953,6 +1022,55 @@ class Plugin(indigo.PluginBase):
         method_to_call = getattr(method_to_call, values_dict['list_of_indigo_methods'])
         inspector = inspect.getdoc(method_to_call)
         indigo.server.log(u"\nindigo.{0}.{1}".format(values_dict['list_of_indigo_classes'], inspector))
+
+    # =============================================================================
+    def modify_numeric_variable(self, action_group):
+        """
+
+        :param action_group:
+        :return:
+        """
+        var_id = int(action_group.props['list_of_variables'])
+        var    = indigo.variables[var_id]
+
+        expr = action_group.props['modifier']
+
+        try:
+            answer = self.Eval.eval_expr(var.value + expr)
+            indigo.variable.updateValue(var_id, unicode(answer))
+            return True
+
+        except SyntaxError:
+            self.logger.critical(u"Error modifying variable {0}.".format(var.name))
+
+    # =============================================================================
+    def modify_time_variable(self, action_group):
+        """
+
+        :param action_group:
+        :return:
+        """
+        # TODO: test plus one hour and minus 1 minute.
+        var_id = int(action_group.props['list_of_variables'])
+        var    = indigo.variables[var_id]
+
+        expr    = action_group.props['modifier']
+        seconds = action_group.props['seconds']
+        minutes = action_group.props['minutes']
+        hours   = action_group.props['hours']
+        days    = action_group.props['days']
+        ops     = {"add": operator.add, "subtract": operator.sub}
+
+        try:
+            d   = datetime.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
+            td  = datetime.timedelta(days=float(days), hours=float(hours), minutes=float(minutes), seconds=float(seconds))
+            d_s = ops[expr](d, td)
+            indigo.variable.updateValue(var_id, unicode(d_s))
+            return True
+
+        except ValueError:
+            self.logger.critical(u"Error modifying variable {0}.".format(var.name))
+            return False
 
     # =============================================================================
     def remove_all_delayed_actions(self, values_dict=None, type_id=""):

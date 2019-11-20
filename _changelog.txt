@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.26
+- Adds the Modify Numeric Variable and Modify Time Variable Action items.
+
 1.0.25
 - Removes all references to legacy version checking.
 
