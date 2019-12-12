@@ -1,0 +1,14 @@
+===============================================================================
+Multitool Plugin Feature Requests
+===============================================================================
+
+===============================================================================
+2019-11-20  agame
+===============================================================================
+- output the result to a different variable
+
+- allow more than one variable as input (eg multiply variable a by variable b)
+
+DaveL17 - These will apply to the Numeric Variable only. Determine whether they
+can be folded into the existing device or whether another device type would be
+better.
