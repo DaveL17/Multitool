@@ -204,53 +204,43 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def validateActionConfigUi(self, action_dict, type_id, device_id):
 
-        class ActionValidationError(Exception):
-            def __init__(self, key=(), alert_text=None, message=u'Error!'):
-                self.key = key
-                self.alert_text = alert_text
-                self.message = message
-
         error_msg_dict = indigo.Dict()
 
-        try:
-            # ========================== Modify Numeric Variable ==========================
-            if type_id == "modify_numeric_variable":
-                var = indigo.variables[int(action_dict['list_of_variables'])]
-                expr = action_dict['modifier']
+        # ========================== Modify Numeric Variable ==========================
+        if type_id == "modify_numeric_variable":
+            var = indigo.variables[int(action_dict['list_of_variables'])]
+            expr = action_dict['modifier']
 
+            try:
+                float(var.value)
+            except ValueError:
+                error_msg_dict['list_of_variables'] = u"The variable value must be a real number."
+
+            try:
+                self.Eval.eval_expr(var.value + expr)
+            except (SyntaxError, TypeError):
+                error_msg_dict['modifier'] = u"Please enter a valid formula. Click the help icon below (?) for details."
+
+        # =========================== Modify Time Variable ============================
+        if type_id == "modify_time_variable":
+            var = indigo.variables[int(action_dict['list_of_variables'])]
+
+            try:
+                datetime.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
+            except ValueError:
+                error_msg_dict['list_of_variables'] = u"The variable value must be a POSIX timestamp."
+
+            for val in ('days', 'hours', 'minutes', 'seconds'):
                 try:
-                    float(var.value)
+                    float(action_dict[val])
                 except ValueError:
-                    raise ActionValidationError(key=('list_of_variables',), alert_text=u"Variable Value Error.\n\nThe variable value must be a real number.", message=u"The variable value must be a real number.")
+                    error_msg_dict[val] = u"The value must be a real number."
 
-                try:
-                    self.Eval.eval_expr(var.value + expr)
-                except (SyntaxError, TypeError):
-                    raise ActionValidationError(key=('modifier',), alert_text=u"Formula Error.\n\nThe formula you have entered is invalid. Click the help icon below (?) for details.", message=u"Please enter a valid formula. Click the help icon below (?) for details.")
-
-            # =========================== Modify Time Variable ============================
-            if type_id == "modify_time_variable":
-                var = indigo.variables[int(action_dict['list_of_variables'])]
-
-                try:
-                    datetime.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
-                except ValueError:
-                    raise ActionValidationError(key=('list_of_variables',), alert_text=u"Variable Value Error.\n\nThe variable value must be a POSIX timestamp of the value:\nYYYY-MM-DD HH:MM:SS.FFFFFF.", message=u"The variable value must be a POSIX timestamp.")
-
-                for val in ('days', 'hours', 'minutes', 'seconds'):
-                    try:
-                        float(action_dict[val])
-                    except ValueError:
-                        raise ActionValidationError(key=(val,), alert_text=u"Value Error.\n\nThe value must be a real number.", message=u"The value must be a real number.")
-
-            return True, action_dict
-
-        except ActionValidationError as err:
-            for key in err.key:
-                error_msg_dict[key] = err.message
-            if err.alert_text:
-                error_msg_dict['showAlertText'] = err.alert_text
+        if len(error_msg_dict) > 0:
+            error_msg_dict['showAlertText'] = u"Configuration Errors\n\nThere are one or more settings that need to be corrected. Fields requiring attention will be highlighted."
             return False, action_dict, error_msg_dict
+
+        return True, action_dict
 
     # =============================================================================
     def validatePrefsConfigUi(self, values_dict):
