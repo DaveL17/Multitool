@@ -13,7 +13,7 @@
         <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
-                <Label>Use this tool to identify color information.</Label>
+                <Label>Use this tool to identify color information.&#13;&#13;Note: depending on your system settings, you may have to adjust the color profile settings (gear icon). Recommended setting: "Device RGB".&#13;</Label>
             </Field>
             <Field id="chosenColor" type="colorPicker">
                 <Label>Color:</Label>
@@ -120,7 +120,7 @@
         <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
-                <Label>Select the device you would like to ping and select "Execute". If successful, the results of the Ping will be written to the Indigo log. Note: Some devices do not support ping requests. Only enabled devices are displayed.</Label>
+                <Label>Select the device you would like to ping and select "Send Ping". If successful, the results of the Ping will be written to the Indigo log.&#13;&#13;Note: Some devices do not support ping requests. Only enabled devices are displayed.</Label>
             </Field>
 
             <Field id="listOfDevices" type="menu">

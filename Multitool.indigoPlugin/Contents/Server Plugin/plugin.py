@@ -243,9 +243,9 @@ class Plugin(indigo.PluginBase):
         return True, action_dict
 
     # =============================================================================
-    def validatePrefsConfigUi(self, values_dict):
-
-        return True, values_dict
+    # def validatePrefsConfigUi(self, values_dict):
+    #
+    #     return True, values_dict
 
     # =============================================================================
     # ============================== Plugin Methods ===============================
@@ -496,14 +496,16 @@ class Plugin(indigo.PluginBase):
         self.logger.debug(u"Call to device_to_ping")
 
         dev_id = int(values_dict['listOfDevices'])
+        dev = indigo.devices[dev_id]
 
         try:
-            if indigo.devices[dev_id].enabled:
-                indigo.server.log(u"{0:{1}^80}".format(u" Pinging device: {0} ".format(indigo.devices[dev_id].name), u"="))
+            if dev.enabled:
+                indigo.server.log(u"{0:{1}^80}".format(u" Pinging device: {0} ".format(dev.name), u"="))
                 result = indigo.device.ping(dev_id, suppressLogging=False)
-                indigo.server.log(unicode(result))
-                return True
-
+                if result['Success']:
+                    indigo.server.log(unicode(u"Ping \"{0}\" success. Time: {1} seconds.".format(dev.name, result["TimeDelta"]/1000.0)))
+                else:
+                    indigo.server.log(unicode(u"Ping fail."))
         except Exception as err:
             self.logger.critical(u"Error sending ping: {0}".format(err))
 

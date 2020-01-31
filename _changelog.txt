@@ -1,5 +1,9 @@
 Multitool Change Log
 
+1.0.28
+- Clarifies instructions for color picker tool.
+- Fixes bug in Device Ping tool.
+
 1.0.27
 - Improvements to configuration validation.
 - Code refinements.
