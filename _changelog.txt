@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.29
+- Better integration of DLFramework.
+
 1.0.28
 - Clarifies instructions for color picker tool.
 - Fixes bug in Device Ping tool.

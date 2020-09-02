@@ -45,7 +45,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.27'
+__version__   = '1.0.29'
 
 # =============================================================================
 
@@ -75,7 +75,8 @@ class Plugin(indigo.PluginBase):
 
         # ================ Subscribe to Indigo Object Changes =================
         if self.pluginPrefs.get('enableSubscribeToChanges', False):
-            self.logger.warning(u"You have subscribed to device and variable changes. Disable this feature if not in use.")
+            self.logger.warning(u"You have subscribed to device and variable changes. Disable this feature if not in "
+                                u"use.")
             indigo.devices.subscribeToChanges()
             indigo.variables.subscribeToChanges()
             # indigo.triggers.subscribeToChanges()      # Not implemented
@@ -237,7 +238,8 @@ class Plugin(indigo.PluginBase):
                     error_msg_dict[val] = u"The value must be a real number."
 
         if len(error_msg_dict) > 0:
-            error_msg_dict['showAlertText'] = u"Configuration Errors\n\nThere are one or more settings that need to be corrected. Fields requiring attention will be highlighted."
+            error_msg_dict['showAlertText'] = u"Configuration Errors\n\nThere are one or more settings that need to " \
+                                              u"be corrected. Fields requiring attention will be highlighted."
             return False, action_dict, error_msg_dict
 
         return True, action_dict
@@ -344,6 +346,7 @@ class Plugin(indigo.PluginBase):
             indigo.server.log(unicode(dependencies))
 
         except StandardError as err:
+            self.Fogbert.pluginErrorHandler(traceback.format_exc())
             self.logger.critical(u"Error obtaining dependencies.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Device dependencies Error.\n\nReason: {0}".format(err)
@@ -472,6 +475,7 @@ class Plugin(indigo.PluginBase):
             return False, values_dict, err_msg_dict
 
         except StandardError as err:
+            self.Fogbert.pluginErrorHandler(traceback.format_exc())
             self.logger.critical(u"Error sending beep request.")
             err_msg_dict['listOfDevices'] = u"Problem communicating with the device."
             err_msg_dict['showAlertText'] = u"Beep Error.\n\nReason: {0}".format(err)
@@ -506,8 +510,9 @@ class Plugin(indigo.PluginBase):
                     indigo.server.log(unicode(u"Ping \"{0}\" success. Time: {1} seconds.".format(dev.name, result["TimeDelta"]/1000.0)))
                 else:
                     indigo.server.log(unicode(u"Ping fail."))
-        except Exception as err:
-            self.logger.critical(u"Error sending ping: {0}".format(err))
+        except Exception:
+            self.Fogbert.pluginErrorHandler(traceback.format_exc())
+            self.logger.critical(u"Error sending ping.")
 
     # =============================================================================
     def dict_to_print(self, filter_item="", values_dict=None, target_id=""):
@@ -1039,6 +1044,7 @@ class Plugin(indigo.PluginBase):
             return True
 
         except SyntaxError:
+            self.Fogbert.pluginErrorHandler(traceback.format_exc())
             self.logger.critical(u"Error modifying variable {0}.".format(var.name))
 
     # =============================================================================
@@ -1067,6 +1073,7 @@ class Plugin(indigo.PluginBase):
             return True
 
         except ValueError:
+            self.Fogbert.pluginErrorHandler(traceback.format_exc())
             self.logger.critical(u"Error modifying variable {0}.".format(var.name))
             return False
 
