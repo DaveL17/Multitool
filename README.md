@@ -21,4 +21,3 @@ Notes: The Multitool plugin does not require Internet access in
 order to work, but the plugin does require Internet access to check
 for plugin software updates.  These features are not required to 
 use the plugin.
-
