@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.31
+- Fixes broken link to readme logo.
+
 1.0.30
 - Further integration of DLFramework.
 

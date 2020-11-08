@@ -1,4 +1,4 @@
-# ![Logo](https://github.com/DaveL17/Multitool/wiki/img/img_multitoolLogo.png)  
+# ![Logo](https://github.com/DaveL17/Multitool/wiki/img/img_multitool_logo.png)  
 # ![shield](https://img.shields.io/github/release/DaveL17/Multitool.svg) ![indigo-version](https://img.shields.io/badge/Indigo-7.0+-blueviolet.svg) ![indigo-version](https://img.shields.io/badge/Python-2.7-darkgreen.svg)
 
 An eclectic set of tools and reports.
