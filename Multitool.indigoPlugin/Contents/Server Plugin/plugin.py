@@ -61,7 +61,8 @@ class Plugin(indigo.PluginBase):
         self.pluginIsShuttingDown = False
 
         self.error_msg_dict = indigo.Dict()
-        self.plugin_file_handler.setFormatter(logging.Formatter('%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s', datefmt='%Y-%m-%d %H:%M:%S'))
+        log_format = '%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s'
+        self.plugin_file_handler.setFormatter(logging.Formatter(log_format, datefmt='%Y-%m-%d %H:%M:%S'))
         self.debugLevel = int(self.pluginPrefs.get('showDebugLevel', '30'))
         self.indigo_log_handler.setLevel(self.debugLevel)
 
@@ -713,21 +714,7 @@ class Plugin(indigo.PluginBase):
         :return:
         """
 
-        self.logger.debug(u"generator_state_or_value() called.")
-
-        try:
-            id_number = int(values_dict['devVarMenu'])
-
-            if id_number in indigo.devices.keys():
-                state_list = [(state, state) for state in indigo.devices[id_number].states if not state.endswith('.ui')]
-                state_list.remove(('onOffState', 'onOffState'))
-                return state_list
-
-            elif id_number in indigo.variables.keys():
-                return [('value', 'Value')]
-
-        except (KeyError, ValueError):
-            return [(0, 'Pick a Device or Variable')]
+        self.Fogbert.generatorStateOrValue(values_dict['devVarMenu'])
 
     # =============================================================================
     def generator_substitutions(self, values_dict=None, type_id="", target_id=0):

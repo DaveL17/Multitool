@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.30
+- Further integration of DLFramework.
+
 1.0.29
 - Better integration of DLFramework.
 
