@@ -45,7 +45,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.31'
+__version__   = '1.0.32'
 
 # =============================================================================
 
@@ -1012,6 +1012,23 @@ class Plugin(indigo.PluginBase):
         method_to_call = getattr(method_to_call, values_dict['list_of_indigo_methods'])
         inspector = inspect.getdoc(method_to_call)
         indigo.server.log(u"\nindigo.{0}.{1}".format(values_dict['list_of_indigo_classes'], inspector))
+
+    # =============================================================================
+    def man_page(self, values_dict=None, type_id=""):
+        cmd = values_dict['manToOpen']
+        proc = subprocess.Popen(['man -t {what} | open -fa "Preview"'.format(what=cmd)],
+                                stdout=subprocess.PIPE,
+                                stderr=subprocess.PIPE,
+                                shell=True
+                                )
+
+        result, err = proc.communicate()
+        return_code = proc.returncode
+
+        if len(err) > 0:
+            self.logger.warning(u"{e} [{rc}]".format(e=err.replace("\n", ""), rc=return_code))
+
+        return True
 
     # =============================================================================
     def modify_numeric_variable(self, action_group):

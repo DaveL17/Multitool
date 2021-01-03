@@ -1,5 +1,9 @@
 Multitool Change Log
 
+1.0.32
+- Adds tool to view man pages in Preview.
+- Updates license file.
+
 1.0.31
 - Fixes broken link to readme logo.
 

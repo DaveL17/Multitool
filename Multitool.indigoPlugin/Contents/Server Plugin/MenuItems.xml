@@ -179,6 +179,20 @@
         </ConfigUI>
     </MenuItem>
 
+    <MenuItem id="manPage">
+        <Name>Man Page...</Name>
+        <CallbackMethod>man_page</CallbackMethod>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <Field id="instructions" type="label">
+                <Label>Enter the command below and Preview will display the man page requested (on the Indigo server machine). There is no filtering for invalid commands.</Label>
+            </Field>
+            <Field id="manToOpen" type="textfield">
+                <Label>Method:</Label>
+            </Field>
+        </ConfigUI>
+    </MenuItem>
+
     <MenuItem id="methodSignature">
         <Name>Methods - Plugin Base...</Name>
         <ConfigUI>
