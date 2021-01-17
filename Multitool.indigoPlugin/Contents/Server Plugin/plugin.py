@@ -45,7 +45,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.32'
+__version__   = '1.0.33'
 
 # =============================================================================
 
@@ -714,7 +714,7 @@ class Plugin(indigo.PluginBase):
         :return:
         """
 
-        self.Fogbert.generatorStateOrValue(values_dict['devVarMenu'])
+        return self.Fogbert.generatorStateOrValue(values_dict.get('devVarMenu', ""))
 
     # =============================================================================
     def generator_substitutions(self, values_dict=None, type_id="", target_id=0):
