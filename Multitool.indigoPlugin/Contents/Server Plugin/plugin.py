@@ -45,7 +45,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '1.0.33'
+__version__   = '1.0.34'
 
 # =============================================================================
 
@@ -628,7 +628,7 @@ class Plugin(indigo.PluginBase):
 
         self.logger.debug(u"generator_device_list() called.")
 
-        return self.Fogbert.deviceList(filter=None)
+        return self.Fogbert.deviceList(dev_filter=None)
 
     # =============================================================================
     def generator_variable_list(self, filter_item="", values_dict=None, type_id="", target_id=0):
@@ -672,7 +672,7 @@ class Plugin(indigo.PluginBase):
 
         self.logger.debug(u"generator_device_list() called.")
 
-        return self.Fogbert.deviceListEnabled(filter=None)
+        return self.Fogbert.deviceListEnabled(dev_filter=None)
 
     # =============================================================================
     def generator_dev_var(self, filter_item="", values_dict=None, type_id="", target_id=0):

@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.34
+- Fixes bug in some tools (unexpected keyword argument 'filter').
+
 1.0.33
 - Fixes bug in Indigo Substitution Generator
 
