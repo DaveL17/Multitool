@@ -15,7 +15,7 @@ use when developing plugins for Indigo.
 # ================================== IMPORTS ==================================
 
 # Built-in modules
-import datetime
+import datetime as dt
 import inspect
 import logging
 import operator
@@ -91,82 +91,6 @@ class Plugin(indigo.PluginBase):
         #     pass
 
         self.pluginIsInitializing = False
-
-    def handle_some_action(self, action, dev=None, callerWaitingForResult=None):
-        """
-        This is the message handler that returns HTML.
-        :param action: action object that contains the properties
-        :param dev: unused
-        :param callerWaitingForResult: always True
-        :return: reply_dict (a Python dict that will be converted to an indigo.Dict instance)
-        """
-        self.logger.debug("variable_actions API call received")
-        reply_dict = {"status": 200}
-
-        try:
-            props = dict(action.props)
-            action = props["incoming_request_method"]
-            if action == "GET":
-                # First, we set the reply headers - specifically the Content-Type so a browser will render correctly.
-                reply_dict["headers"] = {"Content-Type": "text/html; charset=UTF-8", }
-                # Next we return the HTML.
-                content = """<!doctype html>
-                             <html>
-                             <head>
-                             <title>My Plugin Advanced Configuration</title>
-                             <meta name="description" content="Advanced Config">
-                             </head>
-                             <body>
-                             <form action="/message/com.fogbert.indigoplugin.multitool/handle_return">
-                             <label for="f_value">Value: </label> 
-                             <input type="text" id="f_value" name="f_value">
-                             <br>
-                             <input type="submit" value="Submit">
-                             </form>
-                             </body>
-                             </html>
-                             """
-                reply_dict["content"] = content
-
-        except KeyError as exc:
-            reply_dict["status"] = "error"
-            if exc.args[0] == "request_body":
-                if exc.args[0] == "request_body":
-                    self.logger.error("request_body couldn't be retrieved from the props dictionary")
-                else:
-                    self.logger.error("unknown key error: {}".format(str(exc)))
-            reply_dict["reason"] = "An unexpected error occurred, check your Indigo Event Log for details."
-
-        except ValueError:
-            # TODO for PY3: update exception catch to json.decoder.JSONDecodeError
-            reply_dict["status"] = "error"
-            reply_dict["reason"] = "An unexpected error occurred, check your Indigo Event Log for details."
-            self.logger.error("couldn't decode JSON from the request_body")
-            self.logger.error("\n{}".format(traceback.format_exc()))
-
-        # Return the dict to the Web Server
-        return reply_dict
-
-    def handle_return(self, action, dev=None, callerWaitingForResult=None):
-
-        reply_dict = {"status": 200}
-        reply_dict["headers"] = {"Content-Type": "text/html; charset=UTF-8", }
-        content = """<!doctype html>
-                     <html>
-                     <head>
-                     <title>My Plugin Advanced Configuration</title>
-                     <meta name="description" content="Advanced Config">
-                     </head>
-                     <body>
-                     Success!
-                     <br>
-                     You entered: {0}
-                     </body>
-                     </html>
-                     """.format(str(action.props['url_query_args']['f_value']))
-        reply_dict["content"] = content
-
-        return reply_dict
 
     # =============================================================================
     # ============================== Indigo Methods ===============================
@@ -304,7 +228,7 @@ class Plugin(indigo.PluginBase):
             var = indigo.variables[int(action_dict['list_of_variables'])]
 
             try:
-                datetime.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
+                dt.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
             except ValueError:
                 error_msg_dict['list_of_variables'] = u"The variable value must be a POSIX timestamp."
 
@@ -477,7 +401,7 @@ class Plugin(indigo.PluginBase):
                 indigo.server.log(u"{0:<{1}} {2:<{3}} {4:<{5}} {6:<{7}}".format(thing[0], (x0 - 1),
                                                                                 u"[{0}]".format(thing[1]), (x1 - 1),
                                                                                 thing[2], (x2 - 1),
-                                                                                datetime.datetime.strftime(thing[3], '%Y-%m-%d %H:%M:%S'), x3))
+                                                                                dt.datetime.strftime(thing[3], '%Y-%m-%d %H:%M:%S'), x3))
         else:
             if values_dict['typeOfThing'] not in ('Other', 'pickone'):
                 indigo.server.log(u"No {0} devices found.".format(values_dict['typeOfThing']))
@@ -1146,8 +1070,8 @@ class Plugin(indigo.PluginBase):
         ops     = {"add": operator.add, "subtract": operator.sub}
 
         try:
-            d   = datetime.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
-            td  = datetime.timedelta(days=float(days), hours=float(hours), minutes=float(minutes), seconds=float(seconds))
+            d   = dt.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
+            td  = dt.timedelta(days=float(days), hours=float(hours), minutes=float(minutes), seconds=float(seconds))
             d_s = ops[expr](d, td)
             indigo.variable.updateValue(var_id, unicode(d_s))
             return True
