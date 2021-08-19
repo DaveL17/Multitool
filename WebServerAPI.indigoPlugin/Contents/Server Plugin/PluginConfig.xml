@@ -2,10 +2,10 @@
 
 <PluginConfig>
 
-	<SupportURL>https://github.com/DaveL17/Multitool/wiki/configuration</SupportURL>
+	<SupportURL>https://google.com</SupportURL>
 
 	<Field id="infoLabel0" type="label">
-		<Label>Multitool Plugin</Label>
+		<Label>Web Server API Plugin</Label>
 	</Field>
 
 	<Field id="infoLabel1" type="label" fontSize="small">
