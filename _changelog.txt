@@ -1,5 +1,8 @@
 Multitool Change Log
 
+1.0.36
+- Fixes embedded plugin package error.
+
 1.0.35
 - Fixes error in order of plugin menu items not listed in alphabetical order.
 
