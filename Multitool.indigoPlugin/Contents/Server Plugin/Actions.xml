@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<Actions>
+
+    <Action id="modify_numeric_variable" uiPath="Variable Actions">
+        <Name>Modify Numeric Variable</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/actions</SupportURL>
+
+            <Field id="instructions" type="label">
+                <Label>Select the numeric variable you would like to modify. (If your variable value is a timestamp, use the "Modify Time Variable" action.)</Label>
+            </Field>
+
+            <Field id="list_of_variables" type="menu">
+                <Label>Variable:</Label>
+                <List class="self" filter="" method="generator_variable_list" dynamicReload="true"/>
+            </Field>
+
+            <Field id="modifier" type="textfield" tooltip="Click the help icon below (?) for examples.">
+                <Label>Formula:</Label>
+            </Field>
+
+        </ConfigUI>
+        <CallbackMethod>modify_numeric_variable</CallbackMethod>
+    </Action>
+
+    <Action id="modify_time_variable" uiPath="Variable Actions">
+        <Name>Modify Time Variable</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/actions</SupportURL>
+
+            <Field id="instructions" type="label">
+                <Label>Select the time variable you would like to modify. (If your variable value is numeric, use the "Modify Numeric Variable" action.)</Label>
+            </Field>
+
+            <Field id="list_of_variables" type="menu">
+                <Label>Variable:</Label>
+                <List class="self" filter="" method="generator_variable_list" dynamicReload="true"/>
+            </Field>
+
+            <Field id="modifier" type="menu" defaultValue="add">
+                <Label>Modifier:</Label>
+                <List>
+                    <Option value="add">Add*</Option>
+                    <Option value="subtract">Subtract</Option>
+                </List>
+            </Field>
+
+            <Field id="days" type="textfield" defaultValue="0">
+                <Label>Days:</Label>
+            </Field>
+
+            <Field id="hours" type="textfield" defaultValue="0">
+                <Label>Hours:</Label>
+            </Field>
+
+            <Field id="minutes" type="textfield" defaultValue="0">
+                <Label>Minutes:</Label>
+            </Field>
+
+            <Field id="seconds" type="textfield" defaultValue="0">
+                <Label>Seconds:</Label>
+            </Field>
+
+        </ConfigUI>
+        <CallbackMethod>modify_time_variable</CallbackMethod>
+    </Action>
+
+</Actions>

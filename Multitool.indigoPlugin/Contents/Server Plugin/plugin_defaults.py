@@ -1,0 +1,3 @@
+kDefaultPluginPrefs = {
+    'foo': 'bar'
+}

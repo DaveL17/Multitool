@@ -1,5 +1,10 @@
 Multitool Change Log
 
+2022.0.1
+- Updates plugin for Indigo 2022.1 and Python 3.
+- Hides hidden methods for "Methods - Indigo Base..." and "Methods - Plugin Base..." tools by default.
+- Adds enabled state to device inventory output.
+
 1.0.36
 - Fixes embedded plugin package error.
 
@@ -34,8 +39,8 @@ Multitool Change Log
 - Code refinements.
 
 1.0.26
-- Adds the Modify Numeric Variable and Modify Time Variable Action items.
-
+- Adds the "Modify Numeric Variable" and "Modify Time Variable" Action items.
+"
 1.0.25
 - Removes all references to legacy version checking.
 
@@ -83,11 +88,11 @@ Multitool Change Log
 - Changes Python lists to tuples where possible to increase performance.
 
 1.0.19
-- Adds tool to list indigo.server methods.
+- Adds tool to list `indigo.server` methods.
 
 1.0.18
 - Fixes bug in naming of PluginConfig.xml (which caused problems on systems set
-  up as case sensitive.
+  up as case-sensitive).
 
 1.0.17
 - Increments API version requirement to API 2.0.

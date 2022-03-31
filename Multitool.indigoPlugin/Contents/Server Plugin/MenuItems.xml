@@ -180,6 +180,13 @@
             <Field id="instructions" type="label">
                 <Label>Select an Indigo class and then select a method from within that class. When you select the method, the signature will be printed to the Indigo log. This tool exposes everything--including many things you will never have a reason to call.</Label>
             </Field>
+            <Field id="warnings" type="label">
+                <Label>Overriding methods whose name starts with an underscore may break in any given release (the underscore is a python standard naming convention indicating that the object is private).</Label>
+            </Field>
+            <Field id="include_hidden_methods" type="checkbox">
+                <Label>Show private methods: </Label>
+                <CallbackMethod>__dummyCallback__</CallbackMethod>
+            </Field>
             <Field id="list_of_indigo_classes" type="menu">
                 <Label>Class:</Label>
                 <List class="self" filter="x" method="list_of_indigo_classes" dynamicReload="true"/>
@@ -198,7 +205,14 @@
         <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
-                <Label>Select the method that you would like to inspect. Note that some of these methods are designed to only be available within a plugin environment and you may not be able to access them from within an Indigo scripting shell.</Label>
+                <Label>Select the method that you would like to inspect. Note that some of these methods are designed to only be available within a plugin environment, and you may not be able to access them from within an Indigo scripting shell.</Label>
+            </Field>
+            <Field id="warnings" type="label">
+                <Label>Overriding methods whose name starts with an underscore may break in any given release (an underscore is a python standard naming convention indicating that the object is private).</Label>
+            </Field>
+            <Field id="include_hidden_methods" type="checkbox">
+                <Label>Show private methods: </Label>
+                <CallbackMethod>__dummyCallback__</CallbackMethod>
             </Field>
             <Field id="list_of_plugin_methods" type="menu">
                 <Label>Method:</Label>
@@ -214,7 +228,7 @@
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
             <Field id="instructions" type="label">
-                <Label>Select the class and and item from the class.</Label>
+                <Label>Select the class and item from the class.</Label>
             </Field>
 
             <Field id="classOfThing" type="menu" method="dict_to_print">
@@ -293,7 +307,7 @@
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
                 <Field id="getSerialPortsLabel" type="Label">
-                    <Label>List serial ports known to the Indigo server. To include any Bluetooth ports, uncheck the Ignore Bluetooth button.</Label>
+                    <Label>List serial ports known to the Indigo server. To include any Bluetooth ports, uncheck the "Ignore Bluetooth" button.</Label>
                 </Field>
 
                 <Field id="ignoreBluetooth" type="checkbox" defaultValue="true" tooltip="Speak the string.">
