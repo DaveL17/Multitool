@@ -10,6 +10,8 @@
 	<string>1.0.0</string>
 	<key>CFBundleDisplayName</key>
 	<string>Multitool</string>
+	<key>LoadPriority</key>
+	<integer>105</integer>
 	<key>CFBundleName</key>
 	<string>Multitool</string>
 	<key>CFBundleIdentifier</key>

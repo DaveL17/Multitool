@@ -26,12 +26,9 @@ import sys
 # Third-party modules
 try:
     import indigo  # noqa
+    import pydevd
 except ImportError as error:
-    indigo.server.log(error)
-# try:
-#     import pydevd
-# except ImportError:
-#     pass
+    pass
 
 # My modules
 import DLFramework.DLFramework as Dave  # noqa
@@ -50,15 +47,13 @@ __version__   = '2022.0.1'
 # =============================================================================
 class Plugin(indigo.PluginBase):
     """
-    Title Placeholder
+    Standard Indigo Plugin Class
 
-    Body placeholder
+    :param indigo.PluginBase:
     """
     def __init__(self, plugin_id, plugin_display_name, plugin_version, plugin_prefs):
         """
-        Title Placeholder
-
-        Body placeholder
+        Plugin initialization
 
         :param str plugin_id:
         :param str plugin_display_name:
@@ -73,11 +68,11 @@ class Plugin(indigo.PluginBase):
 
         # =============================== Debug Logging ================================
         log_format = '%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s'
-        self.debugLevel = int(self.pluginPrefs.get('showDebugLevel', '30'))
+        self.debug_level = int(self.pluginPrefs.get('showDebugLevel', '30'))
         self.plugin_file_handler.setFormatter(
             logging.Formatter(log_format, datefmt='%Y-%m-%d %H:%M:%S')
         )
-        self.indigo_log_handler.setLevel(self.debugLevel)
+        self.indigo_log_handler.setLevel(self.debug_level)
 
         # ====================== Initialize DLFramework =======================
         self.Fogbert = Dave.Fogbert(self)
@@ -85,29 +80,17 @@ class Plugin(indigo.PluginBase):
         # Log pluginEnvironment information when plugin is first started
         self.Fogbert.pluginEnvironment()
 
-        # ================ Subscribe to Indigo Object Changes =================
-        if self.pluginPrefs.get('enableSubscribeToChanges', False):
-            self.logger.warning(
-                "You have subscribed to device and variable changes. Disable this feature if not "
-                "in use."
+        # ============================= Remote Debugging ==============================
+        try:
+            pydevd.settrace(
+                'localhost',
+                port=5678,
+                stdoutToServer=True,
+                stderrToServer=True,
+                suspend=False
             )
-            indigo.devices.subscribeToChanges()
-            indigo.variables.subscribeToChanges()
-            # indigo.triggers.subscribeToChanges()      # Not implemented
-            # indigo.schedules.subscribeToChanges()     # Not implemented
-            # indigo.actionGroups.subscribeToChanges()  # Not implemented
-            # indigo.controlPages.subscribeToChanges()  # Not implemented
-
-        # try:
-        #     pydevd.settrace(
-        #         'localhost',
-        #         port=5678,
-        #         stdoutToServer=True,
-        #         stderrToServer=True,
-        #         suspend=False
-        #     )
-        # except:
-        #     pass
+        except:
+            pass
 
         self.pluginIsInitializing = False
 
@@ -116,25 +99,30 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def closedPrefsConfigUi(self, values_dict=None, user_cancelled=False):  # noqa
         """
-        Title Placeholder
-
-        Body placeholder
+        Standard Indigo method called when plugin preferences dialog is closed.
 
         :param indigo.Dict values_dict:
         :param bool user_cancelled:
         :return:
         """
-        self.logger.debug("Call to closedPrefsConfigUi")
-
         if not user_cancelled:
-            self.debugLevel = int(values_dict.get('showDebugLevel', '20'))
-            self.indigo_log_handler.setLevel(self.debugLevel)
-
             # Ensure that self.pluginPrefs includes any recent changes.
             for k in values_dict:
                 self.pluginPrefs[k] = values_dict[k]
 
-            return values_dict
+            # Debug Logging
+            self.debug_level = int(values_dict.get('showDebugLevel', "30"))
+            self.indigo_log_handler.setLevel(self.debug_level)
+            indigo.server.log(
+                f"Debugging on (Level: {DEBUG_LABELS[self.debug_level]} ({self.debug_level})"
+            )
+
+            self.logger.debug("Plugin prefs saved.")
+
+        else:
+            self.logger.debug("Plugin prefs cancelled.")
+
+        return values_dict
 
     # =============================================================================
     def deviceUpdated(self, orig_dev=None, new_dev=None):  # noqa
@@ -251,6 +239,19 @@ class Plugin(indigo.PluginBase):
         """
         # =========================== Audit Indigo Version ============================
         self.Fogbert.audit_server_version(min_ver=2022)
+
+        # ================ Subscribe to Indigo Object Changes =================
+        if self.pluginPrefs.get('enableSubscribeToChanges', False):
+            self.logger.warning(
+                "You have subscribed to device and variable changes. Disable this feature if not "
+                "in use."
+            )
+            indigo.devices.subscribeToChanges()
+            indigo.variables.subscribeToChanges()
+            # indigo.triggers.subscribeToChanges()      # Not implemented
+            # indigo.schedules.subscribeToChanges()     # Not implemented
+            # indigo.actionGroups.subscribeToChanges()  # Not implemented
+            # indigo.controlPages.subscribeToChanges()  # Not implemented
 
     # =============================================================================
     def variableUpdated(self, orig_var, new_var):  # noqa
@@ -1445,3 +1446,10 @@ class Plugin(indigo.PluginBase):
             return_value = (False, values_dict, err_msg_dict)
 
         return return_value
+
+
+class Bar:
+
+    @staticmethod
+    def add(a, b):
+        return a + b
