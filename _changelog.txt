@@ -1,5 +1,9 @@
 Multitool Change Log
 
+2022.1.2
+- Fixes bug where plugin ID was inadvertently changed from `com.fogbert.indigoplugin.multitool` to
+  `com.fogbert.indigoplugin.Multitool`
+
 2022.1.1
 - Fixes bug in "Indigo Inventory" tool `(unhashable type: 'list')`.
 
