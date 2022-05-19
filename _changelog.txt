@@ -1,5 +1,8 @@
 Multitool Change Log
 
+2022.1.1
+- Fixes bug in "Indigo Inventory" tool `(unhashable type: 'list')`.
+
 2022.0.1
 - Updates plugin for Indigo 2022.1 and Python 3.
 - Hides hidden methods for "Methods - Indigo Base..." and "Methods - Plugin Base..." tools by default.

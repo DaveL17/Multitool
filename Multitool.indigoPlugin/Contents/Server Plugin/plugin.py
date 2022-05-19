@@ -41,7 +41,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2022.0.1'
+__version__   = '2022.1.1'
 
 
 # =============================================================================
@@ -942,7 +942,7 @@ class Plugin(indigo.PluginBase):
         col_2 = []
         col_3 = []
 
-        for key in inventory.items():
+        for key in inventory:
             col_0 += [item[0] for item in inventory[key]]
             col_1 += [item[1] for item in inventory[key]]
             col_2 += [item[2] for item in inventory[key]]
