@@ -123,7 +123,7 @@
                 <Label>Select the device you would like to ping and select "Send Ping". If successful, the results of the Ping will be written to the Indigo log.&#13;&#13;Note: Some devices do not support ping requests. Only enabled devices are displayed.</Label>
             </Field>
 
-            <Field id="listOfDevices" type="menu">
+            <Field id="listOfDevices" type="menu" defaultValue="None">
                 <Label>Device:</Label>
                 <List class="self" filter="" method="generator_enabled_device_list" dynamicReload="true"/>
             </Field>
@@ -131,7 +131,7 @@
             <Field id="subGeneratorButton" type="button" tooltip="Ping the device.">
                 <Label/>
                 <Title>Send Ping</Title>
-                <CallbackMethod>device_to_ping</CallbackMethod>
+                <CallbackMethod>pinger</CallbackMethod>
             </Field>
 
         </ConfigUI>
@@ -359,12 +359,13 @@
                     <Label>Subscribe to Changes:</Label>
                 </Field>
 
-                <Field id="subscribedDevices" type="textfield">
+                <Field id="subscribedDevices" type="list" rows="6">
                     <Label>Subscribed Devices:</Label>
+                    <List class="self" method="generator_dev_var_clean"/>
                 </Field>
 
                 <Field id="subscribedDevicesLabel" type="Label" alignWithControl="true">
-                    <Label>Enter a list of devices to subscribe to. The list should be Indigo device and/or variable IDs (separated by a comma). Subscriptions to other object types are not supported.</Label>
+                    <Label>Select device and/or variable IDs to subscribe to (press and hold CMD to select more than one item). Subscriptions to other object types are not supported.</Label>
                 </Field>
 
             </ConfigUI>
@@ -405,6 +406,13 @@
 
         </ConfigUI>
         <ButtonTitle>Close</ButtonTitle>
+    </MenuItem>
+
+    <MenuItem id="titleSeparator" type="separator"/>
+
+    <MenuItem id="print_environment_info" uiPath="plugin_tools">
+        <Name>Display Plugin Information</Name>
+        <CallbackMethod>log_plugin_environment</CallbackMethod>
     </MenuItem>
 
 </MenuItems>

@@ -7,7 +7,7 @@
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/actions</SupportURL>
 
             <Field id="instructions" type="label">
-                <Label>Select the numeric variable you would like to modify. (If your variable value is a timestamp, use the "Modify Time Variable" action.)</Label>
+                <Label>Select the numeric variable you would like to modify. (If your variable value is a timestamp, use the "Modify Time Variable" action.) The formula field supports Indigo substitutions.</Label>
             </Field>
 
             <Field id="list_of_variables" type="menu">
@@ -29,7 +29,7 @@
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/actions</SupportURL>
 
             <Field id="instructions" type="label">
-                <Label>Select the time variable you would like to modify. (If your variable value is numeric, use the "Modify Numeric Variable" action.)</Label>
+                <Label>Select the time variable you would like to modify. (If your variable value is numeric, use the "Modify Numeric Variable" action.) The adjustment fields support Indigo substitutions.</Label>
             </Field>
 
             <Field id="list_of_variables" type="menu">

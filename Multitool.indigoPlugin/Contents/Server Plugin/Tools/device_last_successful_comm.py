@@ -1,0 +1,39 @@
+"""
+Print information on the last successful communication with a device
+
+The device_last_successful_comm method prints information on the last successful
+communication with each Indigo device to the Indigo events log.
+
+:return:
+"""
+import indigo
+import logging
+
+LOGGER = logging.getLogger("Plugin")
+
+
+def __init__():
+    pass
+
+
+def report_comms():
+
+    # Get the data we need
+    table = [(dev.id, dev.name, dev.lastSuccessfulComm) for dev in indigo.devices.iter()]
+
+    # Sort the data from newest to oldest
+    # table = sorted(table, key=lambda (dev_id, name, comm): comm, reverse=True)
+    table = sorted(table, key=lambda t: t[::-1], reverse=True)
+
+    # Find the length of the longest device name
+    length = 0
+    for element in table:
+        if len(element[1]) > length:
+            length = len(element[1])
+
+    # Output the result
+    indigo.server.log(f"{' Device Last Successful Comm ':=^100}")
+    indigo.server.log(f"{'ID':<14}{'Name':<{length + 1}} Last Comm Success")
+    indigo.server.log('=' * 100)
+    for element in table:
+        indigo.server.log(f"{element[0]:<14}{element[1]:<{length}}  {element[2]}")

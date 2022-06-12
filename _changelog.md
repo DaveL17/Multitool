@@ -1,62 +1,70 @@
-Multitool Change Log
 
-2022.1.2
+### v2022.1.3
+- "Modify Numeric Variable" and "Modify Time Variable" now support Indigo substitutions.
+- Change "Subscribe to Changes" object selector from textfield to list.
+- Adds `_to_do_list.md` and changes changelog to markdown.
+- Moves plugin environment logging to plugin menu item (log only on request).
+- Refactors code into `Tools.py` custom module.
+- Improves validation for "Speak String" tool.
+- Lays initial groundwork for unit testing.
+
+### v2022.1.2
 - Fixes bug where plugin ID was inadvertently changed from `com.fogbert.indigoplugin.multitool` to
   `com.fogbert.indigoplugin.Multitool`
 
-2022.1.1
+### v2022.1.1
 - Fixes bug in "Indigo Inventory" tool `(unhashable type: 'list')`.
 
-2022.0.1
+### v2022.0.1
 - Updates plugin for Indigo 2022.1 and Python 3.
 - Hides hidden methods for "Methods - Indigo Base..." and "Methods - Plugin Base..." tools by default.
 - Adds enabled state to device inventory output.
 - Standardizes Indigo method implementation.
 
-1.0.36
+### v1.0.36
 - Fixes embedded plugin package error.
 
-1.0.35
+### v1.0.35
 - Fixes error in order of plugin menu items not listed in alphabetical order.
 
-1.0.34
+### v1.0.34
 - Fixes bug in some tools (unexpected keyword argument 'filter').
 
-1.0.33
+### v1.0.33
 - Fixes bug in Indigo Substitution Generator
 
-1.0.32
+### v1.0.32
 - Adds tool to view man pages in Preview.
 - Updates license file.
 
-1.0.31
+### v1.0.31
 - Fixes broken link to readme logo.
 
-1.0.30
+### v1.0.30
 - Further integration of DLFramework.
 
-1.0.29
+### v1.0.29
 - Better integration of DLFramework.
 
-1.0.28
+### v1.0.28
 - Clarifies instructions for color picker tool.
 - Fixes bug in Device Ping tool.
 
-1.0.27
+### v1.0.27
 - Improvements to configuration validation.
 - Code refinements.
 
-1.0.26
+### v1.0.26
 - Adds the "Modify Numeric Variable" and "Modify Time Variable" Action items.
 
-1.0.25
+### v1.0.25
 - Removes all references to legacy version checking.
 
-1.0.24
+### v1.0.24
 - Ensures plugin is compatible with the Indigo server version.
 - Standardizes SupportURL behavior across all functions.
 
-1.0.23
+### v1.0.23
 - Device Dependencies Tool - Added 'List Dependencies' button; the dialog no longer closes after dependencies are
   logged (allowing users to run multiple queries before closing the tool.)
 - Device Dependencies Tool - Changed button title from 'Execute' to 'Close'.
@@ -80,28 +88,31 @@ Multitool Change Log
 - Substitution Generator Tool - Changed button title from 'Execute' to 'Close'.
 - Removes plugin update notifications.
 
-1.0.22
+### v1.0.22
+- Synchronize self.pluginPrefs in closedPrefsConfigUi().
+- 
+### v1.0.22
 - Synchronize self.pluginPrefs in closedPrefsConfigUi().
 
-1.0.21
+### v1.0.21
 - Removes plugin update checker.
 
-1.0.20
+### v1.0.20
 - Changes Python lists to tuples where possible to increase performance.
 
-1.0.19
+### v1.0.19
 - Adds tool to list `indigo.server` methods.
 
-1.0.18
+### v1.0.18
 - Fixes bug in naming of PluginConfig.xml (which caused problems on systems set up as case-sensitive).
 
-1.0.17
+### v1.0.17
 - Increments API version requirement to API 2.0.
 
-1.0.16
+### v1.0.16
 - Adds Subscribe to Changes tool for devices and variables.
 - Improves code commenting and adds Sphinx compatibility to docstrings.
 - Code refinements.
 
-1.0.15
+### v1.0.15
 - Adds menu item to check for plugin updates.
