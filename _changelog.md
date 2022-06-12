@@ -1,4 +1,9 @@
 
+### v2022.1.4
+- Fixes bug in "Substitution Generator" -- "Module not callable."
+- Refines list of devices and variables returned with the 'Device / Variable' dropdown menu.
+- Updates WiKi for latest changes.
+
 ### v2022.1.3
 - "Modify Numeric Variable" and "Modify Time Variable" now support Indigo substitutions.
 - Change "Subscribe to Changes" object selector from textfield to list.

@@ -389,7 +389,7 @@
 
             <Field id="devVarMenu" type="menu" tooltip="Please select a device or variable.">
                 <Label>Device / Variable</Label>
-                <List class="self" filter="" method="generator_dev_var" dynamicReload="true"/>
+                <List class="self" filter="" method="generator_dev_var_clean" dynamicReload="true"/>
                 <CallbackMethod>__dummyCallback__</CallbackMethod>
             </Field>
 

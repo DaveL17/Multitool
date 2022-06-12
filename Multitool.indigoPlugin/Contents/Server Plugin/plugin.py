@@ -36,7 +36,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2022.1.3'
+__version__   = '2022.1.4'
 
 
 # =============================================================================
@@ -445,7 +445,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def generator_substitutions(values_dict=None, type_id="", target_id=0):  # noqa
-        return generator_substitutions(values_dict)
+        return generator_substitutions.return_substitution(values_dict)
 
     # =============================================================================
     def get_serial_ports(self, values_dict=None, type_id=""):  # noqa
