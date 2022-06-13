@@ -19,6 +19,7 @@ __all__ = [
     "man_page",
     "modify_numeric_variable",
     "modify_time_variable",
+    "object_directory",
     "plugin_methods",
     "remove_delayed_actions",
     "results_output",

@@ -1,4 +1,8 @@
 
+### v2022.1.5
+- Adds new tool -- "Print Object Directory..." to tools menu.
+- Adds filter to "Device Last Comm" tool, and makes it so multiple reports can be generated without reopening the tool.
+
 ### v2022.1.4
 - Fixes bug in "Substitution Generator" -- "Module not callable."
 - Refines list of devices and variables returned with the 'Device / Variable' dropdown menu.

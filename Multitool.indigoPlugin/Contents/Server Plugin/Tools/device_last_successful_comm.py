@@ -16,10 +16,20 @@ def __init__():
     pass
 
 
-def report_comms():
+def report_comms(values_dict, menu_item):
+
+    dev_filter = values_dict['listOfDevices']
+    if dev_filter == "all devices":
+        dev_filter = ""
 
     # Get the data we need
-    table = [(dev.id, dev.name, dev.lastSuccessfulComm) for dev in indigo.devices.iter()]
+    table = [
+        (dev.id, dev.name, dev.lastSuccessfulComm) for dev in indigo.devices.iter(filter=dev_filter)
+    ]
+
+    # Filter returns zero devices of type selected.
+    if len(table) == 0:
+        table = [("No devices for the selected filter", " ", " ")]
 
     # Sort the data from newest to oldest
     # table = sorted(table, key=lambda (dev_id, name, comm): comm, reverse=True)

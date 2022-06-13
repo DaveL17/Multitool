@@ -36,7 +36,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2022.1.4'
+__version__   = '2022.1.5'
 
 
 # =============================================================================
@@ -391,9 +391,8 @@ class Plugin(indigo.PluginBase):
         device_inventory.get_inventory(values_dict, type_id)
 
     # =============================================================================
-    @staticmethod
-    def device_last_successful_comm():
-        device_last_successful_comm.report_comms()
+    def device_last_successful_comm(self, values_dict, menu_item):
+        device_last_successful_comm.report_comms(values_dict, menu_item)
 
     # =============================================================================
     def device_to_beep(self, values_dict=None, type_id=""):  # noqa
@@ -429,6 +428,32 @@ class Plugin(indigo.PluginBase):
             self, fltr="", values_dict=None, type_id="", target_id=0  # noqa
     ):
         return self.Fogbert.deviceListEnabled(dev_filter=fltr)
+
+    # =============================================================================
+    def generator_device_filter(self, fltr="", values_dict=None, type_id="", target_id=0):  # noqa
+        # Built-in filters
+        filter_list = [
+            ("all devices", "All Devices"),
+            ("indigo.controller", "indigo.controller"),
+            ("indigo.dimmer", "indigo.dimmer"),
+            ("indigo.insteon", "indigo.insteon"),
+            ("indigo.iodevice", "indigo.iodevice"),
+            ("indigo.relay", "indigo.relay"),
+            ("indigo.responder", "indigo.responder"),
+            ("indigo.sensor", "indigo.sensor"),
+            ("indigo.sprinkler", "indigo.sprinkler"),
+            ("indigo.thermostat", "indigo.thermostat"),
+            ("indigo.x10", "indigo.x10"),
+            ("indigo.zwave", "indigo.zwave"),
+        ]
+
+        # Add plugin identifiers
+        [filter_list.append((dev.pluginId, dev.pluginId))
+         for dev in indigo.devices
+         if (dev.pluginId, dev.pluginId) not in filter_list
+         ]
+
+        return filter_list
 
     # =============================================================================
     def generator_dev_var(self, fltr="", values_dict=None, type_id="", target_id=0):  # noqa
@@ -508,6 +533,11 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def results_output(values_dict=None, caller=None):
         results_output.display_results(values_dict, caller)
+
+    # =============================================================================
+    @staticmethod
+    def object_directory(values_dict=None, caller=None):
+        object_directory.display_results(values_dict, caller)
 
     # =============================================================================
     def send_status_request(self, values_dict=None, type_id=""):  # noqa

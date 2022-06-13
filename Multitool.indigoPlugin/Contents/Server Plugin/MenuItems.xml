@@ -112,7 +112,21 @@
 
     <MenuItem id="deviceLastComm">
         <Name>Device Last Comm</Name>
-        <CallbackMethod>device_last_successful_comm</CallbackMethod>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <Field id="instructions" type="label">
+                <Label>Select a display filter from the dropdown list and select "Execute". If needed, you can process as many filters as you like.</Label>
+            </Field>
+            <Field id="listOfDevices" type="menu">
+                <Label>Filter:</Label>
+                <List class="self" filter="" method="generator_device_filter" dynamicReload="true"/>
+            </Field>
+            <Field id="printResult" type="button" tooltip="Print the list.">
+                <Label/>
+                <Title>Print List</Title>
+                <CallbackMethod>device_last_successful_comm</CallbackMethod>
+            </Field>
+        </ConfigUI>
     </MenuItem>
 
     <MenuItem id="pingDevice">
@@ -253,6 +267,43 @@
                 <Label/>
                 <Title>Print Dict</Title>
                 <CallbackMethod>results_output</CallbackMethod>
+            </Field>
+
+            </ConfigUI>
+            <ButtonTitle>Close</ButtonTitle>
+    </MenuItem>
+
+    <MenuItem id="printDir">
+        <Name>Object Directory...</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+
+            <Field id="instructions" type="label">
+                <Label>Select the class and item from the class.</Label>
+            </Field>
+
+            <Field id="classOfThing" type="menu" method="dict_to_print">
+                <Label>Class:</Label>
+                <List>
+                    <Option value="actionGroups">Action</Option>
+                    <Option value="controlPages">Control Page</Option>
+                    <Option value="devices">Device</Option>
+                    <Option value="schedules">Schedule</Option>
+                    <Option value="triggers">Trigger</Option>
+                    <Option value="variables">Variable</Option>
+                </List>
+                <CallbackMethod>__dummyCallback__</CallbackMethod>
+            </Field>
+
+            <Field id="thingToPrint" type="menu">
+                <Label>Item:</Label>
+                <List class="self" filter="" method="dict_to_print" dynamicReload="true"/>
+            </Field>
+
+            <Field id="subGeneratorButton" type="button" tooltip="Speak the string.">
+                <Label/>
+                <Title>Print Dir</Title>
+                <CallbackMethod>object_directory</CallbackMethod>
             </Field>
 
             </ConfigUI>
