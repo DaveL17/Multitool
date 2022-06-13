@@ -162,7 +162,14 @@
         <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
-                <Label>Create an inventory of all error messages from Indigo log files and save a file called 'Multitool Plugin Error Inventory _X_.txt to the active Indigo Logs folder (where _X_ will be incremented based on the number of error invetory files in the active directory.)</Label>
+                <Label>Create an inventory of messages from Indigo log files and save a file called 'Multitool Plugin Error Inventory _#_.txt to the active Indigo Logs folder.)</Label>
+            </Field>
+            <Field id="error_level" type="menu" defaultValue="err">
+                <Label>Level:</Label>
+                <List>
+                    <Option value="err">Errors Only</Option>
+                    <Option value="err_warn">Errors and Warnings</Option>
+                </List>
             </Field>
         </ConfigUI>
         <CallbackMethod>error_inventory</CallbackMethod>

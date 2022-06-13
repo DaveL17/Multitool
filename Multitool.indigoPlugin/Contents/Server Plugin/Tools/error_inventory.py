@@ -20,8 +20,10 @@ def __init__():
     pass
 
 
-def show_inventory():
+def show_inventory(values_dict):
     check_list = (' Err ', ' err ', 'Error', 'error')
+    if values_dict.get('error_level', 'err') == 'err_warn':
+        check_list += ('Warning', 'warning')
     log_folder = f"{indigo.server.getLogsFolderPath()}/"
 
     # ========================= Create a Unique Filename ==========================

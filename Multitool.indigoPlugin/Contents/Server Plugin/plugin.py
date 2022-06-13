@@ -413,7 +413,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def error_inventory(self, values_dict=None, type_id=""):  # noqa
-        return error_inventory.show_inventory()
+        return error_inventory.show_inventory(values_dict)
 
     # =============================================================================
     def generator_device_list(self, fltr="", values_dict=None, type_id="", target_id=0):  # noqa

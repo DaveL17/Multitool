@@ -1,7 +1,8 @@
 
 ### v2022.1.5
-- Adds new tool -- "Print Object Directory..." to tools menu.
+- Adds new tool: "Print Object Directory".
 - Adds filter to "Device Last Comm" tool, and makes it so multiple reports can be generated without reopening the tool.
+- Adds filter to "Error Inventory" tool to select either `Errors` or `Errors and Warnings`.
 
 ### v2022.1.4
 - Fixes bug in "Substitution Generator" -- "Module not callable."
