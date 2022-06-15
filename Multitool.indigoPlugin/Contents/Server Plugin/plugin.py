@@ -13,9 +13,6 @@ plugins for Indigo.
 import datetime as dt
 import logging
 
-# Third-party modules
-import Tests.test_plugin
-
 try:
     import indigo  # noqa
     import pydevd
@@ -36,7 +33,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2022.1.5'
+__version__   = '2022.1.6'
 
 
 # =============================================================================
@@ -234,8 +231,8 @@ class Plugin(indigo.PluginBase):
 
         :return:
         """
-        # Unit Tests
-        # indigo.server.log(f"{test_plugin.TestAdd().test_add()}")
+        # Run unit Tests
+        # test_plugin.Tester().run_tests()
 
         # =========================== Audit Indigo Version ============================
         self.Fogbert.audit_server_version(min_ver=2022)
@@ -558,5 +555,5 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def add(a, b):
-        """ This is a placeholdeer method to start constructing unit tests """
+        """ This is a placeholder method to start constructing unit tests """
         return a + b

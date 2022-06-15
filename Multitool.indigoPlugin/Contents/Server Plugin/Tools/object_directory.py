@@ -24,6 +24,6 @@ def display_results(values_dict, caller):
     LOGGER.debug(f"Caller: {caller}")
 
     thing = getattr(indigo, values_dict['classOfThing'])[int(values_dict['thingToPrint'])]
-    indigo.server.log(f"{thing.name:{'='}^80}")
+    indigo.server.log(f"{' ' + thing.name + ' ':{'='}^80}")
     indigo.server.log(f"\n{dir(thing)}")
     indigo.server.log("=" * 80)

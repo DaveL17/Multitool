@@ -1,4 +1,8 @@
 
+### v2022.1.6
+- Adds foundation for API `3.1`.
+- Combines "Object Dictionary" and "Object Directory" and renames as "Object Inspection".
+
 ### v2022.1.5
 - Adds new tool: "Print Object Directory".
 - Adds filter to "Device Last Comm" tool, and makes it so multiple reports can be generated without reopening the tool.
