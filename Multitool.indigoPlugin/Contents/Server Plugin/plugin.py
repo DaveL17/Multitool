@@ -376,6 +376,10 @@ class Plugin(indigo.PluginBase):
         about_indigo.report()
 
     # =============================================================================
+    def battery_level_report(self, values_dict=None, type_id=""):  # noqa
+        battery_level.report(values_dict)
+
+    # =============================================================================
     def color_picker(self, values_dict=None, type_id=""):  # noqa
         color_picker.picker(values_dict)
 

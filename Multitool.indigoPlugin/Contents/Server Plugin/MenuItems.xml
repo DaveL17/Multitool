@@ -8,6 +8,11 @@
         <CallbackMethod>about_indigo</CallbackMethod>
     </MenuItem>
 
+    <MenuItem id="batteryLevelReport">
+        <Name>Battery Level Report</Name>
+        <CallbackMethod>battery_level_report</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="pickColor">
         <Name>Color Picker...</Name>
         <ConfigUI>

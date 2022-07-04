@@ -1,5 +1,6 @@
 __all__ = [
     "about_indigo",
+    "battery_level",
     "color_picker",
     "device_beep",
     "device_dependencies",

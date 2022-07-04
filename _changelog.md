@@ -1,7 +1,8 @@
 
 ### v2022.1.6
-- Adds foundation for API `3.1`.
+- Adds **Battery Level Report** Tool.
 - Combines "Object Dictionary" and "Object Directory" and renames as "Object Inspection".
+- Adds foundation for Indigo API `3.1`.
 
 ### v2022.1.5
 - Adds new tool: "Print Object Directory".
