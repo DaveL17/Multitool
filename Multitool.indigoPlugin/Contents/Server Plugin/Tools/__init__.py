@@ -21,6 +21,7 @@ __all__ = [
     "modify_numeric_variable",
     "modify_time_variable",
     "object_directory",
+    "object_dependencies",
     "plugin_methods",
     "remove_delayed_actions",
     "results_output",

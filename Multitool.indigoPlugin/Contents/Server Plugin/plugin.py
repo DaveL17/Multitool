@@ -33,7 +33,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2022.1.7'
+__version__   = '2022.1.8'
 
 
 # =============================================================================
@@ -59,7 +59,7 @@ class Plugin(indigo.PluginBase):
         self.pluginIsShuttingDown = False
 
         # =============================== Debug Logging ================================
-        log_format = '%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(msg)s'
+        log_format = '%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(message)s'
         self.debug_level = int(self.pluginPrefs.get('showDebugLevel', '30'))
         self.plugin_file_handler.setFormatter(
             logging.Formatter(log_format, datefmt='%Y-%m-%d %H:%M:%S')
@@ -382,10 +382,11 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def color_picker(self, values_dict=None, type_id=""):  # noqa
         color_picker.picker(values_dict)
+        return True
 
     # =============================================================================
-    def device_dependencies(self, values_dict=None, type_id=""):  # noqa
-        return device_dependencies.dependencies(values_dict)
+    # def device_dependencies(self, values_dict=None, type_id=""):  # noqa fixme
+    #     return device_dependencies.dependencies(values_dict)
 
     # =============================================================================
     def device_inventory(self, values_dict=None, type_id=""):  # noqa
@@ -539,6 +540,11 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def object_directory(values_dict=None, caller=None):
         object_directory.display_results(values_dict, caller)
+
+    # =============================================================================
+    @staticmethod
+    def object_dependencies(values_dict=None, caller=None):
+        object_dependencies.display_results(values_dict, caller)
 
     # =============================================================================
     def send_status_request(self, values_dict=None, type_id=""):  # noqa

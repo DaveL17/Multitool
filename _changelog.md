@@ -1,4 +1,9 @@
 
+### v2022.1.8
+- Adds feature to print object dependencies to Object Inspection Tool, and removes Device Dependencies Tool from 
+  plugin menu.
+- Fixes minor validation bug in Color Picker tool.
+
 ### v2022.1.7
 - Adds **Battery Level Report** Tool.
 

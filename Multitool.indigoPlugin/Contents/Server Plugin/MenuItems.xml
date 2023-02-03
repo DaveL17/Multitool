@@ -42,27 +42,27 @@
         <CallbackMethod>device_to_beep</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="device_dependencies">
-        <Name>Device Dependencies...</Name>
-        <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
-            <Field id="instructions" type="label">
-                <Label>Select the device you would like to query for dependencies.</Label>
-            </Field>
-            <Field id="listOfDevices" type="menu">
-                <Label>Device:</Label>
-                <List class="self" filter="" method="generator_device_list" dynamicReload="true"/>
-            </Field>
+<!--    <MenuItem id="device_dependencies">-->
+<!--        <Name>Device Dependencies...</Name>-->
+<!--        <ConfigUI>-->
+<!--            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>-->
+<!--            <Field id="instructions" type="label">-->
+<!--                <Label>Select the device you would like to query for dependencies.</Label>-->
+<!--            </Field>-->
+<!--            <Field id="listOfDevices" type="menu">-->
+<!--                <Label>Device:</Label>-->
+<!--                <List class="self" filter="" method="generator_device_list" dynamicReload="true"/>-->
+<!--            </Field>-->
 
-            <Field id="subGeneratorButton" type="button" tooltip="List the dependencies.">
-                <Label/>
-                <Title>List Dependencies</Title>
-                <CallbackMethod>device_dependencies</CallbackMethod>
-            </Field>
-            <ButtonTitle>Close</ButtonTitle>
+<!--            <Field id="subGeneratorButton" type="button" tooltip="List the dependencies.">-->
+<!--                <Label/>-->
+<!--                <Title>List Dependencies</Title>-->
+<!--                <CallbackMethod>device_dependencies</CallbackMethod>-->
+<!--            </Field>-->
+<!--            <ButtonTitle>Close</ButtonTitle>-->
 
-        </ConfigUI>
-    </MenuItem>
+<!--        </ConfigUI>-->
+<!--    </MenuItem>-->
 
     <MenuItem id="deviceInventoryList">
         <Name>Device Inventory...</Name>
@@ -277,56 +277,25 @@
 
             <Field id="print_dict_button" type="button" tooltip="Print the object's dict to the event log.">
                 <Label/>
-                <Title>Print Dict</Title>
+                <Title>Print Object Dict</Title>
                 <CallbackMethod>results_output</CallbackMethod>
             </Field>
 
             <Field id="print_dir_button" type="button" tooltip="Print the object's dir to the event log.">
                 <Label/>
-                <Title>Print Dir</Title>
+                <Title>Print Object Dir()</Title>
                 <CallbackMethod>object_directory</CallbackMethod>
+            </Field>
+
+            <Field id="print_dep_button" type="button" tooltip="Print the object's dir to the event log.">
+                <Label/>
+                <Title>Print Object Dependencies</Title>
+                <CallbackMethod>object_dependencies</CallbackMethod>
             </Field>
 
             </ConfigUI>
             <ButtonTitle>Close</ButtonTitle>
     </MenuItem>
-
-<!--    <MenuItem id="printDir">-->
-<!--        <Name>Object Directory...</Name>-->
-<!--        <ConfigUI>-->
-<!--            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>-->
-
-<!--            <Field id="instructions" type="label">-->
-<!--                <Label>Select the class and item from the class.</Label>-->
-<!--            </Field>-->
-
-<!--            <Field id="classOfThing" type="menu" method="dict_to_print">-->
-<!--                <Label>Class:</Label>-->
-<!--                <List>-->
-<!--                    <Option value="actionGroups">Action</Option>-->
-<!--                    <Option value="controlPages">Control Page</Option>-->
-<!--                    <Option value="devices">Device</Option>-->
-<!--                    <Option value="schedules">Schedule</Option>-->
-<!--                    <Option value="triggers">Trigger</Option>-->
-<!--                    <Option value="variables">Variable</Option>-->
-<!--                </List>-->
-<!--                <CallbackMethod>__dummyCallback__</CallbackMethod>-->
-<!--            </Field>-->
-
-<!--            <Field id="thingToPrint" type="menu">-->
-<!--                <Label>Item:</Label>-->
-<!--                <List class="self" filter="" method="dict_to_print" dynamicReload="true"/>-->
-<!--            </Field>-->
-
-<!--            <Field id="subGeneratorButton" type="button" tooltip="Print the object's dir to the event log.">-->
-<!--                <Label/>-->
-<!--                <Title>Print Dir</Title>-->
-<!--                <CallbackMethod>object_directory</CallbackMethod>-->
-<!--            </Field>-->
-
-<!--            </ConfigUI>-->
-<!--            <ButtonTitle>Close</ButtonTitle>-->
-<!--    </MenuItem>-->
 
     <MenuItem id="installed_plugins">
         <Name>Plugin Inventory</Name>

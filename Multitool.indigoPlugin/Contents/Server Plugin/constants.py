@@ -5,6 +5,10 @@ The Constants.py file contains all application constants and is imported as a
 library. References are denoted as constants by the use of all caps.
 """
 
+try:
+    import indigo
+except ImportError:
+    ...
 
 def __init__():
     pass
@@ -16,4 +20,30 @@ DEBUG_LABELS = {
     30: "Warning Messages",
     40: "Error Messages",
     50: "Critical Errors Only"
+}
+
+INSTANCE_TO_COMMAND_NAMESPACE = {
+    indigo.ActionGroup: indigo.actionGroup,
+    indigo.ControlPage: indigo.controlPage,
+    indigo.Device: indigo.device,
+    indigo.DeviceStateChangeTrigger: indigo.devStateChange,
+    indigo.DimmerDevice: indigo.dimmer,
+    indigo.EmailReceivedTrigger: indigo.emailRcvd,
+    indigo.InsteonCommandReceivedTrigger: indigo.insteonCmdRcvd,
+    indigo.InterfaceFailureTrigger: indigo.interfaceFail,
+    indigo.InterfaceInitializedTrigger: indigo.interfaceInit,
+    indigo.MultiIODevice: indigo.iodevice,
+    indigo.PluginEventTrigger: indigo.pluginEvent,
+    indigo.PowerFailureTrigger: indigo.powerFail,
+    indigo.RelayDevice: indigo.relay,
+    indigo.Schedule: indigo.schedule,
+    indigo.SensorDevice: indigo.sensor,
+    indigo.ServerStartupTrigger: indigo.serverStartup,
+    indigo.SpeedControlDevice: indigo.speedcontrol,
+    indigo.SprinklerDevice: indigo.sprinkler,
+    indigo.ThermostatDevice: indigo.thermostat,
+    indigo.Trigger: indigo.trigger,
+    indigo.Variable: indigo.variable,
+    indigo.VariableValueChangeTrigger: indigo.varValueChange,
+    indigo.X10CommandReceivedTrigger: indigo.x10CmdRcvd,
 }

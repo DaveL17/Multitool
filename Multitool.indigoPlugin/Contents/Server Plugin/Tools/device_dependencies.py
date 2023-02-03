@@ -4,9 +4,7 @@ Print a list of device dependencies to the Indigo events log
 The device_dependencies method prints a list of known dependencies for a selected Indigo
 device.
 
-:param indigo.Dict values_dict:
-:param int type_id:
-:return:
+This tool has been subsumed under the Object Inspection Tool and can be deleted.  fixme
 """
 import indigo
 import logging
