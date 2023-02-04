@@ -26,12 +26,16 @@ def display_results(values_dict, caller):
     obj_id = int(values_dict['thingToPrint'])
     thing = getattr(indigo, values_dict['classOfThing'])[int(values_dict['thingToPrint'])]
 
-    indigo.server.log(f"{' ' + thing.name + ' Dependencies ':{'='}^80}")
-    dep_dict = INSTANCE_TO_COMMAND_NAMESPACE[type(thing)].getDependencies(obj_id)  # Dict of object dependencies
+    try:
+        indigo.server.log(f"{' ' + thing.name + ' Dependencies ':{'='}^80}")
+        dep_dict = INSTANCE_TO_COMMAND_NAMESPACE[type(thing)].getDependencies(obj_id)  # Dict of object dependencies
 
-    for obj_cat in dep_dict:
-        indigo.server.log(f"{obj_cat}:")
-        for dep in dep_dict[obj_cat]:
-            indigo.server.log(f"   {dep['Name']} ({dep['ID']})")
+        for obj_cat in dep_dict:
+            indigo.server.log(f"{obj_cat}:")
+            for dep in dep_dict[obj_cat]:
+                indigo.server.log(f"   {dep['Name']} ({dep['ID']})")
 
-    indigo.server.log("=" * 80)
+        indigo.server.log("=" * 80)
+    except KeyError:
+        LOGGER.warning("Object type not currently supported. Please provide a report so the plugin can be updated.")
+

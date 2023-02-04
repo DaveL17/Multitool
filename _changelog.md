@@ -1,4 +1,8 @@
 
+### v2022.1.9
+- Adds trap to `object_dependencies.py` to account for unsupported object types.
+- Adds changes to Object Inspection Tool to plugin Wiki.
+
 ### v2022.1.8
 - Adds feature to print object dependencies to Object Inspection Tool, and removes Device Dependencies Tool from 
   plugin menu.
