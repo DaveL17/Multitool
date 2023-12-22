@@ -1,19 +1,16 @@
 """
 Print a list of installed plugins to the Indigo events log
 
-The installed_plugins method will print a list of installed plugins to the Indigo events
-log along with the plugin's bundle identifier. In instances where the plugin is disabled,
-[Disabled] will be appended to the log line.
-
-:return:
+The installed_plugins method will print a list of installed plugins to the Indigo events log along with the plugin's
+bundle identifier. In instances where the plugin is disabled, [Disabled] will be appended to the log line.
 """
-# FIXME - if a plugin is missing its .plist file, it breaks the report. Consider trapping and returning a warning
-#  message.
-
-import indigo
 import logging
 import plistlib
 import os
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -23,7 +20,9 @@ def __init__():
 
 
 def get_list():
-
+    """
+    Write a list of installed plugins to the Indigo Events log
+    """
     plugin_name_list = []
     indigo_install_path = indigo.server.getInstallFolderPath()
 
@@ -39,12 +38,12 @@ def get_list():
                 with open(
                         f"{indigo_install_path}/{plugin_folder}/{plugin}"
                         f"/Contents/Info.plist", 'rb') as p_list:
-                    pl = plistlib.load(p_list)
+                    plug_list = plistlib.load(p_list)
 
-                cf_bundle_identifier = pl["CFBundleIdentifier"]
+                cf_bundle_identifier = plug_list["CFBundleIdentifier"]
 
                 # Don't include self (i.e. this plugin) in the plugin list
-                cf_bundle_display_name = pl["CFBundleDisplayName"]
+                cf_bundle_display_name = plug_list["CFBundleDisplayName"]
 
                 # if disabled plugins folder, append 'Disabled' to name
                 if plugin_folder == 'Plugins (Disabled)':

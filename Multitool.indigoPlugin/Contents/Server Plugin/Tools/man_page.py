@@ -1,13 +1,8 @@
 """
-Title Placeholder
+Open up a man page for the selected user-specified command
 
 Body placeholder
-
-:param class values_dict:
-:param str type_id:
-:return:
 """
-import indigo
 import logging
 import subprocess
 

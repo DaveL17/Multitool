@@ -1,23 +1,21 @@
 """
 Print the signature of an Indigo method to the Indigo events log
 
-The inspect_method method will inspect a selected Indigo method and print the target
-method's signature to the Indigo events log. This is useful when the signature of an Indigo
-method is unknown.  It will return a list of attributes passed by the Indigo method.  For
-example,
+The inspect_method method will inspect a selected Indigo method and print the target method's signature to the Indigo
+events log. This is useful when the signature of an Indigo method is unknown.  It will return a list of attributes
+passed by the Indigo method.  For example,
 
    Multitool    self.closedPrefsConfigUi: ArgSpec(args=['self', 'valuesDict',
                 'userCancelled'], varargs=None, keywords=None, defaults=None)
    Multitool    Docstring:  User closes config menu.
                 The validatePrefsConfigUI() method will also be called.
-
-:param indigo.Dict values_dict:
-:param str type_id:
-:return:
 """
-import indigo
 import logging
 import inspect
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -26,8 +24,12 @@ def __init__():
     pass
 
 
-def display_docstring(values_dict):
+def display_docstring(values_dict:indigo.Dict=None):
+    """
 
+    :param indigo.Dict values_dict:
+    :return:
+    """
     method = getattr(indigo.activePlugin, values_dict['list_of_plugin_methods'])
     signature = inspect.getfullargspec(method)
     indigo.server.log(f"self.{values_dict['list_of_plugin_methods']}: {signature}")

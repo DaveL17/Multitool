@@ -1,12 +1,14 @@
 """
 Speak a string
 
-The speak_string method takes a user-input string and sends it for speech on the Indigo
-server. The method supports Indigo substitutions and is useful when testing substitution
-strings.
+The speak_string method takes a user-input string and sends it for speech on the Indigo server. The method supports
+Indigo substitutions and is useful when testing substitution strings.
 """
 import logging
-import indigo
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 ERR_MSG_DICT = indigo.Dict()
@@ -16,10 +18,11 @@ def __init__():
     pass
 
 
-def speaker(values_dict):
+def speaker(values_dict:indigo.Dict=None):
     """
+    The speak_string method takes a user-input string and sends it for speech on the Indigo server.
 
-    :param values_dict:
+    :param indigo.Dict values_dict:
     :return:
     """
     text = values_dict['thingToSpeak']

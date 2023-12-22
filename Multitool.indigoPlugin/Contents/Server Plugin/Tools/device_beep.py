@@ -1,15 +1,14 @@
 """
 Send a beep request to a device
 
-The device_to_beep method will send a beep request to a selected Indigo device. Only select
-devices support the beep request and only enabled devices are displayed for selection.
-
-:param indigo.Dict values_dict:
-:param int type_id:
-:return:
+The device_to_beep method will send a beep request to a selected Indigo device. Only select devices support the beep
+request and only enabled devices are displayed for selection.
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 ERR_MSG_DICT = indigo.Dict()
@@ -19,7 +18,14 @@ def __init__():
     pass
 
 
-def beeper(values_dict):
+def beeper(values_dict:indigo.Dict=None):
+    """
+    Send a beep command to the selected device
+
+    Note that beep is not a valid command for all devices.
+
+    :param indigo.Dict values_dict:
+    """
     try:
         name = indigo.devices[int(values_dict['listOfDevices'])].name
         indigo.server.log(f"{' Send Beep to ' + name + ' ':{'='}^80}")

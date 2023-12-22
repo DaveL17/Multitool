@@ -23,9 +23,8 @@ except ImportError as error:
 import DLFramework.DLFramework as Dave  # noqa
 from constants import DEBUG_LABELS
 from plugin_defaults import kDefaultPluginPrefs  # noqa
-import Tools
+from Tools import *
 # from Tests import *
-
 
 # =================================== HEADER ==================================
 __author__    = Dave.__author__
@@ -369,19 +368,19 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def about_indigo():
         """ Placeholder """
-        Tools.about_indigo.report()
+        about_indigo.report()
 
     # =============================================================================
     @staticmethod
     def battery_level_report(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        Tools.battery_level.report(values_dict)
+        battery_level.report(values_dict)
 
     # =============================================================================
     @staticmethod
     def color_picker(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        Tools.color_picker.picker(values_dict)
+        color_picker.picker(values_dict)
         return True
 
     # =============================================================================
@@ -392,43 +391,43 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def device_inventory(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        Tools.device_inventory.get_inventory(values_dict, type_id)
+        device_inventory.get_inventory(values_dict, type_id)
 
     # =============================================================================
     @staticmethod
     def device_last_successful_comm(values_dict:indigo.Dict=None, menu_item:str=""):
         """ Placeholder """
-        Tools.device_last_successful_comm.report_comms(values_dict, menu_item)
+        device_last_successful_comm.report_comms(values_dict, menu_item)
 
     # =============================================================================
     @staticmethod
     def device_to_beep(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        Tools.device_beep.beeper(values_dict)
+        device_beep.beeper(values_dict)
 
     # =============================================================================
     @staticmethod
     def device_to_ping(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        Tools.device_ping.pinger(values_dict)
+        device_ping.pinger(values_dict)
 
     # =============================================================================
     @staticmethod
     def dict_to_print(fltr:str="", values_dict:indigo.Dict=None, target_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.dict_to_print.print_dict(values_dict)
+        return dict_to_print.print_dict(values_dict)
 
     # =============================================================================
     @staticmethod
     def environment_path():
         """ Placeholder """
-        Tools.environment_path.show_path()
+        environment_path.show_path()
 
     # =============================================================================
     @staticmethod
     def error_inventory(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.error_inventory.show_inventory(values_dict)
+        return error_inventory.show_inventory(values_dict)
 
     # =============================================================================
     def generator_device_list(self, fltr:str="", values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
@@ -494,127 +493,128 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def generator_substitutions(values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
         """ Placeholder """
-        return Tools.generator_substitutions.return_substitution(values_dict)
+        return generator_substitutions.return_substitution(values_dict)
 
     # =============================================================================
     @staticmethod
     def get_serial_ports(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.serial_ports.show_ports(values_dict)
+        return serial_ports.show_ports(values_dict)
 
     # =============================================================================
     @staticmethod
     def indigo_inventory():  # noqa
         """ Placeholder """
-        Tools.indigo_inventory.show_inventory()
+        indigo_inventory.show_inventory()
 
     # =============================================================================
     @staticmethod
     def inspect_method(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        Tools.inspect_method.display_docstring(values_dict)
+        inspect_method.display_docstring(values_dict)
 
     # =============================================================================
     @staticmethod
     def installed_plugins():
         """ Placeholder """
-        Tools.installed_plugins.get_list()
+        installed_plugins.get_list()
 
     # =============================================================================
     @staticmethod
     def list_of_plugin_methods(fltr:str="", values_dict:indigo.Dict=None, target_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.plugin_methods.list_methods(values_dict)
+        return plugin_methods.list_methods(values_dict)
 
     # =============================================================================
     @staticmethod
     def list_of_indigo_classes(fltr:str="", values_dict:indigo.Dict=None, target_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.indigo_classes.display_classes(values_dict)
+        return indigo_classes.display_classes(values_dict)
 
     # =============================================================================
     @staticmethod
     def list_of_indigo_methods(fltr:str="", values_dict:indigo.Dict=None, target_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.indigo_methods.display_methods(values_dict)
+        return indigo_methods.display_methods(values_dict)
 
     # =============================================================================
     @staticmethod
     def log_of_method(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        Tools.log_of_method.display_inspection(values_dict)
+        log_of_method.display_inspection(values_dict)
 
+    # Apparently Apple removed this functionality in Ventura
     # =============================================================================
-    @staticmethod
-    def man_page(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
-        """ Placeholder """
-        return Tools.man_page.display_page(values_dict)
+    # @staticmethod
+    # def man_page(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
+    #     """ Placeholder """
+    #     return man_page.display_page(values_dict)
 
     # =============================================================================
     @staticmethod
     def modify_numeric_variable(action_group:indigo.actionGroup):
         """ Placeholder """
-        return Tools.modify_numeric_variable.modify(action_group)
+        return modify_numeric_variable.modify(action_group)
 
     # =============================================================================
     @staticmethod
     def modify_time_variable(action_group:indigo.actionGroup):
         """ Placeholder """
-        return Tools.modify_time_variable.modify(action_group)
+        return modify_time_variable.modify(action_group)
 
     # =============================================================================
     @staticmethod
     def remove_all_delayed_actions(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.remove_delayed_actions.remove_actions()
+        return remove_delayed_actions.remove_actions()
 
     # =============================================================================
     @staticmethod
     def running_plugins():
         """ Placeholder """
-        Tools.running_plugins.show_running_plugins()
+        running_plugins.show_running_plugins()
 
     # =============================================================================
     @staticmethod
     def results_output(values_dict:indigo.Dict=None, caller:str=""):
         """ Placeholder """
-        Tools.results_output.display_results(values_dict, caller)
+        results_output.display_results(values_dict, caller)
 
     # =============================================================================
     @staticmethod
     def object_directory(values_dict:indigo.Dict=None, caller:str=""):
         """ Placeholder """
-        Tools.object_directory.display_results(values_dict, caller)
+        object_directory.display_results(values_dict, caller)
 
     # =============================================================================
     @staticmethod
     def object_dependencies(values_dict:indigo.Dict=None, caller:str=""):
         """ Placeholder """
-        Tools.object_dependencies.display_results(values_dict, caller)
+        object_dependencies.display_results(values_dict, caller)
 
     # =============================================================================
     @staticmethod
     def send_status_request(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.send_status_request.get_status(values_dict)
+        return send_status_request.get_status(values_dict)
 
     # =============================================================================
     @staticmethod
     def speak_string(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.speak_string.speaker(values_dict)
+        return speak_string.speaker(values_dict)
 
     # =============================================================================
     @staticmethod
     def subscribed_to_changes(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.subscribe_to_changes.subscriber(values_dict)
+        return subscribe_to_changes.subscriber(values_dict)
 
     # =============================================================================
     @staticmethod
     def substitution_generator(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        return Tools.substitution_generator.get_substitute(values_dict)
+        return substitution_generator.get_substitute(values_dict)
 
     # =============================================================================
     @staticmethod

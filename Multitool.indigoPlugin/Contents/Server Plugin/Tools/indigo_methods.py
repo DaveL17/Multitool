@@ -1,17 +1,14 @@
 """
 Generates a list of Indigo methods for inspection
 
-The list_of_indigo_methods method will generate a list of Indigo methods available for
-inspection. It is used to populate the list of methods control for the
-Methods - Indigo Base... tool.
-
-:param str fltr:
-:param indigo.Dict values_dict:
-:param str target_id:
-:return:
+The list_of_indigo_methods method will generate a list of Indigo methods available for inspection. It is used to
+populate the list of methods control for the Methods - Indigo Base... tool.
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -20,7 +17,13 @@ def __init__():
     pass
 
 
-def display_methods(values_dict):
+def display_methods(values_dict:indigo.Dict=None):
+    """
+    Generate a list of Indigo methods given a user-selected class
+
+    :param indigo.Dict values_dict:
+    :return:
+    """
     return_value = []
     try:
         if len(values_dict.keys()) == 0:

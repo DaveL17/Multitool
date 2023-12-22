@@ -4,9 +4,12 @@ Print an Indigo object's dependencies to the Indigo events log
 The results_output method formats an object's *.dependencies() and outputs it to the Indigo events log. It's used in
 conjunction with the Object Inspection... tool.
 """
-import indigo
 import logging
-from constants import *
+from constants import INSTANCE_TO_COMMAND_NAMESPACE
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -15,11 +18,12 @@ def __init__():
     pass
 
 
-def display_results(values_dict, caller):
+def display_results(values_dict:indigo.Dict=None, caller:str=""):
     """
     Prepare and output the dependency results to the Indigo events log.
-    :param values_dict:
-    :param caller:
+
+    :param indigo.Dict values_dict:
+    :param str caller:
     :return:
     """
     LOGGER.debug(f"Caller: {caller}")
@@ -39,4 +43,3 @@ def display_results(values_dict, caller):
         indigo.server.log("=" * 80)
     except KeyError:
         LOGGER.warning("Object type not currently supported. Please provide a report so the plugin can be updated.")
-

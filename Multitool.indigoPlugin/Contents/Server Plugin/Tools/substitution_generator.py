@@ -1,17 +1,16 @@
 """
 Generate an Indigo substitution string
 
-The substitution_generator method is used to construct Indigo substitution string segments
-from Indigo objects.  For example,
+The substitution_generator method is used to construct Indigo substitution string segments from Indigo objects.  For
+example,
 
     Indigo Device Substitution: %%d:978421449:stateName%%
-
-:param indigo.Dict values_dict:
-:param str type_id:
-:return:
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 ERR_MSG_DICT = indigo.Dict()
@@ -21,7 +20,13 @@ def __init__():
     pass
 
 
-def get_substitute(values_dict):
+def get_substitute(values_dict:indigo.Dict=None):
+    """
+    Generate a substitution based on user input
+
+    :param indigo.Dict values_dict:
+    :return:
+    """
     substitution_text = values_dict.get('thingToSubstitute', '')
     result = indigo.activePlugin.substitute(substitution_text)
 

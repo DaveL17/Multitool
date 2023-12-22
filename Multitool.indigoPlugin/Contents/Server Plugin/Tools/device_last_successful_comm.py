@@ -4,10 +4,12 @@ Print information on the last successful communication with a device
 The device_last_successful_comm method prints information on the last successful
 communication with each Indigo device to the Indigo events log.
 
-:return:
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -16,8 +18,14 @@ def __init__():
     pass
 
 
-def report_comms(values_dict, menu_item):
+def report_comms(values_dict:indigo.Dict=None, menu_item:str=""):
+    """
+    Print information on the last successful communication
 
+    :param indigo.Dict values_dict:
+    :param str menu_item:
+    :return:
+    """
     dev_filter = values_dict['listOfDevices']
     if dev_filter == "all devices":
         dev_filter = ""

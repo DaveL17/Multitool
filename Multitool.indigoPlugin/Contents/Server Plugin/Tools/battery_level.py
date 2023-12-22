@@ -1,12 +1,12 @@
 """
 Print list of Z-Wave devices and their current battery level
-
-:param indigo.Dict values_dict:
-:param int type_id:
-:return:
 """
-import indigo
+
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -15,7 +15,13 @@ def __init__():
     pass
 
 
-def report(values_dict):
+def report(values_dict: indigo.Dict = None):
+    """
+    Print list of Z-Wave devices and their current battery levels
+
+    :param indigo.Dict values_dict:
+    :return:
+    """
     collection = {}
 
     # Gather all battery-powered devices and their battery levels
@@ -29,7 +35,7 @@ def report(values_dict):
         indigo.server.log("No battery devices found.")
     else:
         longest_name = max(map(len, collection))
-        for k in collection:
+        for k in collection.items():
             indigo.server.log(
                 f"{k:<{longest_name}} |{'-' * int(collection[k] / 2)}| {collection[k]}%"
             )

@@ -1,17 +1,15 @@
 """
 Save "Subscribe to Changes" menu item configuration to plugin prefs for storage.
 
-The subscribed_to_changes method is used to save the settings for the "Subscribe to
-Changes" menu tool. We do this because there is no closedMenuConfigUi method similar to
-closedDeviceConfigUi method. We must save the menu configuration settings to the plugin
-configuration menu so that they're persistent.
-
-:param indigo.Dict values_dict:
-:param str type_id:
-:return:
+The subscribed_to_changes method is used to save the settings for the "Subscribe to Changes" menu tool. We do this
+because there is no closedMenuConfigUi method similar to closedDeviceConfigUi method. We must save the menu
+configuration settings to the plugin configuration menu so that they're persistent.
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -20,7 +18,13 @@ def __init__():
     pass
 
 
-def subscriber(values_dict):
+def subscriber(values_dict:indigo.Dict=None):
+    """
+    Save "Subscribe to Changes" menu item configuration to plugin prefs for storage.
+
+    :param indigo.Dict values_dict:
+    :return:
+    """
     # If user changes subscription preference, set flag for plugin restart (see __init__)
     if indigo.activePlugin.pluginPrefs['enableSubscribeToChanges'] == values_dict['enableSubscribeToChanges']:
         restart_required = False

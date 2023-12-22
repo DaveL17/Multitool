@@ -1,16 +1,14 @@
 """
 Generate the construct for an Indigo substitution
 
-The generator_substitutions method is used with the Substitution Generator. It is the
-callback that's used to create the Indigo substitution construct.
-
-:param indigo.Dict values_dict:
-:return str type_id:
-:return int target_id:
-:return:
+The generator_substitutions method is used with the Substitution Generator. It is the callback that's used to create
+the Indigo substitution construct.
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -19,7 +17,13 @@ def __init__():
     pass
 
 
-def return_substitution(values_dict):
+def return_substitution(values_dict:indigo.Dict=None):
+    """
+    Generate an Indigo substitution string based on user-selected object
+
+    :param indigo.Dict values_dict:
+    :return:
+    """
     dev_var_id = values_dict['devVarMenu']
     dev_var_value = values_dict['generator_state_or_value']
 

@@ -1,12 +1,14 @@
 """
 Print an inventory of Indigo devices to the Indigo events log
 
-The device_inventory method prints an inventory of all Indigo devices to the Indigo events
-log.
+The device_inventory method prints an inventory of all Indigo devices to the Indigo events log.
 """
 import datetime as dt
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -15,8 +17,10 @@ def __init__():
     pass
 
 
-def get_inventory(values_dict, type_id):
+def get_inventory(values_dict:indigo.Dict=None, type_id:str=""):
     """
+    Print an inventory of devices to the Indigo Events log
+
     :param indigo.Dict values_dict:
     :param str type_id:
     :return:
@@ -42,19 +46,19 @@ def get_inventory(values_dict, type_id):
 
     if len(inventory) > 0:
         # ====================== Generate Custom Table Settings =======================
-        x0 = max([len(f"{thing[0]}") for thing in inventory]) + 2
-        x1 = max([len(f"{thing[1]}") for thing in inventory]) + 2
-        x2 = max([len(f"{thing[2]}") for thing in inventory]) + 2
-        x3 = max([len(f"{thing[3]}") for thing in inventory])
-        x4 = max([len(f"{thing[4]}") for thing in inventory])
-        table_width = sum((x0, x1, x2, x3, x4)) + 6
+        x_0 = max([len(f"{thing[0]}") for thing in inventory]) + 2
+        x_1 = max([len(f"{thing[1]}") for thing in inventory]) + 2
+        x_2 = max([len(f"{thing[2]}") for thing in inventory]) + 2
+        x_3 = max([len(f"{thing[3]}") for thing in inventory])
+        x_4 = max([len(f"{thing[4]}") for thing in inventory])
+        table_width = sum((x_0, x_1, x_2, x_3, x_4)) + 6
 
         # ============================= Output the Header =============================
         indigo.server.log(f"{f' Inventory of {filter_item} Devices ':=^{table_width}}")
         indigo.server.log(
-            f"{'ID':<{x0}} {'Addr':<{x1}} "
-            f"{'Name':<{x2}} "
-            f"{'Last Changed':<{x3}} "
+            f"{'ID':<{x_0}} {'Addr':<{x_1}} "
+            f"{'Name':<{x_2}} "
+            f"{'Last Changed':<{x_3}} "
             f"{'Enabled':<3}"
         )
         indigo.server.log("=" * table_width)
@@ -62,10 +66,10 @@ def get_inventory(values_dict, type_id):
         # ============================= Output the Table ==============================
         for thing in inventory:
             indigo.server.log(
-                f"{thing[0]:<{x0}} "
-                f"{f'[{thing[1]}]':<{x1}} "
-                f"{thing[2]:<{x2}} "
-                f"{dt.datetime.strftime(thing[3], '%Y-%m-%d %H:%M:%S'):<{x3}} "
+                f"{thing[0]:<{x_0}} "
+                f"{f'[{thing[1]}]':<{x_1}} "
+                f"{thing[2]:<{x_2}} "
+                f"{dt.datetime.strftime(thing[3], '%Y-%m-%d %H:%M:%S'):<{x_3}} "
                 f"[ {thing[4]:^3} ]"
             )
     else:

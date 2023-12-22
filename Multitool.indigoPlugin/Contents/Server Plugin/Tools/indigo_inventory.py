@@ -5,8 +5,11 @@ Body placeholder
 
 :return:
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger()
 
@@ -16,6 +19,11 @@ def __init__():
 
 
 def show_inventory():
+    """
+    Build a complete inventory of Indigo objects and output it to the Indigo Events log
+
+    :return:
+    """
     # ============================== Build Inventory ==============================
     inventory = {
         'Action Groups': [],
@@ -92,7 +100,7 @@ def show_inventory():
     col_2 = []
     col_3 = []
 
-    for key in inventory:
+    for key in inventory.keys():
         col_0 += [item[0] for item in inventory[key]]
         col_1 += [item[1] for item in inventory[key]]
         col_2 += [item[2] for item in inventory[key]]

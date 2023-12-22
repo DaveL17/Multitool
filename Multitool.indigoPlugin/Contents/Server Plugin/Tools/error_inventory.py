@@ -1,17 +1,15 @@
 """
 Create an inventory of error messages appearing in the Indigo Logs.
 
-The error_inventory method will scan log files and parse out any log lines than contain the
-term 'error'. It is agnostic about whether the log line is an actual error or a debug
-statement that contains the term error.
-
-:param indigo.Dict values_dict:
-:param int type_id:
-:return:
+The error_inventory method will scan log files and parse out any log lines than contain the term 'error'. It is
+agnostic about whether the log line is an actual error or a debug statement that contains the term error.
 """
-import indigo
 import logging
 import os
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -20,7 +18,13 @@ def __init__():
     pass
 
 
-def show_inventory(values_dict):
+def show_inventory(values_dict:indigo.Dict=None):
+    """
+    Print an inventory of error messages to the Indigo Events log
+
+    :param indigo.Dict values_dict:
+    :return:
+    """
     check_list = (' Err ', ' err ', 'Error', 'error')
     if values_dict.get('error_level', 'err') == 'err_warn':
         check_list += ('Warning', 'warning')
@@ -45,7 +49,7 @@ def show_inventory(values_dict):
 
                         for line in log_file.split('\n'):
                             if any(item in line for item in check_list):
-                                outfile.write(f"{root + filename:<130}{line}\n")
+                                outfile.write(f"{filename:<26}{line}\n")
 
     indigo.server.log(f"Error message inventory saved to: {full_path}")
     return True

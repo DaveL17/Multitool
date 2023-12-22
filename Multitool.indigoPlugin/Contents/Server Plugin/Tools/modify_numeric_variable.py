@@ -1,13 +1,11 @@
 """
-Title Placeholder
-
-Body placeholder
-
-:param indigo.ActionGroup action_group:
-:return:
+Modifies a variable value based on a user-supplied formula
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -16,7 +14,13 @@ def __init__():
     pass
 
 
-def modify(action_group):
+def modify(action_group:indigo.actionGroup=None):
+    """
+    Modifies a variable value based on a user-supplied formula
+
+    :param indigo.actionGroup action_group:
+    :return:
+    """
     var_id = int(action_group.props['list_of_variables'])
     var = indigo.variables[var_id]
     expr = indigo.activePlugin.substitute(action_group.props['modifier'])

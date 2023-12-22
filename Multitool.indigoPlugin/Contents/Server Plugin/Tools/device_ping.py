@@ -1,16 +1,14 @@
 """
 Send a ping request to a device
 
-The pinger method will send a ping request to a selected Indigo device. Only
-enabled devices are displayed. Plugin devices must support sendDevicePing method and plugin
-must be enabled.
-
-:param indigo.Dict values_dict:
-:param int type_id:
-:return:
+The pinger method will send a ping request to a selected Indigo device. Only enabled devices are displayed. Plugin
+devices must support sendDevicePing method and plugin must be enabled.
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -19,7 +17,13 @@ def __init__():
     pass
 
 
-def pinger(values_dict):
+def pinger(values_dict:indigo.Dict=None):
+    """
+    Send a ping to the selected device
+
+    :param indigo.Dict values_dict:
+    :return:
+    """
     dev_id = int(values_dict['listOfDevices'])
     dev = indigo.devices[dev_id]
 

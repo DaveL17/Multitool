@@ -1,19 +1,21 @@
 """
 Print a list of running plugins to the Indigo events log
 
-The running_plugins method prints a table of Indigo plugins that are currently enabled. It
-includes system and other information that is useful for troubleshooting purposes.
+The running_plugins method prints a table of Indigo plugins that are currently enabled. It includes system and other
+information that is useful for troubleshooting purposes.
 
-Display the uid, pid, parent pid, recent CPU usage, process start time, controlling tty,
-elapsed CPU usage, and the associated command.  If the -u option is also used, display the
-username rather than the numeric uid.  When -o or -O is used to add to the display
-following -f, the command field is not truncated as severely as it is in other formats.
+Display the uid, pid, parent pid, recent CPU usage, process start time, controlling tty, elapsed CPU usage, and the
+associated command.  If the -u option is also used, display the username rather than the numeric uid.  When -o or -O is
+used to add to the display following -f, the command field is not truncated as severely as it is in other formats.
 
 :return:
 """
-import indigo
 import logging
 import subprocess
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -23,6 +25,11 @@ def __init__():
 
 
 def show_running_plugins():
+    """
+    Generate a list of running plugins and output it to the Indigo Events log
+
+    :return:
+    """
     with subprocess.Popen(
             "/bin/ps -ef | grep 'MacOS/IndigoPluginHost' | grep -v grep",
             shell=True,

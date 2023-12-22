@@ -1,11 +1,14 @@
 """
 Print an Indigo object's directory to the Indigo events log
 
-The results_output method formats an object's dir() and outputs it to the Indigo events log. It's
-used in conjunction with the Object Directory... tool.
+The results_output method formats an object's dir() and outputs it to the Indigo events log. It's used in conjunction
+with the Object Directory... tool.
 """
-import indigo
 import logging
+try:
+    import indigo
+except ImportError:
+    pass
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -14,11 +17,12 @@ def __init__():
     pass
 
 
-def display_results(values_dict, caller):
+def display_results(values_dict:indigo.Dict=None, caller:str=""):
     """
+    Get a Python dir() of the user-specified object and output to the Indigo Events log
 
-    :param values_dict:
-    :param caller:
+    :param indigo.Dict values_dict:
+    :param str caller:
     :return:
     """
     LOGGER.debug(f"Caller: {caller}")

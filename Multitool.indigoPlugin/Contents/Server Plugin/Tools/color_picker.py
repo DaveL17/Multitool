@@ -7,14 +7,24 @@ Write color information to the Indigo events log to include the raw, hex, and RG
 :param int picker.type_id:
 :return:
 """
-import indigo
+
+try:
+    import indigo
+except ImportError:
+    pass
 
 
 def __init__():
     pass
 
+def picker(values_dict:indigo.Dict=None, type_id:str=""):
+    """
+    Print raw, hex, and rgb color values to the Indigo events log
 
-def picker(values_dict, type_id=""):
+    :param indigo.Dict values_dict:
+    :param str type_id:
+    :return:
+    """
     if not values_dict['chosenColor']:
         values_dict['chosenColor'] = "FF FF FF"
     indigo.server.log(f"Raw: {values_dict['chosenColor']}")

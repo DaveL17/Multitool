@@ -1,5 +1,6 @@
 
 ### v2023.1.0
+- Removes Man Page tool as feature deprecated by Apple in Ventura.
 - Code refinements
 
 ### v2022.1.10
