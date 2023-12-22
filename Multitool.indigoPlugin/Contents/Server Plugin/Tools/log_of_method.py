@@ -24,3 +24,11 @@ def display_inspection(values_dict):
     method_to_call = getattr(method_to_call, values_dict['list_of_indigo_methods'])
     inspector = inspect.getdoc(method_to_call)
     indigo.server.log(f"\nindigo.{values_dict['list_of_indigo_classes']}.{inspector}")
+
+# TODO: Update this to improve the instances where the underlying item isn't callable.
+# import inspect
+# 
+# foo = inspect.getdoc(indigo.host.debugMode)  <== this is an example of something that's not callable.
+# # indigo.server.log(f"{foo}")
+# bar = callable(indigo.host.debugMode)
+# indigo.server.log(f"{bar}")

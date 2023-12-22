@@ -42,28 +42,6 @@
         <CallbackMethod>device_to_beep</CallbackMethod>
     </MenuItem>
 
-<!--    <MenuItem id="device_dependencies">-->
-<!--        <Name>Device Dependencies...</Name>-->
-<!--        <ConfigUI>-->
-<!--            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>-->
-<!--            <Field id="instructions" type="label">-->
-<!--                <Label>Select the device you would like to query for dependencies.</Label>-->
-<!--            </Field>-->
-<!--            <Field id="listOfDevices" type="menu">-->
-<!--                <Label>Device:</Label>-->
-<!--                <List class="self" filter="" method="generator_device_list" dynamicReload="true"/>-->
-<!--            </Field>-->
-
-<!--            <Field id="subGeneratorButton" type="button" tooltip="List the dependencies.">-->
-<!--                <Label/>-->
-<!--                <Title>List Dependencies</Title>-->
-<!--                <CallbackMethod>device_dependencies</CallbackMethod>-->
-<!--            </Field>-->
-<!--            <ButtonTitle>Close</ButtonTitle>-->
-
-<!--        </ConfigUI>-->
-<!--    </MenuItem>-->
-
     <MenuItem id="deviceInventoryList">
         <Name>Device Inventory...</Name>
         <ConfigUI>
@@ -421,6 +399,10 @@
 
             <Field id="substitutionTextLabel" type="Label">
                 <Label>Select a device or variable from the first dropdown list and then select the device state or variable value from the second dropdown list.</Label>
+            </Field>
+
+            <Field id="substitutionTextLabelNote" type="Label" fontSize="small">
+                <Label>Note: beginning with Indigo 2021.2, you can simply right-click on a variable or device state and select "Copy Substitution String".</Label>
             </Field>
 
             <Field id="subGeneratorSeparator" type="separator"/>

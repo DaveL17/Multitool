@@ -3,7 +3,6 @@ __all__ = [
     "battery_level",
     "color_picker",
     "device_beep",
-    "device_dependencies",
     "device_inventory",
     "device_last_successful_comm",
     "device_ping",

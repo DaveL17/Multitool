@@ -1,7 +1,14 @@
 
+### v2023.1.0
+- Code refinements
+
+### v2022.1.10
+- Updates plugin to API `3.2`.
+- Notes that Indigo 2021.2 added ability to create a substitution string natively.
+ 
 ### v2022.1.9
 - Adds trap to `object_dependencies.py` to account for unsupported object types.
-- Adds changes to Object Inspection Tool to plugin Wiki.
+- Updates Object Inspection Tool in plugin Wiki to include expanded dependencies inspection.
 
 ### v2022.1.8
 - Adds feature to print object dependencies to Object Inspection Tool, and removes Device Dependencies Tool from 

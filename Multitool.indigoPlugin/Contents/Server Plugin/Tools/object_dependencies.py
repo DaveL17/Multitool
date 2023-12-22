@@ -33,6 +33,7 @@ def display_results(values_dict, caller):
         for obj_cat in dep_dict:
             indigo.server.log(f"{obj_cat}:")
             for dep in dep_dict[obj_cat]:
+                indigo.server.log(f"   {len(dep)}")
                 indigo.server.log(f"   {dep['Name']} ({dep['ID']})")
 
         indigo.server.log("=" * 80)

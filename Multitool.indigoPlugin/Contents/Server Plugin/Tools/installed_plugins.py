@@ -7,6 +7,9 @@ log along with the plugin's bundle identifier. In instances where the plugin is 
 
 :return:
 """
+# FIXME - if a plugin is missing its .plist file, it breaks the report. Consider trapping and returning a warning
+#  message.
+
 import indigo
 import logging
 import plistlib
