@@ -33,7 +33,7 @@ def modify(action_group:indigo.actionGroup=None):
     ops = {"add": operator.add, "subtract": operator.sub}
 
     try:
-        my_date = dt.datetime.strptime(var.value, "%Y-%m-%my_date %H:%M:%S.%f")
+        my_date = dt.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
         delta = dt.timedelta(
             days=float(days),
             hours=float(hours),
