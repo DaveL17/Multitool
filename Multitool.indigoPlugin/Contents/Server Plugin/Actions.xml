@@ -1,6 +1,27 @@
 <?xml version="1.0"?>
 <Actions>
 
+    <!-- The only thing this action does is return a value to a caller using plugin.executeAction(). -->
+    <Action id="test_action_return" hidden="true">
+        <Name>Test Action Return</Name>
+        <ConfigUI>
+
+            <Field id="field1" type="textfield">
+                <Label>Field 1:</Label>
+            </Field>
+
+            <Field id="field2" type="textfield">
+                <Label>Field 1:</Label>
+            </Field>
+
+            <Field id="field3" type="textfield">
+                <Label>Field 1:</Label>
+            </Field>
+
+        </ConfigUI>
+        <CallbackMethod>test_action_return</CallbackMethod>
+    </Action>
+
     <Action id="modify_numeric_variable" uiPath="Variable Actions">
         <Name>Modify Numeric Variable</Name>
         <ConfigUI>

@@ -1,5 +1,6 @@
 
 ### v2023.1.0
+- Adds plugin action for testing callback requests (see docs for more information).
 - Removes Man Page tool as feature deprecated by Apple in Ventura.
 - Code refinements
 

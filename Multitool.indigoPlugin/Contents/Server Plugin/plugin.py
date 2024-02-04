@@ -58,11 +58,8 @@ class Plugin(indigo.PluginBase):
         self.pluginIsShuttingDown = False
 
         # =============================== Debug Logging ================================
-        log_format = '%(asctime)s.%(msecs)03d\t%(levelname)-10s\t%(name)s.%(funcName)-28s %(message)s'
         self.debug_level = int(self.pluginPrefs.get('showDebugLevel', '30'))
-        self.plugin_file_handler.setFormatter(
-            logging.Formatter(log_format, datefmt='%Y-%m-%d %H:%M:%S')
-        )
+        self.plugin_file_handler.setFormatter(logging.Formatter(Dave.LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S'))
         self.indigo_log_handler.setLevel(self.debug_level)
 
         # ====================== Initialize DLFramework =======================
@@ -100,10 +97,7 @@ class Plugin(indigo.PluginBase):
             # Debug Logging
             self.debug_level = int(values_dict.get('showDebugLevel', "30"))
             self.indigo_log_handler.setLevel(self.debug_level)
-            indigo.server.log(
-                f"Debugging on (Level: {DEBUG_LABELS[self.debug_level]} ({self.debug_level})"
-            )
-
+            indigo.server.log(f"Debugging on (Level: {DEBUG_LABELS[self.debug_level]} ({self.debug_level})")
             self.logger.debug("Plugin prefs saved.")
 
         else:
@@ -191,13 +185,9 @@ class Plugin(indigo.PluginBase):
         """
         # Grab the setting values for the "Subscribe to Changes" tool
         if menu_id == 'subscribeToChanges':
-
             changes_dict = indigo.Dict()
-            changes_dict['enableSubscribeToChanges'] = (
-                self.pluginPrefs.get('enableSubscribeToChanges', False)
-            )
+            changes_dict['enableSubscribeToChanges'] = (self.pluginPrefs.get('enableSubscribeToChanges', False))
             changes_dict['subscribedDevices'] = self.pluginPrefs.get('subscribedDevices', '')
-
             return_value = changes_dict
 
         else:
@@ -234,8 +224,7 @@ class Plugin(indigo.PluginBase):
         # ================ Subscribe to Indigo Object Changes =================
         if self.pluginPrefs.get('enableSubscribeToChanges', False):
             self.logger.warning(
-                "You have subscribed to device and variable changes. Disable this feature if not "
-                "in use."
+                "You have subscribed to device and variable changes. Disable this feature if not in use."
             )
             indigo.devices.subscribeToChanges()
             indigo.variables.subscribeToChanges()
@@ -330,9 +319,7 @@ class Plugin(indigo.PluginBase):
             try:
                 dt.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
             except ValueError:
-                error_msg_dict['list_of_variables'] = (
-                    "The variable value must be a POSIX timestamp."
-                )
+                error_msg_dict['list_of_variables'] = ("The variable value must be a POSIX timestamp.")
 
             for val in ('days', 'hours', 'minutes', 'seconds'):
                 try:
@@ -342,8 +329,8 @@ class Plugin(indigo.PluginBase):
 
         if len(error_msg_dict) > 0:
             error_msg_dict['showAlertText'] = (
-                "Configuration Errors\n\nThere are one or more settings that need to be corrected. "
-                "Fields requiring attention will be highlighted."
+                "Configuration Errors\n\nThere are one or more settings that need to be corrected. Fields requiring "
+                "attention will be highlighted."
             )
             return False, action_dict, error_msg_dict
 
@@ -382,10 +369,6 @@ class Plugin(indigo.PluginBase):
         """ Placeholder """
         color_picker.picker(values_dict)
         return True
-
-    # =============================================================================
-    # def device_dependencies(self, values_dict:indigo.Dict=None, type_id:str=""):  # noqa fixme
-    #     return device_dependencies.dependencies(values_dict)
 
     # =============================================================================
     @staticmethod
@@ -468,9 +451,9 @@ class Plugin(indigo.PluginBase):
 
         # Add plugin identifiers
         _ = [filter_list.append((dev.pluginId, dev.pluginId))
-         for dev in indigo.devices
-         if (dev.pluginId, dev.pluginId) not in filter_list
-         ]
+             for dev in indigo.devices
+             if (dev.pluginId, dev.pluginId) not in filter_list
+             ]
 
         return filter_list
 
@@ -615,6 +598,30 @@ class Plugin(indigo.PluginBase):
     def substitution_generator(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
         return substitution_generator.get_substitute(values_dict)
+
+    # =============================================================================
+    @staticmethod
+    def test_action_return(action, return_value=None):
+        """
+        Dummy action to test return values
+
+        The test_action_return method is used to test return values for calls to plugin.executeAction() calls. The
+        plugin will return a value based on the 'return_value' type passed to the method.
+        """
+        if action.props['return_value'] in [None, ""]:
+            return None
+        elif action.props['return_value'] == "int":
+            return 1
+        elif action.props['return_value'] == "float":
+            return 1.0
+        elif action.props['return_value'] == "str":
+            return "string"
+        elif action.props['return_value'] == "tuple":
+            return tuple((None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()))
+        elif action.props['return_value'] == "dict":
+            return {'a': None, 'b': 1, 'c': 2.0, 'd': "string", 'e': (), 'f': indigo.Dict(), 'g': indigo.List()}
+        elif action.props['return_value'] == "list":
+            return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
 
     # =============================================================================
     @staticmethod
