@@ -2,7 +2,7 @@
 <Actions>
 
     <!-- The only thing this action does is return a value to a caller using plugin.executeAction(). -->
-    <Action id="test_action_return" hidden="true">
+    <Action id="test_action_return" uiPath="hidden">
         <Name>Test Action Return</Name>
         <ConfigUI>
 

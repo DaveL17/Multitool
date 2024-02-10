@@ -35,9 +35,8 @@ def report(values_dict: indigo.Dict = None):
         indigo.server.log("No battery devices found.")
     else:
         longest_name = max(map(len, collection))
-        for k in collection.items():
+        for k in collection:
             indigo.server.log(
-                f"{k:<{longest_name}} |{'-' * int(collection[k] / 2)}| {collection[k]}%"
+                f"{k:<{longest_name}} | {'-' * int(collection[k] / 2)}| {collection[k]}%"
             )
-
     return True

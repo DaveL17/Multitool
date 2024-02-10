@@ -32,7 +32,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2023.1.0'
+__version__   = '2023.1.1'
 
 
 # =============================================================================

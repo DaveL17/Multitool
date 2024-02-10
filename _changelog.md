@@ -1,4 +1,8 @@
 
+### v2023.1.1
+- Fixes bug causing Test Action Return to appear in Indigo UI (it is now hidden.)
+- Fixes bug in Battery Level Report that kept the report from being output to the log.
+
 ### v2023.1.0
 - Adds plugin action for testing callback requests (see docs for more information).
 - Removes Man Page tool as feature deprecated by Apple in Ventura.
