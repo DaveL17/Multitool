@@ -14,7 +14,9 @@ import datetime as dt
 import json
 import logging
 import platform
+from queue import Queue
 import subprocess
+from threading import Thread
 
 try:
     import indigo  # noqa
@@ -27,9 +29,6 @@ import DLFramework.DLFramework as Dave  # noqa
 from constants import DEBUG_LABELS
 from plugin_defaults import kDefaultPluginPrefs  # noqa
 from Tools import *
-from threading import Thread
-from queue import Queue
-
 # from Tests import *
 
 # =================================== HEADER ==================================
@@ -643,6 +642,7 @@ class Plugin(indigo.PluginBase):
         return True
 
     def network_quality_test_os(self):
+        """ Test the OS version to ensure that the network quality test tool is available """
         # Test OS compatability
         if (float(platform.mac_ver()[0])) < 12.0:
             self.logger.warning("This tool requires at least MacOS 12.0 Monterey.")
@@ -651,7 +651,7 @@ class Plugin(indigo.PluginBase):
 
     @staticmethod
     def network_quality_flags(props):
-
+        """ Parse the config preferences into the appropriate command line arguments. """
         # Build command line argument
         command = ['networkQuality']
         # Do not run a download test (implies -s)

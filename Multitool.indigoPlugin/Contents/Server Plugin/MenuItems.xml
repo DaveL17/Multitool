@@ -232,7 +232,7 @@
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
                 <Field id="networkQualityLabel" type="Label">
-                    <Label>This tool runs the macOS Network Quality command line tool using the options configured below. It may take some time for the results to appear in the Indigo events log.</Label>
+                    <Label>This tool runs the macOS Network Quality command line tool using the options configured below. It may take some time for the results to appear in the Indigo events log. The test results will be output to the Events log.</Label>
                 </Field>
                 <Field id="networkQualityLabel2" type="Label" fontColor="red">
                     <Label>Using the tool from the plugin menu does *not* update any network quality devices you may have.</Label>
