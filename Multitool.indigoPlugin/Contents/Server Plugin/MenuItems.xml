@@ -226,6 +226,46 @@
         </ConfigUI>
     </MenuItem>
 
+    <MenuItem id="networkQuality">
+        <Name>Network Quality Report</Name>
+            <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+
+                <Field id="networkQualityLabel" type="Label">
+                    <Label>This tool runs the macOS Network Quality command line tool using the options configured below. It may take some time for the results to appear in the Indigo events log.</Label>
+                </Field>
+                <Field id="networkQualityLabel2" type="Label" fontColor="red">
+                    <Label>Using the tool from the plugin menu does *not* update any network quality devices you may have.</Label>
+                </Field>
+                <Field id="nqSeparator" type="separator"/>
+                <Field id="runDownloadTest" type="checkbox" defaultValue="true" tooltip="Run download test.">
+                    <Label>Download:</Label>
+                    <Description>Run a download test.</Description>
+                </Field>
+                <Field id="runUploadTest" type="checkbox" defaultValue="true" tooltip="Run upload test.">
+                    <Label>Upload:</Label>
+                    <Description>Run an upload test.</Description>
+                </Field>
+                <Field id="usePrivateRelay" type="checkbox" defaultValue="false" tooltip="Use iCloud Private Relay.">
+                    <Label>Private Relay:</Label>
+                    <Description>Use iCloud Private Relay.</Description>
+                </Field>
+                <Field id="runTestsSequentially" type="checkbox" defaultValue="false" tooltip="Run tests sequentially instead of parallel upload/download.">
+                    <Label>Sequential Tests:</Label>
+                    <Description>Run tests sequentially instead of parallel upload/download.</Description>
+                </Field>
+                <Field id="verboseOutput" type="checkbox" defaultValue="false" tooltip="Run tests sequentially instead of parallel upload/download.">
+                    <Label>Verbose:</Label>
+                    <Description>Verbose output.</Description>
+                </Field>
+                <Field id="outputVerification" type="checkbox" defaultValue="false" tooltip="Disable verification of the server identity via TLS.">
+                    <Label>Verification:</Label>
+                    <Description>Disable verification of the server identity via TLS.</Description>
+                </Field>
+            </ConfigUI>
+        <CallbackMethod>network_quality</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="printDict">
         <Name>Object Inspection...</Name>
         <ConfigUI>

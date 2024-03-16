@@ -11,7 +11,10 @@ plugins for Indigo.
 # ================================== IMPORTS ==================================
 # Built-in modules
 import datetime as dt
+import json
 import logging
+import platform
+import subprocess
 
 try:
     import indigo  # noqa
@@ -24,6 +27,9 @@ import DLFramework.DLFramework as Dave  # noqa
 from constants import DEBUG_LABELS
 from plugin_defaults import kDefaultPluginPrefs  # noqa
 from Tools import *
+from threading import Thread
+from queue import Queue
+
 # from Tests import *
 
 # =================================== HEADER ==================================
@@ -32,7 +38,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2023.1.1'
+__version__   = '2023.2.1'
 
 
 # =============================================================================
@@ -65,6 +71,14 @@ class Plugin(indigo.PluginBase):
         # ====================== Initialize DLFramework =======================
         self.Fogbert = Dave.Fogbert(self)
         self.Eval    = Dave.evalExpr(self)
+
+        self.cmd_queue = Queue()
+        self.nq_queue = Queue()
+
+        # Start the thread to execute commands
+        self.command_thread = MyThread(target=self.execute_command, args=(self.cmd_queue, self.nq_queue))
+        # self.command_thread = Thread(target=self.execute_command, args=(self.cmd_queue, self.nq_queue))
+        self.command_thread.start()
 
         # ============================= Remote Debugging ==============================
         # try:
@@ -234,6 +248,10 @@ class Plugin(indigo.PluginBase):
             # indigo.controlPages.subscribeToChanges()  # Not implemented
 
     # =============================================================================
+    def shutdown(self):
+        self.command_thread.stop()
+
+    # =============================================================================
     def variableUpdated(self, orig_var:indigo.Variable, new_var:indigo.Variable):  # noqa
         """
         Title Placeholder
@@ -319,7 +337,7 @@ class Plugin(indigo.PluginBase):
             try:
                 dt.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
             except ValueError:
-                error_msg_dict['list_of_variables'] = ("The variable value must be a POSIX timestamp.")
+                error_msg_dict['list_of_variables'] = "The variable value must be a POSIX timestamp."
 
             for val in ('days', 'hours', 'minutes', 'seconds'):
                 try:
@@ -339,7 +357,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     # ============================== Plugin Methods ===============================
     # =============================================================================
-    def __dummyCallback__(self, values_dict:indigo.Dict=None, type_id:str=""):
+    def __dummyCallback__(self, values_dict: indigo.Dict = None, type_id: str = ""):
         """
         Dummy callback to cause refresh of dialog elements
 
@@ -378,7 +396,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def device_last_successful_comm(values_dict:indigo.Dict=None, menu_item:str=""):
+    def device_last_successful_comm(values_dict: indigo.Dict = None, menu_item: str = ""):
         """ Placeholder """
         device_last_successful_comm.report_comms(values_dict, menu_item)
 
@@ -411,6 +429,32 @@ class Plugin(indigo.PluginBase):
     def error_inventory(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
         return error_inventory.show_inventory(values_dict)
+
+    # =============================================================================
+    def execute_command(self, command_queue, result_queue):
+        """ Get command from queue, run it, and capture the output. """
+        while True:
+            my_command = command_queue.get()
+            my_command = ' '.join(my_command)
+            if my_command is None:  # None signals the end of command execution
+                break
+            try:
+                # Run command and log result.
+                self.logger.debug(f"Command line argument: [ {my_command} ]")
+                indigo.server.log(
+                    "Running network quality test. Results will be displayed when the test is complete (may take some "
+                    "time)."
+                )
+                result = subprocess.check_output(my_command,
+                                                 shell=True,
+                                                 stderr=subprocess.STDOUT,
+                                                 universal_newlines=True)
+
+                result_queue.put(result)
+            except subprocess.CalledProcessError as e:
+                result_queue.put(e.output)
+            except Exception as e:
+                result_queue.put(str(e))
 
     # =============================================================================
     def generator_device_list(self, fltr:str="", values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
@@ -535,21 +579,132 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def modify_numeric_variable(action_group:indigo.actionGroup):
+    def modify_numeric_variable(action_group: indigo.actionGroup):
         """ Placeholder """
         return modify_numeric_variable.modify(action_group)
 
     # =============================================================================
     @staticmethod
-    def modify_time_variable(action_group:indigo.actionGroup):
+    def modify_time_variable(action_group: indigo.actionGroup):
         """ Placeholder """
         return modify_time_variable.modify(action_group)
+
+    # =============================================================================
+    def network_quality_action(self, action_group: indigo.actionGroup):
+        """ Shim used when running the network quality tool from an action. """
+        self.network_quality(action_group.props)
+
+    # =============================================================================
+    def network_quality_device_action(self,  action_group: indigo.actionGroup):
+        """ Update network quality device states after running test. """
+        self.logger.info("Running network quality test. The plugin will be unresponsive until the test is complete.")
+
+        if not self.network_quality_test_os():
+            return False
+
+        dev = indigo.devices[int(action_group.props['selected_device'])]
+
+        command: list = self.network_quality_flags(dev.pluginProps)  # ['networkQuality', '-u', '-v']
+        command.append('-c')  # computer readable format (json) ['networkQuality', '-u', '-v', '-c']
+        command = [' '.join(command)]  # ['networkQuality -u -v -c']
+        self.logger.debug(f"Command line args: {command}")
+
+        # Run the test and get the result.
+        result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
+        results = json.loads(result)
+        self.logger.debug(f"Results payload: {results}")
+
+        # The key 'error_code' only exists if there's a problem. For example, NSURLErrorDomain -1009.
+        if 'error_code' in results:
+            self.logger.warning(f"Warning: error code {results['error_code']} returned.")
+            return False
+
+        # Calculate the test duration in seconds.
+        fmt = "%Y-%m-%d %H:%M:%S.%f"
+        start = dt.datetime.strptime(results['end_date'], fmt)
+        stop = dt.datetime.strptime(results['start_date'], fmt)
+        elapsed_time = (start - stop).total_seconds()
+        self.logger.info(f"Network quality test took approximately {round(elapsed_time, 3)} seconds to complete.")
+
+        # Build the device states list
+        states_list = [
+            {'key': 'base_rtt', 'value': round(results.get('base_rtt', 0), 3)},
+            {'key': 'dl_throughput', 'value': round(results.get('dl_throughput', 0) / 1000000, 3)},
+            {'key': 'end_date', 'value': results['end_date']},
+            {'key': 'elapsed_time', 'value': round(elapsed_time)},
+            {'key': 'responsiveness', 'value': round(results.get('responsiveness', -1), 3)},
+            {'key': 'start_date', 'value': results['start_date']},
+            {'key': 'ul_throughput', 'value': round(results.get('ul_throughput', 0) / 1000000, 3)},
+        ]
+
+        # Update device
+        dev.updateStatesOnServer(states_list)
+
+        return True
+
+    def network_quality_test_os(self):
+        # Test OS compatability
+        if (float(platform.mac_ver()[0])) < 12.0:
+            self.logger.warning("This tool requires at least MacOS 12.0 Monterey.")
+            return False
+        return True
+
+    @staticmethod
+    def network_quality_flags(props):
+
+        # Build command line argument
+        command = ['networkQuality']
+        # Do not run a download test (implies -s)
+        if not props.get('runDownloadTest', True):
+            command.append('-d')
+        # Do not run an upload test (implies -s)
+        if not props.get('runUploadTest', True):
+            command.append('-u')
+        # Use iCloud Private Relay.
+        if props.get('usePrivateRelay', False):
+            command.append('-p')
+        # Run tests sequentially instead of parallel upload/download.
+        if props.get('runTestsSequentially', False):
+            command.append('-s')
+        # Verbose output.
+        if props.get('verboseOutput', False):
+            command.append('-v')
+        # Disable verification of the server identity via TLS.
+        if props.get('outputVerification', False):
+            command.append('-k')
+
+        return command
+
+    # =============================================================================
+    def network_quality(self, action_group: indigo.actionGroup, action_id: str = ""):
+        """ Run the macOS command line Network Quality tool and log the result  """
+
+        if not self.network_quality_test_os():
+            return False
+
+        command = self.network_quality_flags(action_group)
+        self.cmd_queue.put(command)
+        return True
 
     # =============================================================================
     @staticmethod
     def remove_all_delayed_actions(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
         return remove_delayed_actions.remove_actions()
+
+    # =============================================================================
+    def run_concurrent_thread(self):
+        try:
+            while True:
+                self.sleep(1)
+
+                # Process any network quality requests.
+                while not self.nq_queue.empty():
+                    result = self.nq_queue.get()
+                    indigo.server.log(f"\n{result}")
+
+        except self.StopThread:
+            pass
 
     # =============================================================================
     @staticmethod
@@ -559,19 +714,19 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def results_output(values_dict:indigo.Dict=None, caller:str=""):
+    def results_output(values_dict: indigo.Dict = None, caller: str = ""):
         """ Placeholder """
         results_output.display_results(values_dict, caller)
 
     # =============================================================================
     @staticmethod
-    def object_directory(values_dict:indigo.Dict=None, caller:str=""):
+    def object_directory(values_dict: indigo.Dict = None, caller: str = ""):
         """ Placeholder """
         object_directory.display_results(values_dict, caller)
 
     # =============================================================================
     @staticmethod
-    def object_dependencies(values_dict:indigo.Dict=None, caller:str=""):
+    def object_dependencies(values_dict: indigo.Dict = None, caller: str = ""):
         """ Placeholder """
         object_dependencies.display_results(values_dict, caller)
 
@@ -623,8 +778,32 @@ class Plugin(indigo.PluginBase):
         elif action.props['return_value'] == "list":
             return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
 
-    # =============================================================================
-    @staticmethod
-    def add(a, b):
-        """ This is a placeholder method to start constructing unit tests """
-        return a + b
+
+# =============================================================================
+class MyThread(Thread):
+    """
+    Subclass of the threading.Thread module for blocking commands.
+
+    The MyThread class is used to subclass the Thread module so that blocking commands can run in the background and
+    not block the Indigo UI. This allows select callbacks to fire in while allowing any Indigo dialogs to complete as
+    normal (rather than staying open until the command execution is completed).
+    """
+    def __init__(self, target, args=()):
+        super().__init__()
+        self.target = target
+        self.args = args
+        self.stop_event = False
+        self.logger = logging.getLogger("Plugin")
+
+    def stop(self):
+        """ Stop the thread when the stop event is called (like plugin shutdown/reload). """
+        self.logger.debug("Stopping command thread.")
+        self.stop_event = True
+
+    def run(self):
+        """ Run the thread. """
+        while not self.stop_event:
+            if self.target:
+                self.target(*self.args)
+            else:
+                break

@@ -1,0 +1,87 @@
+<?xml version="1.0"?>
+<Devices>
+
+	<Device type="custom" id="networkQuality">
+		<Name>Network Quality Device</Name>
+		<ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
+                <Field id="networkQualityLabel" type="Label">
+                    <Label>This tool runs the macOS Network Quality command line tool using the options configured below.</Label>
+                </Field>
+                <Field id="networkQualityLabel2" type="Label" fontColor="red">
+                    <Label>Important! Device updates will only take place after running a device update action. See the help page for more information.</Label>
+                </Field>
+                <Field id="nqSeparator" type="separator"/>
+                <Field id="runDownloadTest" type="checkbox" defaultValue="true" tooltip="Run download test.">
+                    <Label>Download:</Label>
+                    <Description>Run a download test.</Description>
+                </Field>
+                <Field id="runUploadTest" type="checkbox" defaultValue="true" tooltip="Run upload test.">
+                    <Label>Upload:</Label>
+                    <Description>Run an upload test.</Description>
+                </Field>
+                <Field id="usePrivateRelay" type="checkbox" defaultValue="false" tooltip="Use iCloud Private Relay.">
+                    <Label>Private Relay:</Label>
+                    <Description>Use iCloud Private Relay.</Description>
+                </Field>
+                <Field id="runTestsSequentially" type="checkbox" defaultValue="false" tooltip="Run tests sequentially instead of parallel upload/download.">
+                    <Label>Sequential Tests:</Label>
+                    <Description>Run tests sequentially instead of parallel upload/download.</Description>
+                </Field>
+                <Field id="verboseOutput" type="checkbox" defaultValue="false" tooltip="Run tests sequentially instead of parallel upload/download.">
+                    <Label>Verbose:</Label>
+                    <Description>Verbose output.</Description>
+                </Field>
+                <Field id="outputVerification" type="checkbox" defaultValue="false" tooltip="Disable verification of the server identity via TLS.">
+                    <Label>Verification:</Label>
+                    <Description>Disable verification of the server identity via TLS.</Description>
+                </Field>
+            </ConfigUI>
+        <States>
+
+            <State id="base_rtt">
+                <ValueType>Float</ValueType>
+                <TriggerLabel>Idle Latency</TriggerLabel>
+                <ControlPageLabel>Idle Latency</ControlPageLabel>
+            </State>
+
+            <State id="dl_throughput">
+                <ValueType>Integer</ValueType>
+                <TriggerLabel>Downlink Throughput</TriggerLabel>
+                <ControlPageLabel>Downlink Throughput</ControlPageLabel>
+            </State>
+
+            <State id="ul_throughput">
+                <ValueType>Integer</ValueType>
+                <TriggerLabel>Uplink Throughput</TriggerLabel>
+                <ControlPageLabel>Uplink Throughput</ControlPageLabel>
+            </State>
+
+            <State id="responsiveness">
+                <ValueType>Float</ValueType>
+                <TriggerLabel>Responsiveness</TriggerLabel>
+                <ControlPageLabel>Responsiveness</ControlPageLabel>
+            </State>
+
+            <State id="start_date">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Start Time</TriggerLabel>
+                <ControlPageLabel>Start Time</ControlPageLabel>
+            </State>
+
+            <State id="end_date">
+                <ValueType>String</ValueType>
+                <TriggerLabel>End Time</TriggerLabel>
+                <ControlPageLabel>End Time</ControlPageLabel>
+            </State>
+
+            <State id="elapsed_time">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Elapsed Time</TriggerLabel>
+                <ControlPageLabel>Elapsed Time</ControlPageLabel>
+            </State>
+
+        </States>
+<!--        <UiDisplayStateId>onOffState</UiDisplayStateId>-->
+    </Device>
+</Devices>

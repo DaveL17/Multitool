@@ -1,4 +1,8 @@
 
+### v2023.2.1
+- Adds Network Quality Device tool.
+- Adds Network Quality Report Menu item.
+
 ### v2023.1.1
 - Fixes bug causing Test Action Return to appear in Indigo UI (it is now hidden.)
 - Fixes bug in Battery Level Report that kept the report from being output to the log.
