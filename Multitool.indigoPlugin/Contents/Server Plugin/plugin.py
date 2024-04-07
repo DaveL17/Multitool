@@ -37,7 +37,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2023.2.1'
+__version__   = '2023.2.2'
 
 
 # =============================================================================
@@ -644,7 +644,8 @@ class Plugin(indigo.PluginBase):
     def network_quality_test_os(self):
         """ Test the OS version to ensure that the network quality test tool is available """
         # Test OS compatability
-        if (float(platform.mac_ver()[0])) < 12.0:
+        pltfrm = platform.mac_ver()[0].split('.')  # ['14', '4', '1']
+        if (float(pltfrm[0])) < 12.0:
             self.logger.warning("This tool requires at least MacOS 12.0 Monterey.")
             return False
         return True

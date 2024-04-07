@@ -1,4 +1,7 @@
 
+### v2023.2.2
+- Fixes bug in network quality os test, "could not convert string to float".
+
 ### v2023.2.1
 - Adds Network Quality Device tool.
 - Adds Network Quality Report Menu item.
