@@ -4,10 +4,7 @@ Print a list of serial ports to the Indigo events log
 The get_serial_ports method prints a list of available serial ports to the Indigo events log.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -16,7 +13,7 @@ def __init__():
     pass
 
 
-def show_ports(values_dict:indigo.Dict=None):
+def show_ports(values_dict: indigo.Dict = None):
     """
     Print a list of available serial ports to the Indigo events log.
 
@@ -30,6 +27,8 @@ def show_ports(values_dict:indigo.Dict=None):
         port_filter = ""
 
     # ============================= Print the Report ==============================
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     indigo.server.log(f"{' Current Serial Ports ':=^80}")
 
     for key, value in indigo.server.getSerialPorts(filter=f"{port_filter}").items():

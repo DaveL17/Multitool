@@ -5,10 +5,7 @@ The results_output method formats an object properties dictionary for output to 
 conjunction with the Object Dictionary... tool.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -17,7 +14,7 @@ def __init__():
     pass
 
 
-def display_results(values_dict:indigo.Dict=None, caller:str=""):
+def display_results(values_dict: indigo.Dict = None, caller: str = ""):
     """
     Format an object properties dictionary and output it to the Indigo events log
 
@@ -25,8 +22,10 @@ def display_results(values_dict:indigo.Dict=None, caller:str=""):
     :param str caller:
     :return:
     """
-    LOGGER.debug(f"Caller: {caller}")
+    LOGGER.debug(f"Caller: %s" % caller)
 
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current logging
+    # level.
     thing = getattr(indigo, values_dict['classOfThing'])[int(values_dict['thingToPrint'])]
     indigo.server.log(f"{' ' + thing.name + ' ':{'='}^80}")
     indigo.server.log(f"\n{thing}")

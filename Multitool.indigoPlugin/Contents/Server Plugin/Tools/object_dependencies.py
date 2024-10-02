@@ -6,10 +6,7 @@ conjunction with the Object Inspection... tool.
 """
 import logging
 from constants import INSTANCE_TO_COMMAND_NAMESPACE
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -18,7 +15,7 @@ def __init__():
     pass
 
 
-def display_results(values_dict:indigo.Dict=None, caller:str=""):
+def display_results(values_dict: indigo.Dict = None, caller: str = ""):
     """
     Prepare and output the dependency results to the Indigo events log.
 
@@ -26,11 +23,13 @@ def display_results(values_dict:indigo.Dict=None, caller:str=""):
     :param str caller:
     :return:
     """
-    LOGGER.debug(f"Caller: {caller}")
+    LOGGER.debug(f"Caller: %s" % caller)
     obj_id = int(values_dict['thingToPrint'])
     thing = getattr(indigo, values_dict['classOfThing'])[int(values_dict['thingToPrint'])]
 
     try:
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
         indigo.server.log(f"{' ' + thing.name + ' Dependencies ':{'='}^80}")
         dep_dict = INSTANCE_TO_COMMAND_NAMESPACE[type(thing)].getDependencies(obj_id)  # Dict of object dependencies
 

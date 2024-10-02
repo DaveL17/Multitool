@@ -6,10 +6,7 @@ agnostic about whether the log line is an actual error or a debug statement that
 """
 import logging
 import os
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -18,7 +15,7 @@ def __init__():
     pass
 
 
-def show_inventory(values_dict:indigo.Dict=None):
+def show_inventory(values_dict: indigo.Dict = None):
     """
     Print an inventory of error messages to the Indigo Events log
 
@@ -51,5 +48,7 @@ def show_inventory(values_dict:indigo.Dict=None):
                             if any(item in line for item in check_list):
                                 outfile.write(f"{filename:<26}{line}\n")
 
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     indigo.server.log(f"Error message inventory saved to: {full_path}")
     return True

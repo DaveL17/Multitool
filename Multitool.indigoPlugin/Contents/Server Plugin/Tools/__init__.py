@@ -1,3 +1,6 @@
+"""
+The purpose of this __init__ files is to allow the Tools folder to function as a module.
+"""
 __all__ = [
     "about_indigo",
     "battery_level",
@@ -9,18 +12,20 @@ __all__ = [
     "dict_to_print",
     "environment_path",
     "error_inventory",
-    "generator_substitutions",
+    "find_embedded_scripts",
+    "find_linked_scripts",
+    # "generator_substitutions",
     "indigo_classes",
     "indigo_inventory",
     "indigo_methods",
     "inspect_method",
     "installed_plugins",
     "log_of_method",
-    "man_page",
+    # "man_page",
     "modify_numeric_variable",
     "modify_time_variable",
-    "object_directory",
     "object_dependencies",
+    "object_directory",
     "plugin_methods",
     "remove_delayed_actions",
     "results_output",
@@ -29,5 +34,5 @@ __all__ = [
     "serial_ports",
     "speak_string",
     "subscribe_to_changes",
-    "substitution_generator",
+    "substitution_generator"
 ]

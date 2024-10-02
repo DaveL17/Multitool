@@ -6,10 +6,7 @@ Control Pages, Devices, Schedules, Triggers, and variables. It is called by the 
 conjunction with the results_output method.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -18,7 +15,7 @@ def __init__():
     pass
 
 
-def print_dict(values_dict:indigo.Dict=None):
+def print_dict(values_dict: indigo.Dict = None):
     """
     Prints selected information about an Indigo object based on user-selected class and object
 

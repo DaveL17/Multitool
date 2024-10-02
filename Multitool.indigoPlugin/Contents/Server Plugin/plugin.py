@@ -17,19 +17,18 @@ import platform
 from queue import Queue
 import subprocess
 from threading import Thread
+from unittest import TestCase
 
-try:
-    import indigo  # noqa
-    # import pydevd
-except ImportError as error:
-    pass
+# from Tools import find_embedded_scripts
+
+import indigo  # noqa
+# import pydevd
 
 # My modules
 import DLFramework.DLFramework as Dave  # noqa
 from constants import DEBUG_LABELS
 from plugin_defaults import kDefaultPluginPrefs  # noqa
 from Tools import *
-# from Tests import *
 
 # =================================== HEADER ==================================
 __author__    = Dave.__author__
@@ -59,11 +58,11 @@ class Plugin(indigo.PluginBase):
         super().__init__(plugin_id, plugin_display_name, plugin_version, plugin_prefs)
 
         # ============================ Instance Attributes =============================
-        self.pluginIsInitializing = True
-        self.pluginIsShuttingDown = False
+        self.pluginIsInitializing: bool = True
+        self.pluginIsShuttingDown: bool = False
 
         # =============================== Debug Logging ================================
-        self.debug_level = int(self.pluginPrefs.get('showDebugLevel', '30'))
+        self.debug_level: int = int(self.pluginPrefs.get('showDebugLevel', '30'))
         self.plugin_file_handler.setFormatter(logging.Formatter(Dave.LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S'))
         self.indigo_log_handler.setLevel(self.debug_level)
 
@@ -228,8 +227,8 @@ class Plugin(indigo.PluginBase):
 
         :return:
         """
-        # Run unit Tests
-        # test_plugin.Tester().run_tests()
+        if self.debug_level == 10:
+            self.my_tests()
 
         # =========================== Audit Indigo Version ============================
         self.Fogbert.audit_server_version(min_ver=2022)
@@ -378,14 +377,13 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def battery_level_report(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        battery_level.report(values_dict)
+        battery_level.report()
 
     # =============================================================================
     @staticmethod
     def color_picker(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
         color_picker.picker(values_dict)
-        return True
 
     # =============================================================================
     @staticmethod
@@ -516,10 +514,10 @@ class Plugin(indigo.PluginBase):
         return self.Fogbert.generatorStateOrValue(values_dict.get('devVarMenu', ""))
 
     # =============================================================================
-    @staticmethod
-    def generator_substitutions(values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
-        """ Placeholder """
-        return generator_substitutions.return_substitution(values_dict)
+    # @staticmethod
+    # def generator_substitutions(values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
+    #     """ Placeholder """
+    #     return generator_substitutions.return_substitution(values_dict)
 
     # =============================================================================
     @staticmethod
@@ -732,6 +730,16 @@ class Plugin(indigo.PluginBase):
         object_dependencies.display_results(values_dict, caller)
 
     # =============================================================================
+    def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
+        """ Placeholder """
+        return find_embedded_scripts.make_report(values_dict)
+
+    # =============================================================================
+    def search_linked_scripts(self, values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
+        """ Placeholder """
+        return find_linked_scripts.make_report(values_dict)
+
+    # =============================================================================
     @staticmethod
     def send_status_request(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
@@ -779,6 +787,68 @@ class Plugin(indigo.PluginBase):
         elif action.props['return_value'] == "list":
             return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
 
+    def test_foobar(self, action):
+        """
+        This method is used to create and delete a plugin device for unit testing
+
+        The unit test sends a "plugin.executeAction" command message via the IWS API with an instruction to either
+        create or delete a plugin device. The action passes the payload through to this method.
+        """
+        props = action.props
+        if props['instruction'] == "create":
+            dev = indigo.device.create(
+                address=props.get('address', ""),
+                configured=props.get('configured', True),
+                description=props.get('description', ""),
+                deviceTypeId=props.get('deviceTypeId', 'networkQuality'),
+                folder=props.get('folder', 0),
+                # groupWithDevice=props.get('groupWithDevice', False),  # note GWD is expecting an obj, so we skip for now.
+                name=props.get('name', "Unit Test Device"),
+                pluginId='com.fogbert.indigoplugin.multitool',
+                props=props.get('props', None),
+                protocol=indigo.kProtocol.Plugin,
+            )
+            self.logger.info(f"Unit Test: Created device [{dev.deviceTypeId} - {dev.id}]")
+            # TODO: would it be better here to return the entire device obj?
+            return {'dev_id': dev.id}  # the id of the device that was created
+        if props['instruction'] == "delete":
+            indigo.device.delete(props['dev_id'])
+            self.logger.info(f"Unit Test: Deleted device [[{props['deviceTypeId']} - {props['dev_id']}]")
+            return "dev deleted"
+
+    def my_tests(self):
+        """
+        The my_tests method runs functional tests every time the plugin is (re)loaded in debug mode.
+
+        If it encounters an error, a message will be written to the Indigo events log. The tests will stop upon the
+        first error (subsequent tests will not be run).
+        """
+        test_case = TestCase()
+        self.logger.debug("Running startup tests. (Warning messages are normal.)")
+        try:
+            # ===================================== About Indigo =====================================
+            test_case.assertIsNone(self.about_indigo(), "Method failed.")  # Implied `None` returned
+            # ===================================== Battery Level Report =====================================
+            test_case.assertIsNone(self.battery_level_report(), "Method failed.")  # Implied `None` returned
+            # ===================================== Color Picker =====================================
+            dicts = [
+                {'chosenColor': 'FF FF FF'},
+                {'chosenColor': 1},  # wrong value type
+                {'chosenColor': 'white'}  # wrong value type
+            ]
+            for test_dict in dicts:
+                test_case.assertIsNone(self.color_picker(test_dict), "Method failed.")
+            # ===================================== Generate Substitutions =====================================
+            # dicts = [
+            #     {'devVarMenu': 144258876, 'generator_state_or_value': 'serverStatus'},  # Email+ SMTP device
+            #     {'devVarMenu': '144258876', 'generator_state_or_value': 'serverStatus'},  # dev_id as string
+            #     {'devVarMenu': 23078783, 'generator_state_or_value': 'value'},  # Var `isDaylight`
+            # ]
+            # for sub_dict in dicts:
+            #     test_case.assertIsInstance(self.generator_substitutions(sub_dict), dict, "Method should return a dict.")
+        except AssertionError as err:
+            line_number = err.__traceback__.tb_lineno
+            indigo.server.log(f"Startup test failed: {err} at line {line_number}", level=logging.ERROR)
 
 # =============================================================================
 class MyThread(Thread):

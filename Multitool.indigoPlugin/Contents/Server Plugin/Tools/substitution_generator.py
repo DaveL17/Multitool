@@ -7,10 +7,7 @@ example,
     Indigo Device Substitution: %%d:978421449:stateName%%
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 ERR_MSG_DICT = indigo.Dict()
@@ -20,7 +17,7 @@ def __init__():
     pass
 
 
-def get_substitute(values_dict:indigo.Dict=None):
+def get_substitute(values_dict: indigo.Dict = None):
     """
     Generate a substitution based on user input
 

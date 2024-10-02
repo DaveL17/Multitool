@@ -6,25 +6,24 @@ write the result to the Indigo Activity Log.
 """
 import logging
 import inspect
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
-lOGGER = logging.getLogger("Plugin")
+LOGGER = logging.getLogger("Plugin")
 
 
 def __init__():
     pass
 
 
-def display_inspection(values_dict:indigo.Dict=None):
+def display_inspection(values_dict: indigo.Dict = None):
     """
-    Output an instpection of the passed class and object to the Indigo Events log
+    Output an inspection of the passed class and object to the Indigo Events log
 
     :param indigo.Dict values_dict:
     :return:
     """
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     method_to_call = getattr(indigo, values_dict['list_of_indigo_classes'])
     method_to_call = getattr(method_to_call, values_dict['list_of_indigo_methods'])
     inspector = inspect.getdoc(method_to_call)

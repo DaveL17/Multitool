@@ -6,10 +6,7 @@ Body placeholder
 :return:
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger()
 
@@ -46,12 +43,11 @@ def show_inventory():
 
     for page in indigo.controlPages.iter():
         inventory['Control Pages'].append(
-            (
-                page.id,
-                page.name,
-                page.folderId,
-                indigo.controlPages.folders.getName(page.folderId)
-            )
+            (page.id,
+             page.name,
+             page.folderId,
+             indigo.controlPages.folders.getName(page.folderId)
+             )
         )
 
     for dev in indigo.devices.iter():
@@ -100,20 +96,27 @@ def show_inventory():
     col_2 = []
     col_3 = []
 
-    for key in inventory.keys():
+    for key in inventory:
         col_0 += [item[0] for item in inventory[key]]
         col_1 += [item[1] for item in inventory[key]]
         col_2 += [item[2] for item in inventory[key]]
         col_3 += [item[3] for item in inventory[key]]
 
-    col0 = max([len(f"{item}") for item in col_0]) + 2
-    col1 = max([len(f"{item}") for item in col_1]) + 2
-    col2 = max([len(f"{item}") for item in col_2]) + 2
-    col3 = max([len(f"{item}") for item in col_3]) + 2
+    # col0 = max([len(f"{item}") for item in col_0]) + 2
+    # col1 = max([len(f"{item}") for item in col_1]) + 2
+    # col2 = max([len(f"{item}") for item in col_2]) + 2
+    # col3 = max([len(f"{item}") for item in col_3]) + 2
+
+    col0 = max(len(f"{item}") for item in col_0) + 2
+    col1 = max(len(f"{item}") for item in col_0) + 2
+    col2 = max(len(f"{item}") for item in col_0) + 2
+    col3 = max(len(f"{item}") for item in col_0) + 2
 
     table_width = sum([col0, col1, col2, col3])
 
     # ============================= Output the Table ==============================
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     for object_type in sorted(inventory):
         header = f" {object_type} "
         indigo.server.log(f"{header:{'='}^{table_width}}")

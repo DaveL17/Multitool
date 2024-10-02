@@ -12,10 +12,7 @@ passed by the Indigo method.  For example,
 """
 import logging
 import inspect
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -24,12 +21,14 @@ def __init__():
     pass
 
 
-def display_docstring(values_dict:indigo.Dict=None):
+def display_docstring(values_dict: indigo.Dict = None):
     """
 
     :param indigo.Dict values_dict:
     :return:
     """
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     method = getattr(indigo.activePlugin, values_dict['list_of_plugin_methods'])
     signature = inspect.getfullargspec(method)
     indigo.server.log(f"self.{values_dict['list_of_plugin_methods']}: {signature}")

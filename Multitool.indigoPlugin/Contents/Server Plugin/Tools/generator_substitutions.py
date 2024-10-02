@@ -5,10 +5,7 @@ The generator_substitutions method is used with the Substitution Generator. It i
 the Indigo substitution construct.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -17,7 +14,7 @@ def __init__():
     pass
 
 
-def return_substitution(values_dict:indigo.Dict=None):
+def return_substitution(values_dict: indigo.Dict = None):
     """
     Generate an Indigo substitution string based on user-selected object
 
@@ -27,7 +24,9 @@ def return_substitution(values_dict:indigo.Dict=None):
     dev_var_id = values_dict['devVarMenu']
     dev_var_value = values_dict['generator_state_or_value']
 
-    if int(values_dict['devVarMenu']) in indigo.devices.keys():
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
+    if int(values_dict['devVarMenu']) in indigo.devices:
         indigo.server.log(f"Indigo Device Substitution: %%d:{dev_var_id}:{dev_var_value}%%")
 
     else:

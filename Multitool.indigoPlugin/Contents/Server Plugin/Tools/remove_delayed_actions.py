@@ -5,10 +5,7 @@ The remove_all_delayed_actions method is a convenience tool to remove all delaye
 """
 
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 

@@ -6,10 +6,7 @@ populate the list of methods control for the Methods - Plugin Base... tool.
 """
 import logging
 import inspect
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -18,7 +15,7 @@ def __init__():
     pass
 
 
-def list_methods(values_dict:indigo.Dict):
+def list_methods(values_dict: indigo.Dict):
     """
     Generate a list of Indigo plugin methods for inspection
 

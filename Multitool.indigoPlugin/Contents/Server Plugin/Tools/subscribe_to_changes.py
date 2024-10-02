@@ -6,10 +6,7 @@ because there is no closedMenuConfigUi method similar to closedDeviceConfigUi me
 configuration settings to the plugin configuration menu so that they're persistent.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -18,7 +15,7 @@ def __init__():
     pass
 
 
-def subscriber(values_dict:indigo.Dict=None):
+def subscriber(values_dict: indigo.Dict = None):
     """
     Save "Subscribe to Changes" menu item configuration to plugin prefs for storage.
 
@@ -36,6 +33,8 @@ def subscriber(values_dict:indigo.Dict=None):
     indigo.activePlugin.pluginPrefs['subscribedDevices'] = values_dict['subscribedDevices']
 
     if restart_required:
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
         indigo.server.log("Preparing to restart plugin...")
         indigo.activePlugin.sleep(2)
 

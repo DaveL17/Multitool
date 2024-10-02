@@ -163,20 +163,6 @@
         <CallbackMethod>indigo_inventory</CallbackMethod>
     </MenuItem>
 
-<!--    <MenuItem id="manPage">-->
-<!--        <Name>Man Page...</Name>-->
-<!--        <CallbackMethod>man_page</CallbackMethod>-->
-<!--        <ConfigUI>-->
-<!--            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>-->
-<!--            <Field id="instructions" type="label">-->
-<!--                <Label>Enter the command below and Preview will display the man page requested (on the Indigo server machine). There is no filtering for invalid commands.</Label>-->
-<!--            </Field>-->
-<!--            <Field id="manToOpen" type="textfield">-->
-<!--                <Label>Method:</Label>-->
-<!--            </Field>-->
-<!--        </ConfigUI>-->
-<!--    </MenuItem>-->
-
     <MenuItem id="indigoSignature">
         <Name>Methods - Indigo Base...</Name>
         <ConfigUI>
@@ -342,6 +328,31 @@
         <CallbackMethod>remove_all_delayed_actions</CallbackMethod>
     </MenuItem>
 
+    <MenuItem id="embedded_scripts">
+        <Name>Scripts - Embedded...</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <Field id="instructions" type="label">
+                <Label>Use this tool to find Indigo objects with embedded scripts.</Label>
+            </Field>
+            <Field id="space1" type="label">
+                <Label/>
+            </Field>
+            <Field id="search_string" type="textfield">
+                <Label>Filter: </Label>
+            </Field>
+            <Field id="filter_label" type="label" alignWithControl="true" fontSize="small">
+                <Label>Enter a filter to find scripts containing the filter text (the filter is literal and evaluated as a single term). To find all objects with embedded scripts, leave the filter field empty.</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>search_embedded_scripts</CallbackMethod>
+    </MenuItem>
+
+    <MenuItem id="linked_scripts">
+        <Name>Scripts - Linked...</Name>
+        <CallbackMethod>search_linked_scripts</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="send_status_request">
         <Name>Send Status Request...</Name>
         <ConfigUI>
@@ -427,46 +438,46 @@
             </ConfigUI>
     </MenuItem>
 
-    <MenuItem id="substitution_generator">
-        <Name>Substitution Generator...</Name>
-        <CallbackMethod>substitution_generator</CallbackMethod>
-        <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+<!--    <MenuItem id="substitution_generator">-->
+<!--        <Name>Substitution Generator...</Name>-->
+<!--        <CallbackMethod>substitution_generator</CallbackMethod>-->
+<!--        <ConfigUI>-->
+<!--            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>-->
 
-            <Field id="subGeneratorLabel" type="label" alignText="right">
-                <Label>Substitution Generator</Label>
-            </Field>
+<!--            <Field id="subGeneratorLabel" type="label" alignText="right">-->
+<!--                <Label>Substitution Generator</Label>-->
+<!--            </Field>-->
 
-            <Field id="substitutionTextLabel" type="Label">
-                <Label>Select a device or variable from the first dropdown list and then select the device state or variable value from the second dropdown list.</Label>
-            </Field>
+<!--            <Field id="substitutionTextLabel" type="Label">-->
+<!--                <Label>Select a device or variable from the first dropdown list and then select the device state or variable value from the second dropdown list.</Label>-->
+<!--            </Field>-->
 
-            <Field id="substitutionTextLabelNote" type="Label" fontSize="small">
-                <Label>Note: beginning with Indigo 2021.2, you can simply right-click on a variable or device state and select "Copy Substitution String".</Label>
-            </Field>
+<!--            <Field id="substitutionTextLabelNote" type="Label" fontSize="small">-->
+<!--                <Label>Note: beginning with Indigo 2021.2, you can simply right-click on a variable or device state and select "Copy Substitution String".</Label>-->
+<!--            </Field>-->
 
-            <Field id="subGeneratorSeparator" type="separator"/>
+<!--            <Field id="subGeneratorSeparator" type="separator"/>-->
 
-            <Field id="devVarMenu" type="menu" tooltip="Please select a device or variable.">
-                <Label>Device / Variable</Label>
-                <List class="self" filter="" method="generator_dev_var_clean" dynamicReload="true"/>
-                <CallbackMethod>__dummyCallback__</CallbackMethod>
-            </Field>
+<!--            <Field id="devVarMenu" type="menu" tooltip="Please select a device or variable.">-->
+<!--                <Label>Device / Variable</Label>-->
+<!--                <List class="self" filter="" method="generator_dev_var_clean" dynamicReload="true"/>-->
+<!--                <CallbackMethod>__dummyCallback__</CallbackMethod>-->
+<!--            </Field>-->
 
-            <Field id="generator_state_or_value" type="menu" tooltip="Please select a device state or variable value.">
-                <Label>State / Value</Label>
-                <List class="self" filter="" method="generator_state_or_value" dynamicReload="true"/>
-            </Field>
+<!--            <Field id="generator_state_or_value" type="menu" tooltip="Please select a device state or variable value.">-->
+<!--                <Label>State / Value</Label>-->
+<!--                <List class="self" filter="" method="generator_state_or_value" dynamicReload="true"/>-->
+<!--            </Field>-->
 
-            <Field id="subGeneratorButton" type="button" tooltip="Generate the substitution.">
-                <Label/>
-                <Title>Generate Substitution</Title>
-                <CallbackMethod>generator_substitutions</CallbackMethod>
-            </Field>
+<!--            <Field id="subGeneratorButton" type="button" tooltip="Generate the substitution.">-->
+<!--                <Label/>-->
+<!--                <Title>Generate Substitution</Title>-->
+<!--                <CallbackMethod>generator_substitutions</CallbackMethod>-->
+<!--            </Field>-->
 
-        </ConfigUI>
-        <ButtonTitle>Close</ButtonTitle>
-    </MenuItem>
+<!--        </ConfigUI>-->
+<!--        <ButtonTitle>Close</ButtonTitle>-->
+<!--    </MenuItem>-->
 
     <MenuItem id="titleSeparator" type="separator"/>
 

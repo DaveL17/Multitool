@@ -9,10 +9,7 @@ to ensure that the output is visible regardless of the plugin's current logging 
 """
 
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 

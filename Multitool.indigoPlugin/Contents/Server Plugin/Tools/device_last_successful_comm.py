@@ -6,10 +6,7 @@ communication with each Indigo device to the Indigo events log.
 
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -18,7 +15,7 @@ def __init__():
     pass
 
 
-def report_comms(values_dict:indigo.Dict=None, menu_item:str=""):
+def report_comms(values_dict: indigo.Dict = None, menu_item: str = ""):
     """
     Print information on the last successful communication
 
@@ -50,6 +47,8 @@ def report_comms(values_dict:indigo.Dict=None, menu_item:str=""):
             length = len(element[1])
 
     # Output the result
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     indigo.server.log(f"{' Device Last Successful Comm ':=^100}")
     indigo.server.log(f"{'ID':<14}{'Name':<{length + 1}} Last Comm Success")
     indigo.server.log('=' * 100)

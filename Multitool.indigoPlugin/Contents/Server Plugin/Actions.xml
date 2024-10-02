@@ -5,19 +5,15 @@
     <Action id="test_action_return" uiPath="hidden">
         <Name>Test Action Return</Name>
         <ConfigUI>
-
             <Field id="field1" type="textfield">
                 <Label>Field 1:</Label>
             </Field>
-
             <Field id="field2" type="textfield">
                 <Label>Field 1:</Label>
             </Field>
-
             <Field id="field3" type="textfield">
                 <Label>Field 1:</Label>
             </Field>
-
         </ConfigUI>
         <CallbackMethod>test_action_return</CallbackMethod>
     </Action>
@@ -135,6 +131,11 @@
             </Field>
         </ConfigUI>
         <CallbackMethod>network_quality_device_action</CallbackMethod>
+    </Action>
+
+    <Action id="test_foo" uiPath="hidden">
+        <Name>My Test Foo</Name>
+        <CallbackMethod>test_foobar</CallbackMethod>
     </Action>
 
 </Actions>

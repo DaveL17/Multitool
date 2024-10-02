@@ -12,10 +12,7 @@ used to add to the display following -f, the command field is not truncated as s
 """
 import logging
 import subprocess
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -37,6 +34,8 @@ def show_running_plugins():
             stderr=subprocess.PIPE) as proc:
         ret = proc.communicate()[0]
 
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     indigo.server.log(f"\n{' Running Plugins (/bin/ps -ef) ':{'='}^120}")
     indigo.server.log(
         f"\n  uid - pid - parent pid - recent CPU usage - process start time - controlling tty "

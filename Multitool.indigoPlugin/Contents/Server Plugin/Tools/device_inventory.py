@@ -5,10 +5,7 @@ The device_inventory method prints an inventory of all Indigo devices to the Ind
 """
 import datetime as dt
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -17,7 +14,7 @@ def __init__():
     pass
 
 
-def get_inventory(values_dict:indigo.Dict=None, type_id:str=""):
+def get_inventory(values_dict: indigo.Dict = None, type_id: str = ""):
     """
     Print an inventory of devices to the Indigo Events log
 
@@ -46,14 +43,23 @@ def get_inventory(values_dict:indigo.Dict=None, type_id:str=""):
 
     if len(inventory) > 0:
         # ====================== Generate Custom Table Settings =======================
-        x_0 = max([len(f"{thing[0]}") for thing in inventory]) + 2
-        x_1 = max([len(f"{thing[1]}") for thing in inventory]) + 2
-        x_2 = max([len(f"{thing[2]}") for thing in inventory]) + 2
-        x_3 = max([len(f"{thing[3]}") for thing in inventory])
-        x_4 = max([len(f"{thing[4]}") for thing in inventory])
+        # x_0 = max([len(f"{thing[0]}") for thing in inventory]) + 2
+        # x_1 = max([len(f"{thing[1]}") for thing in inventory]) + 2
+        # x_2 = max([len(f"{thing[2]}") for thing in inventory]) + 2
+        # x_3 = max([len(f"{thing[3]}") for thing in inventory])
+        # x_4 = max([len(f"{thing[4]}") for thing in inventory])
+        # table_width = sum((x_0, x_1, x_2, x_3, x_4)) + 6
+
+        x_0 = max(len(f"{thing[0]}") for thing in inventory) + 2
+        x_1 = max(len(f"{thing[1]}") for thing in inventory) + 2
+        x_2 = max(len(f"{thing[2]}") for thing in inventory) + 2
+        x_3 = max(len(f"{thing[3]}") for thing in inventory)
+        x_4 = max(len(f"{thing[4]}") for thing in inventory)
         table_width = sum((x_0, x_1, x_2, x_3, x_4)) + 6
 
         # ============================= Output the Header =============================
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
         indigo.server.log(f"{f' Inventory of {filter_item} Devices ':=^{table_width}}")
         indigo.server.log(
             f"{'ID':<{x_0}} {'Addr':<{x_1}} "

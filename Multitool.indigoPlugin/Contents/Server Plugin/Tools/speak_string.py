@@ -5,10 +5,7 @@ The speak_string method takes a user-input string and sends it for speech on the
 Indigo substitutions and is useful when testing substitution strings.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 ERR_MSG_DICT = indigo.Dict()
@@ -18,7 +15,7 @@ def __init__():
     pass
 
 
-def speaker(values_dict:indigo.Dict=None):
+def speaker(values_dict: indigo.Dict = None):
     """
     The speak_string method takes a user-input string and sends it for speech on the Indigo server.
 
@@ -37,7 +34,8 @@ def speaker(values_dict:indigo.Dict=None):
         sub_test = indigo.activePlugin.substitute(text, validateOnly=True)
         if not sub_test[0]:
             raise Exception(sub_test[1])
-        # Substitution string is valid.
+        # Substitution string is valid. We write to `indigo.server.log` to ensure that the output is visible regardless
+        # of the plugin's current logging level.
         text_to_speak = indigo.activePlugin.substitute(text)
         indigo.server.log(f"{' Speaking ':=^80}")
         indigo.server.log(f"{text_to_speak}")

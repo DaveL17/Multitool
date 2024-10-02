@@ -6,10 +6,7 @@ objects support a status request and plugin devices that support status requests
 Further, only enabled objects are available for a status request.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 ERR_MSG_DICT = indigo.Dict()
 LOGGER = logging.getLogger("Plugin")
@@ -19,7 +16,7 @@ def __init__():
     pass
 
 
-def get_status(values_dict:indigo.Dict=None):
+def get_status(values_dict: indigo.Dict = None):
     """
     Send a status request to the user-specified device
 
@@ -27,6 +24,8 @@ def get_status(values_dict:indigo.Dict=None):
     :return:
     """
     try:
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
         indigo.server.log(f"{' Sending Status Request ':{'='}^80}")
         indigo.device.statusRequest(int(values_dict['listOfDevices']), suppressLogging=False)
         return values_dict

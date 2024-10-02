@@ -2,10 +2,7 @@
 Modifies a variable value based on a user-supplied formula
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -14,7 +11,7 @@ def __init__():
     pass
 
 
-def modify(action_group:indigo.actionGroup=None):
+def modify(action_group: indigo.actionGroup = None):
     """
     Modifies a variable value based on a user-supplied formula
 
@@ -32,7 +29,7 @@ def modify(action_group:indigo.actionGroup=None):
 
     except SyntaxError:
         LOGGER.critical("Error: ", exc_info=True)
-        LOGGER.critical(f"Error modifying variable {var.name}.")
+        LOGGER.critical("Error modifying variable %s." % var.name)
         return_value = False
 
     return return_value

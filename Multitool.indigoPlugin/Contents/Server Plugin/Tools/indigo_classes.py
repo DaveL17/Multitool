@@ -5,10 +5,7 @@ The list_of_indigo_classes method will generate a list of Indigo classes availab
 populate the list of classes control for the Methods - Indigo Base... tool.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -17,7 +14,7 @@ def __init__():
     pass
 
 
-def display_classes(values_dict:indigo.Dict=None):
+def display_classes(values_dict: indigo.Dict = None):
     """
 
     :param indigo.Dict values_dict:

@@ -9,10 +9,7 @@ log. This can help with trouble-shooting--for example, when an expected import s
 
 import logging
 import sys
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -27,6 +24,8 @@ def show_path():
 
     :return:
     """
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     indigo.server.log(f"{' Current System Path ':{'='}^130}")
     for item in sys.path:
         indigo.server.log(item)

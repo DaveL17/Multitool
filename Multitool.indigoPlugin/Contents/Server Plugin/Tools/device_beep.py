@@ -5,10 +5,7 @@ The device_to_beep method will send a beep request to a selected Indigo device. 
 request and only enabled devices are displayed for selection.
 """
 import logging
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 ERR_MSG_DICT = indigo.Dict()
@@ -18,7 +15,7 @@ def __init__():
     pass
 
 
-def beeper(values_dict:indigo.Dict=None):
+def beeper(values_dict: indigo.Dict = None):
     """
     Send a beep command to the selected device
 
@@ -27,6 +24,8 @@ def beeper(values_dict:indigo.Dict=None):
     :param indigo.Dict values_dict:
     """
     try:
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
         name = indigo.devices[int(values_dict['listOfDevices'])].name
         indigo.server.log(f"{' Send Beep to ' + name + ' ':{'='}^80}")
         indigo.device.beep(int(values_dict['listOfDevices']), suppressLogging=False)

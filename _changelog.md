@@ -1,3 +1,8 @@
+### v2024.1.0
+- Adds tool to find Indigo objects with embedded scripts.
+- Removes the Substitution Generator Tool (substitutions can be generated directly from the Indigo UI.)
+- Improves functional testing at startup when logging set to debug.
+- Code cleanup
 
 ### v2023.2.2
 - Fixes bug in network quality os test, "could not convert string to float".

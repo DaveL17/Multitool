@@ -7,10 +7,7 @@ bundle identifier. In instances where the plugin is disabled, [Disabled] will be
 import logging
 import plistlib
 import os
-try:
-    import indigo
-except ImportError:
-    pass
+import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 
@@ -51,6 +48,8 @@ def get_list():
 
                 plugin_name_list.append(f"{cf_bundle_display_name:45}{cf_bundle_identifier}")
 
+    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+    # logging level.
     indigo.server.log(f"{' Installed Plugins ':{'='}^130}")
 
     for thing in plugin_name_list:
