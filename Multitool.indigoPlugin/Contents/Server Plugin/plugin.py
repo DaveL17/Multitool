@@ -384,6 +384,7 @@ class Plugin(indigo.PluginBase):
     def color_picker(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
         color_picker.picker(values_dict)
+        return True, values_dict
 
     # =============================================================================
     @staticmethod
@@ -402,6 +403,7 @@ class Plugin(indigo.PluginBase):
     def device_to_beep(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
         device_beep.beeper(values_dict)
+        return True, values_dict
 
     # =============================================================================
     @staticmethod
@@ -471,8 +473,8 @@ class Plugin(indigo.PluginBase):
         return self.Fogbert.deviceListEnabled(dev_filter=fltr)
 
     # =============================================================================
-    @staticmethod
-    def generator_device_filter(fltr:str="", values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
+    # @staticmethod
+    def generator_device_filter(self, fltr:str="", values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
         """ Placeholder """
         # Built-in filters
         filter_list = [
@@ -495,8 +497,16 @@ class Plugin(indigo.PluginBase):
              for dev in indigo.devices
              if (dev.pluginId, dev.pluginId) not in filter_list
              ]
+        # Remove any duplicate tuples
+        unique_tuples = list(set(filter_list))
+
+        # Remove any empty tuples ('', '')
+        filter_list = [tup for tup in unique_tuples if (len(tup[0]) + len(tup[1])) > 0]
 
         return filter_list
+
+
+
 
     # =============================================================================
     def generator_dev_var(self, fltr:str="", values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
@@ -743,7 +753,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def send_status_request(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
         """ Placeholder """
-        return send_status_request.get_status(values_dict)
+        return True, send_status_request.get_status(values_dict)
 
     # =============================================================================
     @staticmethod

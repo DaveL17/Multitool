@@ -128,7 +128,7 @@
             <Field id="subGeneratorButton" type="button" tooltip="Ping the device.">
                 <Label/>
                 <Title>Send Ping</Title>
-                <CallbackMethod>pinger</CallbackMethod>
+                <CallbackMethod>device_to_ping</CallbackMethod>
             </Field>
 
         </ConfigUI>
@@ -415,7 +415,7 @@
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
                 <Field id="subscribeToChangesLabel" type="Label">
-                    <Label>The Subscribe to Changes tool only subscribes to object updates (not objects created or deleted). Enabling or disabling subscriptions will cause a plugin restart to effect the change. This in normal.</Label>
+                    <Label>The Subscribe to Changes tool only subscribes to object updates (not objects created or deleted). Enabling or disabling subscriptions will cause a plugin restart to effect the change. This is normal.</Label>
                 </Field>
 
                 <Field id="subscriptionChangeLabel" type="Label" fontColor="red">

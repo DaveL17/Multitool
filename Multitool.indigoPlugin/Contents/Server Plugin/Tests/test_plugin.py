@@ -75,7 +75,7 @@ class TestDevices(unittest.TestCase):
     defined in `Devices.xml`. This is not meant to test aspects of the various APIs, but it uses the HTTP API to pass
     commands to and receive updates from the Indigo server.
     """
-
+    # TODO: set up test of speak string tool.
     @classmethod
     def setUpClass(cls):
         ...
@@ -183,9 +183,10 @@ class TestXml(unittest.TestCase):
                         self.assertIn(dev_filter, DEVICE_FILTERS, "'deviceFilter' values must be strings.")
 
                     # Test the 'uiPath' attribute:
+                    # The uiPath value can essentially be anything as plugins can create their own uiPaths, so we
+                    # can only test a few things regarding its contents.
                     ui_path = item.get('uiPath')
-                    self.assertIsInstance(node_id, str, "uiPath names must be strings.")
-                    # TODO: the uiPath value can essentially be anything as plugins can create their own uiPaths.
+                    self.assertIsInstance(ui_path, str, "uiPath names must be strings.")
                     # self.assertIn(ui_path, self.ui_paths)
 
                 # Test items that have a 'Name' element. The reference to `root.tag[:-1]` takes the tag name and

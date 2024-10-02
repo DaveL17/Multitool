@@ -16,19 +16,20 @@ def __init__():
 
 def pinger(values_dict: indigo.Dict = None):
     """
-    Send a ping to the selected device
+    Send a ping to the selected device. Only Z-Wave or INSTEON devices are supported by the built-in ping command, so
+    one or both of these interface plugins must be enabled.
 
     :param indigo.Dict values_dict:
     :return:
     """
     dev_id = int(values_dict['listOfDevices'])
     dev = indigo.devices[dev_id]
-
+    #  TODO: ensure that zwave and/or insteon plugins are enabled before going any further.
     try:
         if dev.enabled:
             # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
             # logging level.
-            indigo.server.log(f"{'Pinging device: ' + dev.name:{'='}^80}")
+            indigo.server.log(f" {'Pinging device: ' + dev.name:{'='}^80} ")
             result = indigo.device.ping(dev_id, suppressLogging=False)
             if result['Success']:
                 indigo.server.log(f"Ping \"{dev.name}\" success. Time: {result['TimeDelta'] / 1000.0} seconds.")
