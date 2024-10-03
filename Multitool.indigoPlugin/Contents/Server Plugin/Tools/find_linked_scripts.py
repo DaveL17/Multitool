@@ -2,7 +2,8 @@
 Traverse the Indigo database and find objects with embedded scripts
 
 This tool is only available to users of Indigo 2024.1.0 and later.
-TODO: consider adding a short sleep between object types to make it even easier on the server.
+TODO: consider adding a short sleep between object types to make it even easier on the server. This may come later if
+      folks with extra large databases.
 """
 import logging
 import indigo  # noqa
@@ -54,9 +55,8 @@ def make_report(values_dict: indigo.Dict):
     # ====================== Action Groups =======================
     for action_group in indigo.rawServerRequest("GetActionGroupList"):
         for step in action_group['ActionSteps']:
-            if step.get('ScriptLink2', None):
-                # TODO: 'ScriptLink2' will be updated to 'ScriptLinkURL' with Indigo 2024.1.0.
-                obj_list.append((action_group['ID'], action_group['Name'], step['ScriptLinkUIName']))
+            if step.get('ScriptLinkURL', "no file chosen") != "no file chosen":
+                obj_list.append((action_group['ID'], action_group['Name'], step['ScriptLinkURL']))
     if obj_list:
         result += build_report("Action Groups")  # Only if there are results to return
 
@@ -64,27 +64,24 @@ def make_report(values_dict: indigo.Dict):
     for page in indigo.rawServerRequest("GetControlPageList"):
         for elem in page['PageElemList']:
             for action in elem['ActionGroup']['ActionSteps']:
-                if action.get('ScriptLink2', None):
-                    # TODO: 'ScriptLink2' will be updated to 'ScriptLinkURL' with Indigo 2024.1.0.
-                    obj_list.append((page['ID'], page['Name'], action['ScriptLinkUIName']))
+                if action.get('ScriptLinkURL', "no file chosen") != "no file chosen":
+                    obj_list.append((page['ID'], page['Name'], action['ScriptLinkURL']))
     if obj_list:
         result += build_report("Control Pages")  # Only if there are results to return
 
     # ======================== Schedules =========================
     for schedule in indigo.rawServerRequest("GetEventScheduleList"):
         for action in schedule['ActionGroup']['ActionSteps']:
-            if action.get('ScriptLink2', None):
-                # TODO: 'ScriptLink2' will be updated to 'ScriptLinkURL' with Indigo 2024.1.0.
-                obj_list.append((schedule['ID'], schedule['Name'], action['ScriptLinkUIName']))
+            if action.get('ScriptLinkURL', "no file chosen") != "no file chosen":
+                obj_list.append((schedule['ID'], schedule['Name'], action['ScriptLinkURL']))
     if obj_list:
         result += build_report("Schedules")  # Only if there are results to return
 
     # ========================= Triggers =========================
     for trigger in indigo.rawServerRequest("GetEventTriggerList"):
         for event in trigger['ActionGroup']['ActionSteps']:
-            if event.get('ScriptLink2', None):
-                # TODO: 'ScriptLink2' will be updated to 'ScriptLinkURL' with Indigo 2024.1.0.
-                obj_list.append((trigger['ID'], trigger['Name'], event['ScriptLinkUIName']))
+            if event.get('ScriptLinkURL', "no file chosen") != "no file chosen":
+                obj_list.append((trigger['ID'], trigger['Name'], event['ScriptLinkURL']))
     if obj_list:
         result += build_report("Triggers")  # Only if there are results to return
 

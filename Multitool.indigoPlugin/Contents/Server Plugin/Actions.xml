@@ -119,6 +119,20 @@
         <CallbackMethod>network_quality_action</CallbackMethod>
     </Action>
 
+    <Action id="networkPingDeviceAction" uiPath="Network Ping Report Actions">
+        <Name>Update Network Ping Device</Name>
+        <ConfigUI>
+            <Field id="updateNetworkQualityLabel" type="label">
+                <Label>Select the Network Ping device you want to update when this action is executed.</Label>
+            </Field>
+            <Field id="selected_device" type="menu">
+                <Label>Device:</Label>
+                <List class="indigo.devices" filter="self.networkPing"/>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>network_ping_device_action</CallbackMethod>
+    </Action>
+
     <Action id="networkQualityDeviceAction" uiPath="Network Quality Report Actions">
         <Name>Update Network Quality Device</Name>
         <ConfigUI>

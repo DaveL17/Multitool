@@ -1,6 +1,11 @@
 ### v2024.1.0
 - Adds tool to find Indigo objects with embedded scripts.
-- Removes the Substitution Generator Tool (substitutions can be generated directly from the Indigo UI.)
+- Adds tool to find Indigo objects with linked scripts.
+- Adds tool to ping an IP or hostname to determine its online status.
+  - User creates Indigo Device to track ping status.
+  - User creates Indigo Action to cause the ping to occur.
+  - User creates optional Indigo Trigger to take action when the ping target is offline.
+- Removes the Substitution Generator Tool (substitutions can now be generated directly from the Indigo UI.)
 - Improves functional testing at startup when logging set to debug.
 - Code cleanup
 

@@ -60,6 +60,7 @@ class Plugin(indigo.PluginBase):
         # ============================ Instance Attributes =============================
         self.pluginIsInitializing: bool = True
         self.pluginIsShuttingDown: bool = False
+        self.my_triggers = {}  # Master dict of triggers
 
         # =============================== Debug Logging ================================
         self.debug_level: int = int(self.pluginPrefs.get('showDebugLevel', '30'))
@@ -185,6 +186,10 @@ class Plugin(indigo.PluginBase):
                         f"{'States:':<8}{state_dict}"
                     )
 
+    @staticmethod
+    def get_device_list(filter: str="", type_id: int=0, values_dict: indigo.Dict=None, target_id: int=0) -> list:  # noqa
+        return [(dev.id, dev.name) for dev in indigo.devices.iter(filter="self")]
+
     # =============================================================================
     def getMenuActionConfigUiValues(self, menu_id:str=""):  # noqa
         """
@@ -248,6 +253,12 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def shutdown(self):
         self.command_thread.stop()
+
+    def trigger_start_processing(self, trigger):
+        if trigger.id not in self.my_triggers:
+            # my_triggers is a dict of triggers with the key being the device the trigger tracks and the value being the
+            # trigger object.
+            self.my_triggers[trigger.pluginProps['offlineDevice']] = trigger
 
     # =============================================================================
     def variableUpdated(self, orig_var:indigo.Variable, new_var:indigo.Variable):  # noqa
@@ -505,9 +516,6 @@ class Plugin(indigo.PluginBase):
 
         return filter_list
 
-
-
-
     # =============================================================================
     def generator_dev_var(self, fltr:str="", values_dict:indigo.Dict=None, type_id:str="", target_id:int=0):  # noqa
         """ Placeholder """
@@ -595,6 +603,26 @@ class Plugin(indigo.PluginBase):
     def modify_time_variable(action_group: indigo.actionGroup):
         """ Placeholder """
         return modify_time_variable.modify(action_group)
+
+    # =============================================================================
+    def network_ping_device_action(self, action_group: indigo.actionGroup):
+        """ Shim used when running the network ping tool from an action. """
+        # Do the action and process call to update the device
+        ping_tool.do_the_ping(action_group)
+
+        # Process trigger as needed. If the updated device has a trigger configured, it will have a trigger in
+        # `self.my_triggers`. It will be {dev.id: <trigger object>}
+        dev_id = action_group.props['selected_device']  # the device.id selected in the action config
+        if dev_id in self.my_triggers:
+            event_id = self.my_triggers[dev_id].id  # the id of the trigger object
+            dev = indigo.devices[int(dev_id)]  # the device object
+            status = dev.states['status']  # the online status of the ping device
+
+            # if the device is offline, fire the trigger
+            if not status:
+                indigo.trigger.execute(event_id)
+
+        return True, action_group
 
     # =============================================================================
     def network_quality_action(self, action_group: indigo.actionGroup):
@@ -768,10 +796,10 @@ class Plugin(indigo.PluginBase):
         return subscribe_to_changes.subscriber(values_dict)
 
     # =============================================================================
-    @staticmethod
-    def substitution_generator(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
-        """ Placeholder """
-        return substitution_generator.get_substitute(values_dict)
+    # @staticmethod
+    # def substitution_generator(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
+    #     """ Placeholder """
+    #     return substitution_generator.get_substitute(values_dict)
 
     # =============================================================================
     @staticmethod
@@ -856,9 +884,14 @@ class Plugin(indigo.PluginBase):
             # ]
             # for sub_dict in dicts:
             #     test_case.assertIsInstance(self.generator_substitutions(sub_dict), dict, "Method should return a dict.")
+
+            # ===================================== Network Ping Device =====================================
+            # TODO: test network ping device
+
         except AssertionError as err:
             line_number = err.__traceback__.tb_lineno
             indigo.server.log(f"Startup test failed: {err} at line {line_number}", level=logging.ERROR)
+
 
 # =============================================================================
 class MyThread(Thread):

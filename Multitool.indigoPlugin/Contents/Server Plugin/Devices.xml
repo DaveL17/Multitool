@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <Devices>
 
-	<Device type="custom" id="networkQuality">
+	<Device id="networkQuality" type="custom">
 		<Name>Network Quality Device</Name>
 		<ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
@@ -83,5 +83,31 @@
 
         </States>
 <!--        <UiDisplayStateId>onOffState</UiDisplayStateId>-->
+    </Device>
+	<Device id="networkPing" type="custom">
+		<Name>Network Ping Device</Name>
+		<ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
+                <Field id="ping_label" type="Label">
+                    <Label>This tool runs a ping against the server you specify.</Label>
+                </Field>
+                <Field id="ping_label_2" type="Label" fontColor="red">
+                    <Label>Important! Device updates will only take place after running a device update action. See the help page for more information.</Label>
+                </Field>
+                <Field id="hostname" type="textfield">
+                    <Label>Hostname:</Label>
+                </Field>
+                <Field id="sep_1" type="separator"/>
+            </ConfigUI>
+        <States>
+
+            <State id="status">
+                <ValueType>Boolean</ValueType>
+                <TriggerLabel>Status</TriggerLabel>
+                <ControlPageLabel>Status</ControlPageLabel>
+            </State>
+
+        </States>
+        <UiDisplayStateId>status</UiDisplayStateId>
     </Device>
 </Devices>

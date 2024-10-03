@@ -26,6 +26,7 @@ __all__ = [
     "modify_time_variable",
     "object_dependencies",
     "object_directory",
+    "ping_tool",
     "plugin_methods",
     "remove_delayed_actions",
     "results_output",
