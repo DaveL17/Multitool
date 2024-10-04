@@ -15,12 +15,13 @@ def __init__():
     pass
 
 
-def report_comms(values_dict: indigo.Dict = None, menu_item: str = "", no_log=False):
+def report_comms(values_dict: indigo.Dict = None, menu_item: str = "", no_log: bool = False):
     """
     Print information on the last successful communication
 
     :param indigo.Dict values_dict:
     :param str menu_item:
+    :param bool no_log:
     :return:
     """
     dev_filter = values_dict['listOfDevices']

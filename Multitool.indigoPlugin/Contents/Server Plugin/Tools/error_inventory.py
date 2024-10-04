@@ -15,7 +15,7 @@ def __init__():
     pass
 
 
-def show_inventory(values_dict: indigo.Dict = None, no_log=False):
+def show_inventory(values_dict: indigo.Dict = None, no_log: bool = False):
     """
     Print an inventory of error messages to the Indigo Events log
 

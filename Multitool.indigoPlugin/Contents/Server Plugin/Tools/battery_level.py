@@ -12,7 +12,7 @@ def __init__():
     pass
 
 
-def report(no_log=False):
+def report(no_log: bool = False):
     """
     Print list of Z-Wave devices and their current battery levels
 

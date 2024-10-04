@@ -16,7 +16,7 @@ def __init__():
     pass
 
 
-def get_list(no_log=False):
+def get_list(no_log: bool = False):
     """
     Write a list of installed plugins to the Indigo Events log
     """

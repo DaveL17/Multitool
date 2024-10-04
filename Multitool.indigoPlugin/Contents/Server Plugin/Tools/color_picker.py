@@ -18,12 +18,13 @@ def __init__():
     pass
 
 
-def picker(values_dict: indigo.Dict = None, type_id: str = "", no_log=False):
+def picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):
     """
     Print raw, hex, and rgb color values to the Indigo events log
 
     :param indigo.Dict values_dict:
     :param str type_id:
+    :param bool no_log:
     :return:
     """
     try:

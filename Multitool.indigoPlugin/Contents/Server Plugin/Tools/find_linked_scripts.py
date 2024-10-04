@@ -37,7 +37,7 @@ def build_report(header: str):
 
 
 # Note that there is no search criteria needed as the script is not going to search linked scripts.
-def make_report(values_dict: indigo.Dict, no_log=False):
+def make_report(values_dict: indigo.Dict, no_log: bool = False):
     """
     Traverse the database and find objects with linked scripts and publish report to events log
 

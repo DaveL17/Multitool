@@ -18,7 +18,7 @@ def __init__():
     pass
 
 
-def report(no_log=False):
+def report(no_log: bool = False):
     """
     Prints information about the Indigo environment to the Indigo Events Log
 

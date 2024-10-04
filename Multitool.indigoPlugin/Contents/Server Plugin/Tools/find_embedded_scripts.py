@@ -46,7 +46,7 @@ def build_report(header: str):
     return report
 
 
-def make_report(values_dict: indigo.Dict, no_log=False):
+def make_report(values_dict: indigo.Dict, no_log: bool = False):
     """
     Traverse the database and find objects with embedded scripts and publish report to events log
 

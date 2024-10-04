@@ -21,7 +21,7 @@ def __init__():
     pass
 
 
-def show_running_plugins(no_log=False):
+def show_running_plugins(no_log: bool = False):
     """
     Generate a list of running plugins and output it to the Indigo Events log
 

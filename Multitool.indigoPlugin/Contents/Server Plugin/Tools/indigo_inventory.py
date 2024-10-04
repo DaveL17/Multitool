@@ -15,7 +15,7 @@ def __init__():
     pass
 
 
-def show_inventory(no_log=False):
+def show_inventory(no_log: bool = False):
     """
     Build a complete inventory of Indigo objects and output it to the Indigo Events log
 

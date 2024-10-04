@@ -14,7 +14,7 @@ def __init__():
     pass
 
 
-def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log=False):
+def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False):
     """
     Format an object properties dictionary and output it to the Indigo events log
 

@@ -18,7 +18,7 @@ def __init__():
     pass
 
 
-def show_path(no_log=False):
+def show_path(no_log: bool = False):
     """
     Print the Indigo server's environment path to the Indigo Events log
 
