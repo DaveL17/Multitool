@@ -74,6 +74,7 @@
                 <Label>Enter the filter criteria to use and then click Print the List. Examples:
                     com.mycompany.myplugin
                     com.company.plugin.xyzDeviceType
+                    self (to print Multitool plugin devices)
                 </Label>
             </Field>
             <Field id="customThing" type="textfield" visibleBindingId="typeOfThing" visibleBindingValue="Other">
@@ -299,6 +300,20 @@
 
             </ConfigUI>
             <ButtonTitle>Close</ButtonTitle>
+    </MenuItem>
+
+    <MenuItem id="networkPing">
+        <Name>Ping Host</Name>
+		<ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
+                <Field id="ping_label" type="Label">
+                    <Label>Run a ping against the server you specify.</Label>
+                </Field>
+                <Field id="hostname" type="textfield" tooltip="Supports IP, hostname, or alias.">
+                    <Label>Hostname:</Label>
+                </Field>
+            </ConfigUI>
+        <CallbackMethod>network_ping_device_menu</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="installed_plugins">

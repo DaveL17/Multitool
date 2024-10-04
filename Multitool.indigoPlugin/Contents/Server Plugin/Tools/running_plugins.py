@@ -21,7 +21,7 @@ def __init__():
     pass
 
 
-def show_running_plugins():
+def show_running_plugins(no_log=False):
     """
     Generate a list of running plugins and output it to the Indigo Events log
 
@@ -34,10 +34,11 @@ def show_running_plugins():
             stderr=subprocess.PIPE) as proc:
         ret = proc.communicate()[0]
 
-    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
-    # logging level.
-    indigo.server.log(f"\n{' Running Plugins (/bin/ps -ef) ':{'='}^120}")
-    indigo.server.log(
-        f"\n  uid - pid - parent pid - recent CPU usage - process start time - controlling tty "
-        f"- elapsed CPU usage - associated command\n\n{ret.decode('utf-8')}"
-    )
+    if not no_log:
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
+        indigo.server.log(f"\n{' Running Plugins (/bin/ps -ef) ':{'='}^120}")
+        indigo.server.log(
+            f"\n  uid - pid - parent pid - recent CPU usage - process start time - controlling tty "
+            f"- elapsed CPU usage - associated command\n\n{ret.decode('utf-8')}"
+        )

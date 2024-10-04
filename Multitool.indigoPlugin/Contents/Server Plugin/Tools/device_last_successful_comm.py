@@ -15,7 +15,7 @@ def __init__():
     pass
 
 
-def report_comms(values_dict: indigo.Dict = None, menu_item: str = ""):
+def report_comms(values_dict: indigo.Dict = None, menu_item: str = "", no_log=False):
     """
     Print information on the last successful communication
 
@@ -46,11 +46,12 @@ def report_comms(values_dict: indigo.Dict = None, menu_item: str = ""):
         if len(element[1]) > length:
             length = len(element[1])
 
-    # Output the result
-    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
-    # logging level.
-    indigo.server.log(f"{' Device Last Successful Comm ':=^100}")
-    indigo.server.log(f"{'ID':<14}{'Name':<{length + 1}} Last Comm Success")
-    indigo.server.log('=' * 100)
-    for element in table:
-        indigo.server.log(f"{element[0]:<14}{element[1]:<{length}}  {element[2]}")
+    if not no_log:
+        # Output the result
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
+        indigo.server.log(f"{' Device Last Successful Comm ':=^100}")
+        indigo.server.log(f"{'ID':<14}{'Name':<{length + 1}} Last Comm Success")
+        indigo.server.log('=' * 100)
+        for element in table:
+            indigo.server.log(f"{element[0]:<14}{element[1]:<{length}}  {element[2]}")

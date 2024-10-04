@@ -93,6 +93,7 @@ class Fogbert:
         """
         environment_state: str = self.environment()
         indigo.server.log(environment_state)
+        return True
 
     # =============================================================================
     def pluginEnvironmentLogger(self):  # noqa

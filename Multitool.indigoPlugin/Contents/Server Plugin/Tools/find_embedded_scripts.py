@@ -46,7 +46,7 @@ def build_report(header: str):
     return report
 
 
-def make_report(values_dict: indigo.Dict):
+def make_report(values_dict: indigo.Dict, no_log=False):
     """
     Traverse the database and find objects with embedded scripts and publish report to events log
 
@@ -102,5 +102,6 @@ def make_report(values_dict: indigo.Dict):
     if obj_list:
         result += build_report("Triggers")  # Only if there are results to return
 
-    LOGGER.info(result)
+    if not no_log:
+        LOGGER.info(result)
     return True, values_dict

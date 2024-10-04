@@ -18,7 +18,7 @@ def __init__():
     pass
 
 
-def show_path():
+def show_path(no_log=False):
     """
     Print the Indigo server's environment path to the Indigo Events log
 
@@ -26,9 +26,10 @@ def show_path():
     """
     # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
     # logging level.
-    indigo.server.log(f"{' Current System Path ':{'='}^130}")
-    for item in sys.path:
-        indigo.server.log(item)
-    indigo.server.log(f"{' (Sorted) ':{'='}^130}")
-    for item in sorted(sys.path):
-        indigo.server.log(item)
+    if not no_log:
+        indigo.server.log(f"{' Current System Path ':{'='}^130}")
+        for item in sys.path:
+            indigo.server.log(item)
+        indigo.server.log(f"{' (Sorted) ':{'='}^130}")
+        for item in sorted(sys.path):
+            indigo.server.log(item)

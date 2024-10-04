@@ -14,12 +14,13 @@ def __init__():
     pass
 
 
-def get_inventory(values_dict: indigo.Dict = None, type_id: str = ""):
+def get_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log=False):
     """
     Print an inventory of devices to the Indigo Events log
 
     :param indigo.Dict values_dict:
     :param str type_id:
+    :param bool no_log:
     :return:
     """
     LOGGER.debug("Call to device_inventory")
@@ -57,31 +58,33 @@ def get_inventory(values_dict: indigo.Dict = None, type_id: str = ""):
         x_4 = max(len(f"{thing[4]}") for thing in inventory)
         table_width = sum((x_0, x_1, x_2, x_3, x_4)) + 6
 
-        # ============================= Output the Header =============================
-        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
-        # logging level.
-        indigo.server.log(f"{f' Inventory of {filter_item} Devices ':=^{table_width}}")
-        indigo.server.log(
-            f"{'ID':<{x_0}} {'Addr':<{x_1}} "
-            f"{'Name':<{x_2}} "
-            f"{'Last Changed':<{x_3}} "
-            f"{'Enabled':<3}"
-        )
-        indigo.server.log("=" * table_width)
-
-        # ============================= Output the Table ==============================
-        for thing in inventory:
+        if not no_log:
+            # ============================= Output the Header =============================
+            # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+            # logging level.
+            indigo.server.log(f"{f' Inventory of {filter_item} Devices ':=^{table_width}}")
             indigo.server.log(
-                f"{thing[0]:<{x_0}} "
-                f"{f'[{thing[1]}]':<{x_1}} "
-                f"{thing[2]:<{x_2}} "
-                f"{dt.datetime.strftime(thing[3], '%Y-%m-%d %H:%M:%S'):<{x_3}} "
-                f"[ {thing[4]:^3} ]"
+                f"{'ID':<{x_0}} {'Addr':<{x_1}} "
+                f"{'Name':<{x_2}} "
+                f"{'Last Changed':<{x_3}} "
+                f"{'Enabled':<3}"
             )
+            indigo.server.log("=" * table_width)
+
+            # ============================= Output the Table ==============================
+            for thing in inventory:
+                indigo.server.log(
+                    f"{thing[0]:<{x_0}} "
+                    f"{f'[{thing[1]}]':<{x_1}} "
+                    f"{thing[2]:<{x_2}} "
+                    f"{dt.datetime.strftime(thing[3], '%Y-%m-%d %H:%M:%S'):<{x_3}} "
+                    f"[ {thing[4]:^3} ]"
+                )
     else:
-        if values_dict['typeOfThing'] not in ('Other', 'pickone'):
-            indigo.server.log(f"No {values_dict['typeOfThing']} devices found.")
-        elif values_dict['typeOfThing'] == 'Other' and len(values_dict['customThing']) > 0:
-            indigo.server.log(f"No {values_dict['customThing']} devices found.")
+        if not no_log:
+            if values_dict['typeOfThing'] not in ('Other', 'pickone'):
+                indigo.server.log(f"No {values_dict['typeOfThing']} devices found.")
+            elif values_dict['typeOfThing'] == 'Other' and len(values_dict['customThing']) > 0:
+                indigo.server.log(f"No {values_dict['customThing']} devices found.")
 
     return values_dict

@@ -24,7 +24,8 @@ def pinger(values_dict: indigo.Dict = None):
     """
     dev_id = int(values_dict['listOfDevices'])
     dev = indigo.devices[dev_id]
-    #  TODO: ensure that zwave and/or insteon plugins are enabled before going any further.
+    #  TODO: ensure that zwave and/or insteon plugins are enabled before going any further. This will require a new
+    #    beta build as build 2 has a Z-Wave plugin bug.
     try:
         if dev.enabled:
             # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current

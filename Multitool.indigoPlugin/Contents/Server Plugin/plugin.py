@@ -18,8 +18,7 @@ from queue import Queue
 import subprocess
 from threading import Thread
 from unittest import TestCase
-
-# from Tools import find_embedded_scripts
+from unittest.mock import MagicMock
 
 import indigo  # noqa
 # import pydevd
@@ -90,6 +89,7 @@ class Plugin(indigo.PluginBase):
         Log pluginEnvironment information when plugin is first started
         """
         self.Fogbert.pluginEnvironment()
+        return True
 
     # =============================================================================
     # ============================== Indigo Methods ===============================
@@ -380,34 +380,38 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def about_indigo():
+    def about_indigo(no_log=False):
         """ Placeholder """
-        about_indigo.report()
+        about_indigo.report(no_log)
+        return True
 
     # =============================================================================
     @staticmethod
-    def battery_level_report(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
+    def battery_level_report(values_dict:indigo.Dict=None, type_id:str="", no_log=False):  # noqa
         """ Placeholder """
-        battery_level.report()
+        battery_level.report(no_log)
+        return True
 
     # =============================================================================
     @staticmethod
-    def color_picker(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
+    def color_picker(values_dict:indigo.Dict=None, type_id:str="", no_log=False):  # noqa
         """ Placeholder """
-        color_picker.picker(values_dict)
+        color_picker.picker(values_dict, no_log)
         return True, values_dict
 
     # =============================================================================
     @staticmethod
-    def device_inventory(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
+    def device_inventory(values_dict:indigo.Dict=None, type_id:str="", no_log=False):  # noqa
         """ Placeholder """
-        device_inventory.get_inventory(values_dict, type_id)
+        device_inventory.get_inventory(values_dict, type_id, no_log)
+        return values_dict
 
     # =============================================================================
     @staticmethod
-    def device_last_successful_comm(values_dict: indigo.Dict = None, menu_item: str = ""):
+    def device_last_successful_comm(values_dict: indigo.Dict = None, menu_item: str = "", no_log=False):
         """ Placeholder """
-        device_last_successful_comm.report_comms(values_dict, menu_item)
+        device_last_successful_comm.report_comms(values_dict, menu_item, no_log)
+        return True
 
     # =============================================================================
     @staticmethod
@@ -430,15 +434,17 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def environment_path():
+    def environment_path(no_log=False):
         """ Placeholder """
-        environment_path.show_path()
+        environment_path.show_path(no_log)
+        return True
 
     # =============================================================================
     @staticmethod
-    def error_inventory(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
+    def error_inventory(values_dict:indigo.Dict=None, type_id:str="", no_log=False):  # noqa
         """ Placeholder """
-        return error_inventory.show_inventory(values_dict)
+        error_inventory.show_inventory(values_dict, no_log)
+        return True
 
     # =============================================================================
     def execute_command(self, command_queue, result_queue):
@@ -539,15 +545,17 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def get_serial_ports(values_dict:indigo.Dict=None, type_id:str=""):  # noqa
+    def get_serial_ports(values_dict:indigo.Dict=None, type_id:str="", no_log=False):  # noqa
         """ Placeholder """
-        return serial_ports.show_ports(values_dict)
+        serial_ports.show_ports(values_dict, no_log)
+        return True
 
     # =============================================================================
     @staticmethod
-    def indigo_inventory():  # noqa
+    def indigo_inventory(no_log=False):  # noqa
         """ Placeholder """
-        indigo_inventory.show_inventory()
+        indigo_inventory.show_inventory(no_log)
+        return True
 
     # =============================================================================
     @staticmethod
@@ -557,9 +565,10 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def installed_plugins():
+    def installed_plugins(no_log=False):
         """ Placeholder """
-        installed_plugins.get_list()
+        installed_plugins.get_list(no_log)
+        return True
 
     # =============================================================================
     @staticmethod
@@ -605,10 +614,15 @@ class Plugin(indigo.PluginBase):
         return modify_time_variable.modify(action_group)
 
     # =============================================================================
+    def network_ping_device_menu(self, values_dict: indigo.Dict, item_id: str):
+        ping_tool.do_the_ping(values_dict, menu_call=True)
+        return True, values_dict
+
+    # =============================================================================
     def network_ping_device_action(self, action_group: indigo.actionGroup):
         """ Shim used when running the network ping tool from an action. """
         # Do the action and process call to update the device
-        ping_tool.do_the_ping(action_group)
+        ping_tool.do_the_ping(action_group, menu_call=False)
 
         # Process trigger as needed. If the updated device has a trigger configured, it will have a trigger in
         # `self.my_triggers`. It will be {dev.id: <trigger object>}
@@ -745,37 +759,40 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def running_plugins():
+    def running_plugins(no_log=False):
         """ Placeholder """
-        running_plugins.show_running_plugins()
+        running_plugins.show_running_plugins(no_log)
+        return True
 
     # =============================================================================
     @staticmethod
-    def results_output(values_dict: indigo.Dict = None, caller: str = ""):
+    def results_output(values_dict: indigo.Dict = None, caller: str = "", no_log=False):
         """ Placeholder """
-        results_output.display_results(values_dict, caller)
+        results_output.display_results(values_dict, caller, no_log)
+        return True, values_dict
+    # =============================================================================
+    @staticmethod
+    def object_directory(values_dict: indigo.Dict = None, caller: str = "", no_log=False):
+        """ Placeholder """
+        object_directory.display_results(values_dict, caller, no_log)
+        return True, values_dict
 
     # =============================================================================
     @staticmethod
-    def object_directory(values_dict: indigo.Dict = None, caller: str = ""):
+    def object_dependencies(values_dict: indigo.Dict = None, caller: str = "", no_log=False):
         """ Placeholder """
-        object_directory.display_results(values_dict, caller)
+        object_dependencies.display_results(values_dict, caller, no_log)
+        return True, values_dict
 
     # =============================================================================
-    @staticmethod
-    def object_dependencies(values_dict: indigo.Dict = None, caller: str = ""):
+    def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log=False):  # noqa
         """ Placeholder """
-        object_dependencies.display_results(values_dict, caller)
+        return find_embedded_scripts.make_report(values_dict, no_log)
 
     # =============================================================================
-    def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
+    def search_linked_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log=False):  # noqa
         """ Placeholder """
-        return find_embedded_scripts.make_report(values_dict)
-
-    # =============================================================================
-    def search_linked_scripts(self, values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
-        """ Placeholder """
-        return find_linked_scripts.make_report(values_dict)
+        return find_linked_scripts.make_report(values_dict, no_log)
 
     # =============================================================================
     @staticmethod
@@ -864,10 +881,12 @@ class Plugin(indigo.PluginBase):
         test_case = TestCase()
         self.logger.debug("Running startup tests. (Warning messages are normal.)")
         try:
+            # TODO: Add a attribute to suppress log output when relevant methods are called from a test. See
+            #     see Indigo Inventory below.
             # ===================================== About Indigo =====================================
-            test_case.assertIsNone(self.about_indigo(), "Method failed.")  # Implied `None` returned
+            test_case.assertTrue(self.about_indigo(no_log=True), "Method failed.")  # Implied `None` returned
             # ===================================== Battery Level Report =====================================
-            test_case.assertIsNone(self.battery_level_report(), "Method failed.")  # Implied `None` returned
+            test_case.assertTrue(self.battery_level_report(no_log=True), "Method failed.")  # Implied `None` returned
             # ===================================== Color Picker =====================================
             dicts = [
                 {'chosenColor': 'FF FF FF'},
@@ -875,19 +894,75 @@ class Plugin(indigo.PluginBase):
                 {'chosenColor': 'white'}  # wrong value type
             ]
             for test_dict in dicts:
-                test_case.assertIsNone(self.color_picker(test_dict), "Method failed.")
-            # ===================================== Generate Substitutions =====================================
-            # dicts = [
-            #     {'devVarMenu': 144258876, 'generator_state_or_value': 'serverStatus'},  # Email+ SMTP device
-            #     {'devVarMenu': '144258876', 'generator_state_or_value': 'serverStatus'},  # dev_id as string
-            #     {'devVarMenu': 23078783, 'generator_state_or_value': 'value'},  # Var `isDaylight`
-            # ]
-            # for sub_dict in dicts:
-            #     test_case.assertIsInstance(self.generator_substitutions(sub_dict), dict, "Method should return a dict.")
-
-            # ===================================== Network Ping Device =====================================
-            # TODO: test network ping device
-
+                test_case.assertTrue(self.color_picker(test_dict, no_log=True), "Method failed.")
+            # ===================================== Device Beep =====================================
+            # Standard Indigo command; may not need testing.
+            # ===================================== Device Inventory =====================================
+            values_dict = {'customThing': 'self', 'typeOfThing': 'Other'}
+            test_case.assertIsInstance(self.device_inventory(values_dict, no_log=True), dict, "Method failed.")
+            # ===================================== Device Last Comm =====================================
+            test_case.assertTrue(self.device_last_successful_comm({'listOfDevices': 'indigo.relay'}, no_log=True), "Method failed.")
+            # ===================================== Device Ping =====================================
+            # ===================================== Environment Path =====================================
+            test_case.assertTrue(self.environment_path(no_log=True), "Method failed")
+            # ===================================== Error Inventory =====================================
+            for values_dict in [{'error_level': 'err'}, {'error_level': 'err_warn'}]:
+                test_case.assertTrue(self.error_inventory(values_dict, no_log=True), "Method failed")
+            # ===================================== Indigo Inventory =====================================
+            test_case.assertTrue(self.indigo_inventory(no_log=True), "Method failed")
+            # ===================================== Methods Indigo Base =====================================
+            # Standard Indigo command; may not need testing.
+            # ===================================== Methods Plugin Base =====================================
+            # Standard Indigo command; may not need testing.
+            # ===================================== Network Quality Report =====================================
+            # ===================================== Object Inspection =====================================
+            # It's best if the referenced objects are ones that will be around permanently.
+            for payload in [{'classOfThing': 'actionGroups', 'thingToPrint': 460267384},
+                            {'classOfThing': 'controlPages', 'thingToPrint': 37036932},
+                            {'classOfThing': 'devices', 'thingToPrint': 374100038},
+                            {'classOfThing': 'schedules', 'thingToPrint': 147884757},
+                            {'classOfThing': 'triggers', 'thingToPrint': 1789555909},
+                            {'classOfThing': 'variables', 'thingToPrint': 23078783}
+                            ]:
+                # Print Object Dict
+                test_case.assertTrue(self.results_output(payload, no_log=True), "Method failed.")
+                # Print Object Dir
+                test_case.assertTrue(self.object_directory(payload, no_log=True), "Method failed.")
+                # Print Object Dependencies
+                test_case.assertTrue(self.object_dependencies(payload, no_log=True), "Method failed.")
+            # ===================================== Ping Host =====================================
+            # Menu Call
+            for hostname in ['10.0.1.1', 'google.com', 'indigo']:
+                test_case.assertIsNone(ping_tool.do_the_ping({'hostname': hostname}, menu_call=True), "Method failed.")
+            # Action Call
+            values_dict = MagicMock()
+            values_dict.props = {'selected_device': 1655068310}
+            test_case.assertIsInstance(self.network_ping_device_action(values_dict), tuple, "Method failed.")
+            # ===================================== Plugin Inventory =====================================
+            test_case.assertTrue(self.installed_plugins(no_log=True), "Method failed.")
+            # ===================================== Plugins Online =====================================
+            test_case.assertTrue(self.running_plugins(no_log=True), "Method failed.")
+            # ===================================== Remove Delayed Actions =====================================
+            # Standard Indigo command; may not need testing.
+            # ===================================== Scripts Embedded =====================================
+            test_case.assertIsInstance(self.search_embedded_scripts({'search_string': ''}, no_log=True), tuple, "Method failed.")
+            test_case.assertTrue(self.search_embedded_scripts({'search_string': ''}, no_log=True)[0], "Method failed.")
+            test_case.assertIsInstance(self.search_embedded_scripts({'search_string': 'A'}, no_log=True), tuple, "Method failed.")
+            test_case.assertTrue(self.search_embedded_scripts({'search_string': 'A'}, no_log=True)[0], "Method failed.")
+            # ===================================== Scripts Linked =====================================
+            values_dict = {}
+            test_case.assertIsInstance(self.search_linked_scripts(values_dict, no_log=True), tuple, "Method failed.")
+            test_case.assertTrue(self.search_linked_scripts(values_dict, no_log=True)[0], "Method failed.")
+            # ===================================== Send Status Request =====================================
+            # Standard Indigo command; may not need testing.
+            # ===================================== Serial Ports =====================================
+            test_case.assertTrue(self.get_serial_ports({'ignoreBluetooth': True}, no_log=True), "Method failed.")
+            # ===================================== Speak String =====================================
+            # Standard Indigo command; may not need testing.
+            # ===================================== Subscribe to Changes =====================================
+            # Standard Indigo command; may not need testing.
+            # ===================================== Display Plugin Information =====================================
+            test_case.assertTrue(self.log_plugin_environment(), "Method failed.")
         except AssertionError as err:
             line_number = err.__traceback__.tb_lineno
             indigo.server.log(f"Startup test failed: {err} at line {line_number}", level=logging.ERROR)

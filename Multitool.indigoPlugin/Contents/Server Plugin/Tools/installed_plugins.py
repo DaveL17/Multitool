@@ -16,7 +16,7 @@ def __init__():
     pass
 
 
-def get_list():
+def get_list(no_log=False):
     """
     Write a list of installed plugins to the Indigo Events log
     """
@@ -48,11 +48,12 @@ def get_list():
 
                 plugin_name_list.append(f"{cf_bundle_display_name:45}{cf_bundle_identifier}")
 
-    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
-    # logging level.
-    indigo.server.log(f"{' Installed Plugins ':{'='}^130}")
+    if not no_log:
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
+        indigo.server.log(f"{' Installed Plugins ':{'='}^130}")
 
-    for thing in plugin_name_list:
-        indigo.server.log(f'{thing}')
+        for thing in plugin_name_list:
+            indigo.server.log(f'{thing}')
 
-    indigo.server.log(f"{' Code Credit: Autolog ':{'='}^130}")
+        indigo.server.log(f"{' Code Credit: Autolog ':{'='}^130}")

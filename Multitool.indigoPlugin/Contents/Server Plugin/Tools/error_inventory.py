@@ -15,11 +15,12 @@ def __init__():
     pass
 
 
-def show_inventory(values_dict: indigo.Dict = None):
+def show_inventory(values_dict: indigo.Dict = None, no_log=False):
     """
     Print an inventory of error messages to the Indigo Events log
 
     :param indigo.Dict values_dict:
+    :param bool no_log:
     :return:
     """
     check_list = (' Err ', ' err ', 'Error', 'error')
@@ -38,7 +39,6 @@ def show_inventory(values_dict: indigo.Dict = None):
     with open(full_path, 'w', encoding='utf-8') as outfile:
         for root, sub, files in os.walk(log_folder):
             for filename in files:
-                # if filename.endswith((".log", ".txt")) and filename != 'error_inventory.txt':
                 if filename.endswith((".log", ".txt")) \
                         and not filename.startswith('Multitool Plugin Error Inventory'):
                     with open(os.path.join(root, filename), "r", encoding="utf-8") as infile:
@@ -46,9 +46,14 @@ def show_inventory(values_dict: indigo.Dict = None):
 
                         for line in log_file.split('\n'):
                             if any(item in line for item in check_list):
-                                outfile.write(f"{filename:<26}{line}\n")
+                                # If unit test, don't write out the file. Tough to unit test quality of output, so we
+                                # will rely on reports of problems.
+                                if not no_log:
+                                    outfile.write(f"{filename:<26}{line}\n")
 
-    # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
-    # logging level.
-    indigo.server.log(f"Error message inventory saved to: {full_path}")
+    if not no_log:
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
+        indigo.server.log(f"Error message inventory saved to: {full_path}")
+
     return True

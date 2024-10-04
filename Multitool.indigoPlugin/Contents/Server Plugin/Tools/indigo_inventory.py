@@ -15,7 +15,7 @@ def __init__():
     pass
 
 
-def show_inventory():
+def show_inventory(no_log=False):
     """
     Build a complete inventory of Indigo objects and output it to the Indigo Events log
 
@@ -116,25 +116,26 @@ def show_inventory():
 
     # ============================= Output the Table ==============================
     # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
-    # logging level.
-    for object_type in sorted(inventory):
-        header = f" {object_type} "
-        indigo.server.log(f"{header:{'='}^{table_width}}")
+    # logging level. If `no_log` is True, we don't print the results.
+    if not no_log:
+        for object_type in sorted(inventory):
+            header = f" {object_type} "
+            indigo.server.log(f"{header:{'='}^{table_width}}")
 
-        indigo.server.log(
-            f"{'ID':{col0}}{'Name':{col1}}{'Folder ID':{col2}}{'Folder Name':{col3}}"
-        )
-        indigo.server.log("=" * table_width)
-
-        for element in inventory[object_type]:
             indigo.server.log(
-                f"{element[0]:<{col0}}"
-                f"{element[1]:<{col1}}"
-                f"{element[2]:<{col2}}"
-                f"{element[3]:<{col3}}"
+                f"{'ID':{col0}}{'Name':{col1}}{'Folder ID':{col2}}{'Folder Name':{col3}}"
             )
+            indigo.server.log("=" * table_width)
 
-    indigo.server.log(f"{' Summary ':{'='}^{table_width}}")
+            for element in inventory[object_type]:
+                indigo.server.log(
+                    f"{element[0]:<{col0}}"
+                    f"{element[1]:<{col1}}"
+                    f"{element[2]:<{col2}}"
+                    f"{element[3]:<{col3}}"
+                )
 
-    for object_type in sorted(inventory):
-        indigo.server.log(f"{object_type:15}{len(inventory[object_type])}")
+        indigo.server.log(f"{' Summary ':{'='}^{table_width}}")
+
+        for object_type in sorted(inventory):
+            indigo.server.log(f"{object_type:15}{len(inventory[object_type])}")
