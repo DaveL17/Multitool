@@ -21,10 +21,11 @@ def __init__():
     pass
 
 
-def show_running_plugins(no_log: bool = False):
+def show_running_plugins(no_log: bool = False) -> None:
     """
     Generate a list of running plugins and output it to the Indigo Events log
 
+    :param bool no_log: If True, no output is logged.
     :return:
     """
     with subprocess.Popen(

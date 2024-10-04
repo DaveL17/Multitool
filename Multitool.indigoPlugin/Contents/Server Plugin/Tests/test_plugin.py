@@ -51,7 +51,7 @@ class TestActions(unittest.TestCase):
     def test_network_quality_device_action(self):
         """
         Note that the Network Quality Action can take some time to complete, and we wait for it to finish before
-        determining success.
+        determining success. This test will block until complete.
         """
         # Run the action.
         message = {
@@ -75,19 +75,23 @@ class TestDevices(unittest.TestCase):
     defined in `Devices.xml`. This is not meant to test aspects of the various APIs, but it uses the HTTP API to pass
     commands to and receive updates from the Indigo server.
     """
-    # TODO: set up test of speak string tool.
     @classmethod
     def setUpClass(cls):
         ...
 
     @staticmethod
-    def communicate(message):
+    def communicate(message: dict) -> httpx.Response:
         """ Send the API command message """
         headers = {'Authorization': f'Bearer {API_SECRET}'}
         return httpx.post(API_URL, headers=headers, json=message, verify=False)
 
     def test_api(self):
-        """ Tests the plugin API by creating, testing, and deleting a plugin device. """
+        """
+        Tests the plugin API by creating, testing, and deleting a plugin device.
+
+        Note that this API method will fail in interesting ways if the temporary test device was previously created but
+        wasn't subsequently deleted. Indigo creates the device by name, and if the name already exists, it will get mad.
+        """
         # ===== Network Quality Device =====
         # Create the device
         message = {

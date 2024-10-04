@@ -14,7 +14,7 @@ def __init__():
     pass
 
 
-def pinger(values_dict: indigo.Dict = None):
+def pinger(values_dict: indigo.Dict = None) -> None:
     """
     Send a ping to the selected device. Only Z-Wave or INSTEON devices are supported by the built-in ping command, so
     one or both of these interface plugins must be enabled.
@@ -24,18 +24,29 @@ def pinger(values_dict: indigo.Dict = None):
     """
     dev_id = int(values_dict['listOfDevices'])
     dev = indigo.devices[dev_id]
-    #  TODO: ensure that zwave and/or insteon plugins are enabled before going any further. This will require a new
-    #    beta build as build 2 has a Z-Wave plugin bug.
+
+    plugin_id = "com.perceptiveautomation.indigoplugin.InsteonCommands"
+    plugin = indigo.server.getPlugin(plugin_id)
+    insteon_enabled = plugin.isEnabled()
+
+    plugin_id = "com.perceptiveautomation.indigoplugin.zwave"
+    plugin = indigo.server.getPlugin(plugin_id)
+    zwave_enabled = plugin.isEnabled()
+
     try:
-        if dev.enabled:
-            # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
-            # logging level.
-            indigo.server.log(f" {'Pinging device: ' + dev.name:{'='}^80} ")
-            result = indigo.device.ping(dev_id, suppressLogging=False)
-            if result['Success']:
-                indigo.server.log(f"Ping \"{dev.name}\" success. Time: {result['TimeDelta'] / 1000.0} seconds.")
-            else:
-                indigo.server.log("Ping fail.")
+        if insteon_enabled and zwave_enabled:
+            if dev.enabled and dev.configured:
+                # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's
+                # current logging level.
+                indigo.server.log(f" {'Pinging device: ' + dev.name:{'='}^80} ")
+                result = indigo.device.ping(dev_id, suppressLogging=False)
+                if result['Success']:
+                    indigo.server.log(f"Ping \"{dev.name}\" success. Time: {result['TimeDelta'] / 1000.0} seconds.")
+                else:
+                    indigo.server.log("Ping fail.")
+        else:
+            LOGGER.warning("You must enable either or both: Z-Wave or INSTEON interfaces.")
     except (ValueError, TypeError):
         LOGGER.critical("Error: ", exc_info=True)
         LOGGER.critical("Error sending ping.")
+

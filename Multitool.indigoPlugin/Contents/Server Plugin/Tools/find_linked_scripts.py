@@ -2,8 +2,6 @@
 Traverse the Indigo database and find objects with embedded scripts
 
 This tool is only available to users of Indigo 2024.1.0 and later.
-TODO: consider adding a short sleep between object types to make it even easier on the server. This may come later if
-      folks with extra large databases.
 """
 import logging
 import indigo  # noqa
@@ -17,8 +15,12 @@ def __init__():
     pass
 
 
-def sort_obj_list(ob_list: list):
-    """ Sort the list of objects by their object name """
+def sort_obj_list(ob_list: list) -> str:
+    """
+    Sort the list of objects by their object name
+
+    :param ob_list: list of objects
+    """
     result = ""
     new_ob_list = (sorted(ob_list, key=lambda item: item[1]))
     for obj in new_ob_list:
@@ -27,8 +29,12 @@ def sort_obj_list(ob_list: list):
     return result
 
 
-def build_report(header: str):
-    """ Add payload objects to the report """
+def build_report(header: str) -> str:
+    """
+    Add payload objects to the report
+
+    :param header: header of the report
+    """
     # Note that we don't want to combine "duplicates" here because we are going to be showing the full path which might
     # be quite long.
     report = f"\n{SPACER}{' ' + header + ' ':=^60}\n"
@@ -44,6 +50,9 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
     We intentionally split the `rawServerRequests` apart because some users have massive databases and even this
     small separation may give the server a bit of a break. We evaluate each object type separately because there can be
     nuanced differences in the database XML and the format of the XML could change in the future.
+
+    :param values_dict:
+    :param bool no_log: If True, no output is logged.
     """
     result = "Indigo Objects with Linked Scripts"
 
@@ -86,5 +95,5 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
         result += build_report("Triggers")  # Only if there are results to return
 
     if not no_log:
-        LOGGER.info(result)
+        indigo.server.log(result)
     return True, values_dict

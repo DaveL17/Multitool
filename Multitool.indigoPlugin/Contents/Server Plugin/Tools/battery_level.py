@@ -12,9 +12,11 @@ def __init__():
     pass
 
 
-def report(no_log: bool = False):
+def report(no_log: bool = False) -> None:
     """
     Print list of Z-Wave devices and their current battery levels
+
+    Will return all known battery levels regardless of whether the device is enabled or configured.
 
     :return:
     """
@@ -26,14 +28,12 @@ def report(no_log: bool = False):
             collection[dev.name] = dev.batteryLevel
 
     if not no_log:
-        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current logging
-        # level.
+        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+        # logging level.
         indigo.server.log(f"{' Battery Level Report ':=^100}")
         if len(collection) == 0:
             indigo.server.log("No battery devices found.")
         else:
             longest_name = max(map(len, collection))
             for k in collection:
-                indigo.server.log(
-                    f"{k:<{longest_name}} | {'-' * int(collection[k] / 2)}| {collection[k]}%"
-                )
+                indigo.server.log(f"{k:<{longest_name}} | {'-' * int(collection[k] / 2)}| {collection[k]}%")

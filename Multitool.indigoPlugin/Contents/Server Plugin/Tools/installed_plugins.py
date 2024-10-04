@@ -16,9 +16,11 @@ def __init__():
     pass
 
 
-def get_list(no_log: bool = False):
+def get_list(no_log: bool = False) -> None:
     """
     Write a list of installed plugins to the Indigo Events log
+
+    :param bool no_log: If True, no output is logged.
     """
     plugin_name_list = []
     indigo_install_path = indigo.server.getInstallFolderPath()

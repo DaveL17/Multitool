@@ -15,10 +15,11 @@ def __init__():
     pass
 
 
-def show_inventory(no_log: bool = False):
+def show_inventory(no_log: bool = False) -> None:
     """
     Build a complete inventory of Indigo objects and output it to the Indigo Events log
 
+    :param bool no_log: If True, no output is logged.
     :return:
     """
     # ============================== Build Inventory ==============================

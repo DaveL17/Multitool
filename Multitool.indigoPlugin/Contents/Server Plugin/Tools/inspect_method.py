@@ -21,7 +21,7 @@ def __init__():
     pass
 
 
-def display_docstring(values_dict: indigo.Dict = None):
+def display_docstring(values_dict: indigo.Dict = None) -> None:
     """
 
     :param indigo.Dict values_dict:

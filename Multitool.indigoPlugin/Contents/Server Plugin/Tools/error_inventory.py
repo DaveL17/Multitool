@@ -15,12 +15,12 @@ def __init__():
     pass
 
 
-def show_inventory(values_dict: indigo.Dict = None, no_log: bool = False):
+def show_inventory(values_dict: indigo.Dict = None, no_log: bool = False) -> bool:
     """
     Print an inventory of error messages to the Indigo Events log
 
     :param indigo.Dict values_dict:
-    :param bool no_log:
+    :param bool no_log: If True, no output is logged.
     :return:
     """
     check_list = (' Err ', ' err ', 'Error', 'error')

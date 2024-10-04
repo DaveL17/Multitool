@@ -15,7 +15,7 @@ def __init__():
     pass
 
 
-def print_dict(values_dict: indigo.Dict = None):
+def print_dict(values_dict: indigo.Dict = None) -> list:
     """
     Prints selected information about an Indigo object based on user-selected class and object
 

@@ -14,13 +14,13 @@ def __init__():
     pass
 
 
-def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False):
+def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> None:
     """
     Get a Python dir() of the user-specified object and output to the Indigo Events log
 
     :param indigo.Dict values_dict:
     :param str caller:
-    :param bool no_log:
+    :param bool no_log: If True, no output is logged.
     :return:
     """
     thing = getattr(indigo, values_dict['classOfThing'])[int(values_dict['thingToPrint'])]

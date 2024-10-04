@@ -35,7 +35,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for Indigo Home Control'
-__version__   = '2023.2.2'
+__version__   = '2024.1.0'
 
 
 # =============================================================================
@@ -84,7 +84,7 @@ class Plugin(indigo.PluginBase):
         # except:
         #     pass
 
-    def log_plugin_environment(self):
+    def log_plugin_environment(self) -> bool:
         """
         Log pluginEnvironment information when plugin is first started
         """
@@ -94,7 +94,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     # ============================== Indigo Methods ===============================
     # =============================================================================
-    def closedPrefsConfigUi(self, values_dict: indigo.Dict = None, user_cancelled:bool=False):  # noqa
+    def closedPrefsConfigUi(self, values_dict: indigo.Dict = None, user_cancelled: bool = False) -> dict:  # noqa
         """
         Standard Indigo method called when plugin preferences dialog is closed.
 
@@ -119,7 +119,7 @@ class Plugin(indigo.PluginBase):
         return values_dict
 
     # =============================================================================
-    def deviceUpdated(self, orig_dev:indigo.Device=None, new_dev:indigo.Device=None):  # noqa
+    def deviceUpdated(self, orig_dev: indigo.Device = None, new_dev: indigo.Device = None):  # noqa
         """
         Title Placeholder
 
@@ -191,7 +191,7 @@ class Plugin(indigo.PluginBase):
         return [(dev.id, dev.name) for dev in indigo.devices.iter(filter="self")]
 
     # =============================================================================
-    def getMenuActionConfigUiValues(self, menu_id:str=""):  # noqa
+    def getMenuActionConfigUiValues(self, menu_id: str = "") -> dict:  # noqa
         """
         Title Placeholder
 
@@ -214,7 +214,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def sendDevicePing(dev_id:int=0, suppress_logging:bool=False):  # noqa
+    def sendDevicePing(dev_id: int = 0, suppress_logging: bool = False) -> dict:  # noqa
         """
         Standard Indigo method called when a ping request sent to a plugin device.
 
@@ -254,19 +254,23 @@ class Plugin(indigo.PluginBase):
     def shutdown(self):
         self.command_thread.stop()
 
-    def trigger_start_processing(self, trigger):
+    def trigger_start_processing(self, trigger: indigo.Trigger):
+        """
+        Standard Indigo method called when a trigger starts processing.
+
+        :param indigo.Trigger trigger: a dict of triggers with the key being the device the trigger tracks and the
+        value being the trigger object.
+        """
         if trigger.id not in self.my_triggers:
-            # my_triggers is a dict of triggers with the key being the device the trigger tracks and the value being the
-            # trigger object.
             self.my_triggers[trigger.pluginProps['offlineDevice']] = trigger
 
     # =============================================================================
-    def variableUpdated(self, orig_var:indigo.Variable, new_var:indigo.Variable):  # noqa
+    def variableUpdated(self, orig_var: indigo.Variable, new_var: indigo.Variable) -> None:  # noqa
         """
         Title Placeholder
 
-        :param indigo.Dict orig_var:
-        :param indigo.Dict new_var:
+        :param indigo.Variable orig_var:
+        :param indigo.Variable new_var:
         :return:
         """
         # Call the base implementation first just to make sure all the right things happen elsewhere
@@ -309,7 +313,7 @@ class Plugin(indigo.PluginBase):
                     )
 
     # =============================================================================
-    def validateActionConfigUi(self, action_dict:indigo.Dict=None, type_id:str="", device_id:int=0):  # noqa
+    def validateActionConfigUi(self, action_dict: indigo.Dict = None, type_id: str = "", device_id: int = 0) -> tuple:  # noqa
         """
         Title Placeholder
 
@@ -366,7 +370,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     # ============================== Plugin Methods ===============================
     # =============================================================================
-    def __dummyCallback__(self, values_dict: indigo.Dict = None, type_id: str = ""):
+    def __dummyCallback__(self, values_dict: indigo.Dict = None, type_id: str = "") -> None:
         """
         Dummy callback to cause refresh of dialog elements
 
@@ -380,75 +384,133 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def about_indigo(no_log: bool = False):
-        """ Placeholder """
+    def about_indigo(no_log: bool = False) -> bool:
+        """
+        Placeholder
+
+        :param bool no_log: If True, no output is logged.
+        """
         about_indigo.report(no_log)
         return True
 
     # =============================================================================
     @staticmethod
-    def battery_level_report(values_dict: indigo.Dict = None, type_id:str="", no_log: bool = False):  # noqa
-        """ Placeholder """
+    def battery_level_report(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool no_log: If True, no output is logged.
+        """
         battery_level.report(no_log)
         return True
 
     # =============================================================================
     @staticmethod
-    def color_picker(values_dict: indigo.Dict = None, type_id:str="", no_log: bool = False):  # noqa
-        """ Placeholder """
+    def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool no_log: If True, no output is logged.
+        """
         color_picker.picker(values_dict, "", no_log)
         return True, values_dict
 
     # =============================================================================
     @staticmethod
-    def device_inventory(values_dict: indigo.Dict = None, type_id:str="", no_log: bool = False):  # noqa
-        """ Placeholder """
+    def device_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> dict:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool no_log: If True, no output is logged.
+        """
         device_inventory.get_inventory(values_dict, type_id, no_log)
         return values_dict
 
     # =============================================================================
     @staticmethod
     def device_last_successful_comm(values_dict: indigo.Dict = None, menu_item: str = "", no_log: bool = False):
-        """ Placeholder """
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str menu_item:
+        :param bool no_log: If True, no output is logged.
+        """
+        indigo.server.log(f"-----> {menu_item}")
         device_last_successful_comm.report_comms(values_dict, menu_item, no_log)
-        return True
 
     # =============================================================================
     @staticmethod
-    def device_to_beep(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
-        """ Placeholder """
+    def device_to_beep(values_dict: indigo.Dict = None, type_id: str = "") -> tuple[bool, dict]:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        """
         device_beep.beeper(values_dict)
         return True, values_dict
 
     # =============================================================================
     @staticmethod
-    def device_to_ping(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
-        """ Placeholder """
+    def device_to_ping(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        """
         device_ping.pinger(values_dict)
 
     # =============================================================================
     @staticmethod
-    def dict_to_print(fltr:str="", values_dict: indigo.Dict = None, target_id:str=""):  # noqa
-        """ Placeholder """
+    def dict_to_print(fltr:str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str target_id:
+        """
         return dict_to_print.print_dict(values_dict)
 
     # =============================================================================
     @staticmethod
-    def environment_path(no_log: bool = False):
-        """ Placeholder """
+    def environment_path(no_log: bool = False) -> bool:
+        """
+        Placeholder
+
+        :param bool no_log: If True, no output is logged.
+        """
         environment_path.show_path(no_log)
         return True
 
     # =============================================================================
     @staticmethod
-    def error_inventory(values_dict: indigo.Dict = None, type_id:str="", no_log: bool = False):  # noqa
-        """ Placeholder """
+    def error_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> bool:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool no_log: If True, no output is logged.
+        """
         error_inventory.show_inventory(values_dict, no_log)
         return True
 
     # =============================================================================
-    def execute_command(self, command_queue, result_queue):
-        """ Get command from queue, run it, and capture the output. """
+    def execute_command(self, command_queue: Queue, result_queue: Queue) -> None:
+        """
+        Get command from queue, run it, and capture the output.
+
+        :param Queue command_queue:
+        :param Queue result_queue:
+        """
         while True:
             my_command = command_queue.get()
             my_command = ' '.join(my_command)
@@ -473,26 +535,51 @@ class Plugin(indigo.PluginBase):
                 result_queue.put(str(e))
 
     # =============================================================================
-    def generator_device_list(self, fltr:str="", values_dict: indigo.Dict = None, type_id:str="", target_id:int=0):  # noqa
-        """ Placeholder """
+    def generator_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool target_id:
+        """
         return self.Fogbert.deviceList(dev_filter=fltr)
 
     # =============================================================================
-    def generator_variable_list(self, fltr:str="", values_dict: indigo.Dict = None, type_id:str="", target_id:int=0):  # noqa
-        """ Placeholder """
+    def generator_variable_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool target_id:
+        """
         return self.Fogbert.variableList()
 
     # =============================================================================
-    def generator_enabled_device_list(
-            self, fltr:str="", values_dict: indigo.Dict = None, type_id:str="", target_id:int=0  # noqa
-    ):
-        """ Placeholder """
+    def generator_enabled_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool target_id:
+        """
         return self.Fogbert.deviceListEnabled(dev_filter=fltr)
 
     # =============================================================================
     # @staticmethod
-    def generator_device_filter(self, fltr:str="", values_dict: indigo.Dict = None, type_id:str="", target_id:int=0):  # noqa
-        """ Placeholder """
+    def generator_device_filter(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool target_id:
+        """
         # Built-in filters
         filter_list = [
             ("all devices", "All Devices"),
@@ -523,104 +610,187 @@ class Plugin(indigo.PluginBase):
         return filter_list
 
     # =============================================================================
-    def generator_dev_var(self, fltr:str="", values_dict: indigo.Dict = None, type_id:str="", target_id:int=0):  # noqa
-        """ Placeholder """
+    def generator_dev_var(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool target_id:
+        """
         return self.Fogbert.deviceAndVariableList()
 
     # =============================================================================
-    def generator_dev_var_clean(self, fltr:str="", values_dict: indigo.Dict = None, type_id:str="", target_id:int=0):  # noqa
-        """ Placeholder """
+    def generator_dev_var_clean(self, fltr:str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool target_id:
+        """
         return self.Fogbert.deviceAndVariableListClean()
 
     # =============================================================================
-    def generator_state_or_value(self, fltr:str="", values_dict: indigo.Dict = None, type_id:str="", target_id:int=0):  # noqa
-        """ Placeholder """
+    def generator_state_or_value(self, fltr:str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool target_id:
+        """
         return self.Fogbert.generatorStateOrValue(values_dict.get('devVarMenu', ""))
 
     # =============================================================================
     # @staticmethod
-    # def generator_substitutions(values_dict: indigo.Dict = None, type_id:str="", target_id:int=0):  # noqa
+    # def generator_substitutions(values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0):  # noqa
     #     """ Placeholder """
     #     return generator_substitutions.return_substitution(values_dict)
 
     # =============================================================================
+
     @staticmethod
-    def get_serial_ports(values_dict: indigo.Dict = None, type_id:str="", no_log: bool = False):  # noqa
-        """ Placeholder """
+    def get_serial_ports(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> bool:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool no_log: If True, no output is logged.
+        """
         serial_ports.show_ports(values_dict, no_log)
         return True
 
     # =============================================================================
     @staticmethod
-    def indigo_inventory(no_log: bool = False):  # noqa
-        """ Placeholder """
+    def indigo_inventory(no_log: bool = False) -> bool:  # noqa
+        """
+        Placeholder
+
+        :param bool no_log: If True, no output is logged.
+        """
         indigo_inventory.show_inventory(no_log)
         return True
 
     # =============================================================================
     @staticmethod
-    def inspect_method(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
-        """ Placeholder """
+    def inspect_method(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        """
         inspect_method.display_docstring(values_dict)
 
     # =============================================================================
     @staticmethod
-    def installed_plugins(no_log: bool = False):
-        """ Placeholder """
+    def installed_plugins(no_log: bool = False) -> bool:
+        """
+        Placeholder
+
+        :param bool no_log: If True, no output is logged.
+        """
         installed_plugins.get_list(no_log)
         return True
 
     # =============================================================================
     @staticmethod
-    def list_of_plugin_methods(fltr:str="", values_dict: indigo.Dict = None, target_id:str=""):  # noqa
-        """ Placeholder """
+    def list_of_plugin_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str target_id:
+        """
         return plugin_methods.list_methods(values_dict)
 
     # =============================================================================
     @staticmethod
-    def list_of_indigo_classes(fltr:str="", values_dict: indigo.Dict = None, target_id:str=""):  # noqa
-        """ Placeholder """
+    def list_of_indigo_classes(fltr:str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str target_id:
+        """
         return indigo_classes.display_classes(values_dict)
 
     # =============================================================================
     @staticmethod
-    def list_of_indigo_methods(fltr:str="", values_dict: indigo.Dict = None, target_id:str=""):  # noqa
-        """ Placeholder """
+    def list_of_indigo_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
+        """
+        Placeholder
+
+        :param str fltr:
+        :param indigo.Dict values_dict:
+        :param str target_id:
+        """
         return indigo_methods.display_methods(values_dict)
 
     # =============================================================================
     @staticmethod
-    def log_of_method(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
-        """ Placeholder """
+    def log_of_method(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        """
         log_of_method.display_inspection(values_dict)
 
     # Apparently Apple removed this functionality in Ventura
     # =============================================================================
     # @staticmethod
-    # def man_page(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
+    # def man_page(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
     #     """ Placeholder """
     #     return man_page.display_page(values_dict)
 
     # =============================================================================
     @staticmethod
     def modify_numeric_variable(action_group: indigo.actionGroup):
-        """ Placeholder """
+        """
+        Placeholder
+
+        :param action_group:
+        """
         return modify_numeric_variable.modify(action_group)
 
     # =============================================================================
     @staticmethod
     def modify_time_variable(action_group: indigo.actionGroup):
-        """ Placeholder """
+        """
+        Placeholder
+
+        :param action_group:
+        """
         return modify_time_variable.modify(action_group)
 
     # =============================================================================
-    def network_ping_device_menu(self, values_dict: indigo.Dict, item_id: str):
+    @staticmethod
+    def network_ping_device_menu(values_dict: indigo.Dict, item_id: str) -> tuple[bool, dict]:
+        """
+        Placeholder
+
+        :param indigo.Dict values_dict:
+        :param str item_id:
+        """
         ping_tool.do_the_ping(values_dict, menu_call=True)
         return True, values_dict
 
     # =============================================================================
-    def network_ping_device_action(self, action_group: indigo.actionGroup):
-        """ Shim used when running the network ping tool from an action. """
+    def network_ping_device_action(self, action_group: indigo.actionGroup) -> tuple[bool, dict]:
+        """
+        Shim used when running the network ping tool from an action.
+
+        :param action_group:
+        """
         # Do the action and process call to update the device
         ping_tool.do_the_ping(action_group, menu_call=False)
 
@@ -639,13 +809,21 @@ class Plugin(indigo.PluginBase):
         return True, action_group
 
     # =============================================================================
-    def network_quality_action(self, action_group: indigo.actionGroup):
-        """ Shim used when running the network quality tool from an action. """
+    def network_quality_action(self, action_group: indigo.actionGroup) -> None:
+        """
+        Shim used when running the network quality tool from an action.
+
+        :param action_group:
+        """
         self.network_quality(action_group.props)
 
     # =============================================================================
-    def network_quality_device_action(self,  action_group: indigo.actionGroup):
-        """ Update network quality device states after running test. """
+    def network_quality_device_action(self,  action_group: indigo.actionGroup) -> bool:
+        """
+        Update network quality device states after running test.
+
+        :param action_group:
+        """
         self.logger.info("Running network quality test. The plugin will be unresponsive until the test is complete.")
 
         if not self.network_quality_test_os():
@@ -691,18 +869,22 @@ class Plugin(indigo.PluginBase):
 
         return True
 
-    def network_quality_test_os(self):
+    def network_quality_test_os(self) -> bool:
         """ Test the OS version to ensure that the network quality test tool is available """
         # Test OS compatability
-        pltfrm = platform.mac_ver()[0].split('.')  # ['14', '4', '1']
-        if (float(pltfrm[0])) < 12.0:
+        plat_form = platform.mac_ver()[0].split('.')  # ['14', '4', '1']
+        if (float(plat_form[0])) < 12.0:
             self.logger.warning("This tool requires at least MacOS 12.0 Monterey.")
             return False
         return True
 
     @staticmethod
-    def network_quality_flags(props):
-        """ Parse the config preferences into the appropriate command line arguments. """
+    def network_quality_flags(props) -> list:
+        """
+        Parse the config preferences into the appropriate command line arguments.
+
+        :param dict props:
+        """
         # Build command line argument
         command = ['networkQuality']
         # Do not run a download test (implies -s)
@@ -727,8 +909,13 @@ class Plugin(indigo.PluginBase):
         return command
 
     # =============================================================================
-    def network_quality(self, action_group: indigo.actionGroup, action_id: str = ""):
-        """ Run the macOS command line Network Quality tool and log the result  """
+    def network_quality(self, action_group: indigo.actionGroup, action_id: str = "") -> bool:
+        """
+        Run the macOS command line Network Quality tool and log the result
+
+        :param indigo.actionGroup action_group:
+        :param str action_id:
+        """
 
         if not self.network_quality_test_os():
             return False
@@ -739,8 +926,13 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def remove_all_delayed_actions(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
-        """ Placeholder """
+    def remove_all_delayed_actions(values_dict: indigo.Dict = None, type_id: str = "") -> bool:  # noqa
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param type_id:
+        """
         return remove_delayed_actions.remove_actions()
 
     # =============================================================================
@@ -759,63 +951,112 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def running_plugins(no_log: bool = False):
-        """ Placeholder """
+    def running_plugins(no_log: bool = False) -> bool:
+        """
+        Placeholder
+
+        :param bool no_log: If True, no output is logged.
+        """
         running_plugins.show_running_plugins(no_log)
         return True
 
     # =============================================================================
     @staticmethod
-    def results_output(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False):
-        """ Placeholder """
+    def results_output(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param caller:
+        :param bool no_log: If True, no output is logged.
+        """
         results_output.display_results(values_dict, caller, no_log)
         return True, values_dict
 
     # =============================================================================
     @staticmethod
-    def object_directory(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False):
-        """ Placeholder """
+    def object_directory(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param caller:
+        :param bool no_log: If True, no output is logged.
+        """
         object_directory.display_results(values_dict, caller, no_log)
         return True, values_dict
 
     # =============================================================================
     @staticmethod
-    def object_dependencies(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False):
-        """ Placeholder """
+    def object_dependencies(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param caller:
+        :param bool no_log: If True, no output is logged.
+        """
         object_dependencies.display_results(values_dict, caller, no_log)
         return True, values_dict
 
     # =============================================================================
     def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
-        """ Placeholder """
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param type_id:
+        :param bool no_log: If True, no output is logged.
+        """
         return find_embedded_scripts.make_report(values_dict, no_log)
 
     # =============================================================================
     def search_linked_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
-        """ Placeholder """
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param type_id:
+        :param bool no_log: If True, no output is logged.
+        """
         return find_linked_scripts.make_report(values_dict, no_log)
 
     # =============================================================================
     @staticmethod
-    def send_status_request(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
-        """ Placeholder """
+    def send_status_request(values_dict: indigo.Dict = None, type_id: str = "") -> tuple:  # noqa
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param type_id:
+        """
         return True, send_status_request.get_status(values_dict)
 
     # =============================================================================
     @staticmethod
-    def speak_string(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
-        """ Placeholder """
+    def speak_string(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param type_id:
+        """
         return speak_string.speaker(values_dict)
 
     # =============================================================================
     @staticmethod
-    def subscribed_to_changes(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
-        """ Placeholder """
+    def subscribed_to_changes(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
+        """
+        Placeholder
+
+        :param dict values_dict:
+        :param type_id:
+        """
         return subscribe_to_changes.subscriber(values_dict)
 
     # =============================================================================
     # @staticmethod
-    # def substitution_generator(values_dict: indigo.Dict = None, type_id:str=""):  # noqa
+    # def substitution_generator(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
     #     """ Placeholder """
     #     return substitution_generator.get_substitute(values_dict)
 
@@ -827,6 +1068,9 @@ class Plugin(indigo.PluginBase):
 
         The test_action_return method is used to test return values for calls to plugin.executeAction() calls. The
         plugin will return a value based on the 'return_value' type passed to the method.
+
+        :param action:
+        :param return_value:
         """
         if action.props['return_value'] in [None, ""]:
             return None
@@ -849,8 +1093,11 @@ class Plugin(indigo.PluginBase):
 
         The unit test sends a "plugin.executeAction" command message via the IWS API with an instruction to either
         create or delete a plugin device. The action passes the payload through to this method.
+
+        :param action:
         """
         props = action.props
+        # groupWithDevice=props.get('groupWithDevice', False),  # note GWD is expecting an obj, so we skip for now.
         if props['instruction'] == "create":
             dev = indigo.device.create(
                 address=props.get('address', ""),
@@ -858,14 +1105,12 @@ class Plugin(indigo.PluginBase):
                 description=props.get('description', ""),
                 deviceTypeId=props.get('deviceTypeId', 'networkQuality'),
                 folder=props.get('folder', 0),
-                # groupWithDevice=props.get('groupWithDevice', False),  # note GWD is expecting an obj, so we skip for now.
                 name=props.get('name', "Unit Test Device"),
                 pluginId='com.fogbert.indigoplugin.multitool',
                 props=props.get('props', None),
                 protocol=indigo.kProtocol.Plugin,
             )
             self.logger.info(f"Unit Test: Created device [{dev.deviceTypeId} - {dev.id}]")
-            # TODO: would it be better here to return the entire device obj?
             return {'dev_id': dev.id}  # the id of the device that was created
         if props['instruction'] == "delete":
             indigo.device.delete(props['dev_id'])
@@ -882,8 +1127,6 @@ class Plugin(indigo.PluginBase):
         test_case = TestCase()
         self.logger.debug("Running startup tests. (Warning messages are normal.)")
         try:
-            # TODO: Add a attribute to suppress log output when relevant methods are called from a test. See
-            #     see Indigo Inventory below.
             # ===================================== About Indigo =====================================
             test_case.assertTrue(self.about_indigo(no_log=True), "Method failed.")  # Implied `None` returned
             # ===================================== Battery Level Report =====================================
@@ -902,7 +1145,7 @@ class Plugin(indigo.PluginBase):
             values_dict = {'customThing': 'self', 'typeOfThing': 'Other'}
             test_case.assertIsInstance(self.device_inventory(values_dict, no_log=True), dict, "Method failed.")
             # ===================================== Device Last Comm =====================================
-            test_case.assertTrue(self.device_last_successful_comm({'listOfDevices': 'indigo.relay'}, no_log=True), "Method failed.")
+            test_case.assertIsNone(self.device_last_successful_comm({'listOfDevices': 'indigo.relay'}, no_log=True), "Method failed.")
             # ===================================== Device Ping =====================================
             # ===================================== Environment Path =====================================
             test_case.assertTrue(self.environment_path(no_log=True), "Method failed")
@@ -979,6 +1222,12 @@ class MyThread(Thread):
     normal (rather than staying open until the command execution is completed).
     """
     def __init__(self, target, args=()):
+        """
+        Placeholder
+
+        :param target:
+        :param args:
+        """
         super().__init__()
         self.target = target
         self.args = args

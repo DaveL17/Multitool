@@ -15,7 +15,7 @@ def __init__():
     pass
 
 
-def subscriber(values_dict: indigo.Dict = None):
+def subscriber(values_dict: indigo.Dict = None) -> bool:
     """
     Save "Subscribe to Changes" menu item configuration to plugin prefs for storage.
 

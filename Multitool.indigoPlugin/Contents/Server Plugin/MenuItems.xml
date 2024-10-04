@@ -213,6 +213,28 @@
         </ConfigUI>
     </MenuItem>
 
+    <MenuItem id="networkPing">
+        <Name>Network Ping Host...</Name>
+		<ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
+                <Field id="ping_label" type="Label">
+                    <Label>Run a ping against the server you specify.</Label>
+                </Field>
+                <Field id="hostname" type="textfield" tooltip="Supports IP, hostname, or alias.">
+                    <Label>Hostname:</Label>
+                </Field>
+                <Field id="timeout" type="textfield" defaultValue="5" tooltip="Time in seconds to wait for a response (5 max).">
+                    <Label>Timeout:</Label>
+                </Field>
+            </ConfigUI>
+        <CallbackMethod>network_ping_device_menu</CallbackMethod>
+    </MenuItem>
+
+    <MenuItem id="installed_plugins">
+        <Name>Plugin Inventory</Name>
+        <CallbackMethod>installed_plugins</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="networkQuality">
         <Name>Network Quality Report</Name>
             <ConfigUI>
@@ -300,25 +322,6 @@
 
             </ConfigUI>
             <ButtonTitle>Close</ButtonTitle>
-    </MenuItem>
-
-    <MenuItem id="networkPing">
-        <Name>Ping Host</Name>
-		<ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
-                <Field id="ping_label" type="Label">
-                    <Label>Run a ping against the server you specify.</Label>
-                </Field>
-                <Field id="hostname" type="textfield" tooltip="Supports IP, hostname, or alias.">
-                    <Label>Hostname:</Label>
-                </Field>
-            </ConfigUI>
-        <CallbackMethod>network_ping_device_menu</CallbackMethod>
-    </MenuItem>
-
-    <MenuItem id="installed_plugins">
-        <Name>Plugin Inventory</Name>
-        <CallbackMethod>installed_plugins</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="running_plugins">

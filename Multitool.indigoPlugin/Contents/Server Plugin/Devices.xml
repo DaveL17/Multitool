@@ -97,6 +97,9 @@
                 <Field id="hostname" type="textfield">
                     <Label>Hostname:</Label>
                 </Field>
+                <Field id="timeout" type="textfield" defaultValue="5" tooltip="Time in seconds to wait for a response (5).">
+                    <Label>Timeout:</Label>
+                </Field>
                 <Field id="sep_1" type="separator"/>
             </ConfigUI>
         <States>
@@ -105,6 +108,14 @@
                 <ValueType>Boolean</ValueType>
                 <TriggerLabel>Status</TriggerLabel>
                 <ControlPageLabel>Status</ControlPageLabel>
+            </State>
+
+<!-- This state is included to ensure that something changes from last check. Otherwise, Indigo's Last Update value
+won't change. You can use either value. -->
+            <State id="last_checked">
+                <ValueType>String</ValueType>
+                <TriggerLabel>Last Checked</TriggerLabel>
+                <ControlPageLabel>Last Checked</ControlPageLabel>
             </State>
 
         </States>

@@ -13,7 +13,7 @@ def __init__():
     pass
 
 
-def show_ports(values_dict: indigo.Dict = None, no_log: bool = False):
+def show_ports(values_dict: indigo.Dict = None, no_log: bool = False) -> bool:
     """
     Print a list of available serial ports to the Indigo events log.
 

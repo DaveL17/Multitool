@@ -14,7 +14,7 @@ def __init__():
     pass
 
 
-def remove_actions():
+def remove_actions() -> bool:
     """
     Remove all delayed actions from the Indigo server
 

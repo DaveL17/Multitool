@@ -1,6 +1,5 @@
 """
 Traverse the Indigo database and find objects with embedded scripts
-TODO: consider adding a short sleep between object types to make it even easier on the server.
 """
 from collections import defaultdict
 import logging
@@ -15,8 +14,12 @@ def __init__():
     pass
 
 
-def sort_obj_list(ob_list: list):
-    """ Sort the list of objects by their object name """
+def sort_obj_list(ob_list: list) -> str:
+    """
+    Sort the list of objects by their object name
+
+    :param list ob_list: list of objects
+    """
     result = ""
     new_ob_list = sorted(ob_list, key=lambda item: item[1])
     for obj in new_ob_list:
@@ -25,8 +28,12 @@ def sort_obj_list(ob_list: list):
     return result
 
 
-def build_report(header: str):
-    """ Add payload objects to the report """
+def build_report(header: str) -> str:
+    """
+    Add payload objects to the report
+
+    :param str header: header string
+    """
     report = f"\n{SPACER}{' ' + header + ' ':=^60}\n"
     count_dict = defaultdict(int)
 
@@ -42,7 +49,10 @@ def build_report(header: str):
         else:
             result.append(item)
 
-    report += sort_obj_list(result)  # put the objects in alpha order by name
+    if len(result) > 0:
+        report += sort_obj_list(result)  # put the objects in alpha order by name
+    else:
+        report += "No objects found."
     return report
 
 
@@ -53,6 +63,9 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
     We intentionally split the `rawServerRequests` apart because some users have massive databases and even this
     small separation may give the server a bit of a break. We evaluate each object type separately because there can be
     nuanced differences in the database XML and the format of the XML could change in the future.
+
+    :param dict values_dict:
+    :param bool no_log: If True, no output is logged.
     """
     error_msg_dict = indigo.Dict()
     try:
@@ -103,5 +116,5 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
         result += build_report("Triggers")  # Only if there are results to return
 
     if not no_log:
-        LOGGER.info(result)
+        indigo.server.log(result)
     return True, values_dict

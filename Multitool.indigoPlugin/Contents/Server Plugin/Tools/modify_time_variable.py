@@ -13,7 +13,7 @@ def __init__():
     pass
 
 
-def modify(action_group: indigo.actionGroup = None):
+def modify(action_group: indigo.actionGroup = None) -> bool:
     """
     Modifies a variable time value based on a user-supplied formula
 

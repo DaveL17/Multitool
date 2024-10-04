@@ -15,11 +15,12 @@ def __init__():
     pass
 
 
-def list_methods(values_dict: indigo.Dict):
+def list_methods(values_dict: indigo.Dict) -> list:
     """
     Generate a list of Indigo plugin methods for inspection
 
     :param indigo.Dict values_dict:
+    :return:
     """
     list_of_attributes = []
 

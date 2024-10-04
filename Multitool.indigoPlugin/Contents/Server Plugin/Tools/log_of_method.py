@@ -15,7 +15,7 @@ def __init__():
     pass
 
 
-def display_inspection(values_dict: indigo.Dict = None):
+def display_inspection(values_dict: indigo.Dict = None) -> None:
     """
     Output an inspection of the passed class and object to the Indigo Events log
 

@@ -14,13 +14,13 @@ def __init__():
     pass
 
 
-def get_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):
+def get_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> dict:
     """
     Print an inventory of devices to the Indigo Events log
 
     :param indigo.Dict values_dict:
     :param str type_id:
-    :param bool no_log:
+    :param bool no_log: If True, no output is logged.
     :return:
     """
     LOGGER.debug("Call to device_inventory")

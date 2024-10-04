@@ -14,7 +14,7 @@ def __init__():
     pass
 
 
-def return_substitution(values_dict: indigo.Dict = None):
+def return_substitution(values_dict: indigo.Dict = None) -> dict:
     """
     Generate an Indigo substitution string based on user-selected object
 

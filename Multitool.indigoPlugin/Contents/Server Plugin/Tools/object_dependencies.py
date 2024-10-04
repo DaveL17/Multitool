@@ -15,13 +15,13 @@ def __init__():
     pass
 
 
-def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False):
+def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> None:
     """
     Prepare and output the dependency results to the Indigo events log.
 
     :param indigo.Dict values_dict:
     :param str caller:
-    :param bool no_log:
+    :param bool no_log: If True, no output is logged.
     :return:
     """
     dep_dict = {}

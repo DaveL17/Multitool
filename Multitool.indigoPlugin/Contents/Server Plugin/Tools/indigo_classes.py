@@ -14,7 +14,7 @@ def __init__():
     pass
 
 
-def display_classes(values_dict: indigo.Dict = None):
+def display_classes(values_dict: indigo.Dict = None) -> list:
     """
 
     :param indigo.Dict values_dict:

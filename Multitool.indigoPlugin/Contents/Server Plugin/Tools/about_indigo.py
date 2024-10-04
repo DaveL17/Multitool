@@ -4,8 +4,6 @@ Prints information about the Indigo environment to the events log
 The about_indigo method prints select Indigo environment information to the Indigo events log. It can be a useful tool
 to get a user to quickly print relevant environment information for troubleshooting.  We write to `indigo.server.log`
 to ensure that the output is visible regardless of the plugin's current logging level.
-
-:return:
 """
 
 import logging
@@ -18,7 +16,7 @@ def __init__():
     pass
 
 
-def report(no_log: bool = False):
+def report(no_log: bool = False) -> None:
     """
     Prints information about the Indigo environment to the Indigo Events Log
 
