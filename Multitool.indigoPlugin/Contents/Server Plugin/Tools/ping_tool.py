@@ -26,14 +26,14 @@ def do_the_ping(action, menu_call: bool = False):
     :return:
     """
     dev: indigo.device = None
-    dev_id: int = 0
-    hostname: str = ""
-    timeout: int = 0
+    # dev_id: int = 0
+    # hostname: str = ""
+    # timeout: int = 0
 
     # Ping requested from plugin menu
     if menu_call:
         hostname = action['hostname']
-        timeout = int(action.get('timeout', 5))
+        timeout = int(action.get('timeout', '5'))
         # Limit timeouts to 5 seconds.
         if timeout > 5:
             LOGGER.warning("Pings from the plugin menu are limited to 5 seconds.")
@@ -63,7 +63,7 @@ def do_the_ping(action, menu_call: bool = False):
                        ]
         indigo.server.log(f"Ping host: {hostname} is up.")
     else:
-        states_list = [{'key': 'status', 'value': False, 'uiValue': "Down", 'last_checked': check_time},
+        states_list = [{'key': 'status', 'value': False, 'uiValue': "Down"},
                        {'key': 'last_checked', 'value': check_time}
                        ]
         indigo.server.log(f"Ping host: {hostname} is down.")

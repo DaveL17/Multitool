@@ -75,7 +75,7 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
     except TypeError:
         error_msg_dict['search_string'] = "The search term must be a string"
         return False, values_dict, error_msg_dict
-    result = "Indigo Objects with Embedded Scripts"
+    result = f"{' Indigo Objects with Embedded Scripts ':=^60}"
     result += f"\n{SPACER}Search Filter: [ {search_string or 'None'} ]"
 
     # ====================== Action Groups =======================
@@ -116,5 +116,6 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
         result += build_report("Triggers")  # Only if there are results to return
 
     if not no_log:
+        result += f"{SPACER}" + "=" * 60 + "\n"
         indigo.server.log(result)
     return True, values_dict

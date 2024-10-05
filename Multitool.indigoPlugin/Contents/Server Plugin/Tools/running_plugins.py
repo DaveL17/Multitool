@@ -28,18 +28,25 @@ def show_running_plugins(no_log: bool = False) -> None:
     :param bool no_log: If True, no output is logged.
     :return:
     """
+    report = ""
     with subprocess.Popen(
             "/bin/ps -ef | grep 'MacOS/IndigoPluginHost' | grep -v grep",
             shell=True,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE) as proc:
-        ret = proc.communicate()[0]
+        response = proc.communicate()[0]
+        response = response.decode('utf-8')
+
+        # Build the report
+        report += f"{' Running Plugins (/bin/ps -ef) ':{'='}^225}\n"
+        report += (f"  uid - pid - parent pid - recent CPU usage - process start time - controlling tty - elapsed CPU "
+                   f"usage - associated command\n")
+        report += "=" * 225 + "\n"
+        report += f"{response}"
+        report += "=" * 225 + "\n"
 
     if not no_log:
+
         # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
         # logging level.
-        indigo.server.log(f"\n{' Running Plugins (/bin/ps -ef) ':{'='}^120}")
-        indigo.server.log(
-            f"\n  uid - pid - parent pid - recent CPU usage - process start time - controlling tty "
-            f"- elapsed CPU usage - associated command\n\n{ret.decode('utf-8')}"
-        )
+        indigo.server.log(f"\n{report}")

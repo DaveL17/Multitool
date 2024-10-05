@@ -25,7 +25,7 @@ import indigo  # noqa
 
 # My modules
 import DLFramework.DLFramework as Dave  # noqa
-from constants import DEBUG_LABELS
+from constants import DEBUG_LABELS, FILTER_LIST
 from plugin_defaults import kDefaultPluginPrefs  # noqa
 from Tools import *
 
@@ -121,9 +121,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def deviceUpdated(self, orig_dev: indigo.Device = None, new_dev: indigo.Device = None):  # noqa
         """
-        Title Placeholder
-
-        Body placeholder
+        Standard Indigo method called when device is updated.
 
         :param indigo.Dict orig_dev:
         :param indigo.Dict new_dev:
@@ -193,9 +191,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def getMenuActionConfigUiValues(self, menu_id: str = "") -> dict:  # noqa
         """
-        Title Placeholder
-
-        Body placeholder
+        Standard Indigo method called when a config menu is openend.
 
         :param str menu_id:
         :return indigo.Dict:
@@ -228,7 +224,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def startup(self):
         """
-        Title Placeholder
+        Standard Indigo startup method.
 
         :return:
         """
@@ -267,7 +263,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def variableUpdated(self, orig_var: indigo.Variable, new_var: indigo.Variable) -> None:  # noqa
         """
-        Title Placeholder
+        Standard Indigo method called when a variable is updated.
 
         :param indigo.Variable orig_var:
         :param indigo.Variable new_var:
@@ -315,9 +311,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def validateActionConfigUi(self, action_dict: indigo.Dict = None, type_id: str = "", device_id: int = 0) -> tuple:  # noqa
         """
-        Title Placeholder
-
-        Body placeholder
+        Standard method called to validate action config dialogs.
 
         :param indigo.Dict action_dict:
         :param int type_id:
@@ -386,7 +380,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def about_indigo(no_log: bool = False) -> bool:
         """
-        Placeholder
+        Shim to call the About Indigo tool.
 
         :param bool no_log: If True, no output is logged.
         """
@@ -397,7 +391,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def battery_level_report(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
         """
-        Placeholder
+        SHim to call the Battery level report tool.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -410,7 +404,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
         """
-        Placeholder
+        Shim to call the ColorPicker tool.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -423,7 +417,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def device_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> dict:  # noqa
         """
-        Placeholder
+        Shim to call the DeviceInventory tool.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -436,7 +430,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def device_last_successful_comm(values_dict: indigo.Dict = None, menu_item: str = "", no_log: bool = False):
         """
-        Placeholder
+        Shim to call the Device_last_successful_comm tool.
 
         :param indigo.Dict values_dict:
         :param str menu_item:
@@ -449,7 +443,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def device_to_beep(values_dict: indigo.Dict = None, type_id: str = "") -> tuple[bool, dict]:  # noqa
         """
-        Placeholder
+        Shim to call the Device_to_beep tool.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -461,7 +455,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def device_to_ping(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
         """
-        Placeholder
+        Shim to call the Device_to_ping tool.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -472,7 +466,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def dict_to_print(fltr:str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
         """
-        Placeholder
+        Shim to call the dict_to_print tool.
 
         :param indigo.Dict values_dict:
         :param str target_id:
@@ -483,7 +477,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def environment_path(no_log: bool = False) -> bool:
         """
-        Placeholder
+        Shim to call the environment_path tool.
 
         :param bool no_log: If True, no output is logged.
         """
@@ -494,7 +488,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def error_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> bool:  # noqa
         """
-        Placeholder
+        Shim to call the error_inventory tool.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -537,7 +531,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def generator_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
         """
-        Placeholder
+        Shim to call the Fogbert.deviceList utility method.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -548,7 +542,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def generator_variable_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
         """
-        Placeholder
+        SHim to call the Fogbert.variableList utility method.
 
         :param str fltr:
         :param indigo.Dict values_dict:
@@ -560,7 +554,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def generator_enabled_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
         """
-        Placeholder
+        Shim to call the deviceListEnabled utility method.
 
         :param str fltr:
         :param indigo.Dict values_dict:
@@ -573,46 +567,35 @@ class Plugin(indigo.PluginBase):
     # @staticmethod
     def generator_device_filter(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
         """
-        Placeholder
+        Build a list of device filters
+
+        Will include all the standard Indigo filters (indigo.relay, indigo.sensor, etc.) and plugin IDs.
 
         :param str fltr:
         :param indigo.Dict values_dict:
         :param str type_id:
         :param bool target_id:
         """
-        # Built-in filters
-        filter_list = [
-            ("all devices", "All Devices"),
-            ("indigo.controller", "indigo.controller"),
-            ("indigo.dimmer", "indigo.dimmer"),
-            ("indigo.insteon", "indigo.insteon"),
-            ("indigo.iodevice", "indigo.iodevice"),
-            ("indigo.relay", "indigo.relay"),
-            ("indigo.responder", "indigo.responder"),
-            ("indigo.sensor", "indigo.sensor"),
-            ("indigo.sprinkler", "indigo.sprinkler"),
-            ("indigo.thermostat", "indigo.thermostat"),
-            ("indigo.x10", "indigo.x10"),
-            ("indigo.zwave", "indigo.zwave"),
-        ]
-
-        # Add plugin identifiers
-        _ = [filter_list.append((dev.pluginId, dev.pluginId))
+        # Add plugin identifiers to standard filters
+        _ = [FILTER_LIST.append((dev.pluginId, dev.pluginId))
              for dev in indigo.devices
-             if (dev.pluginId, dev.pluginId) not in filter_list
+             if (dev.pluginId, dev.pluginId) not in FILTER_LIST
              ]
         # Remove any duplicate tuples
-        unique_tuples = list(set(filter_list))
+        unique_tuples = list(set(FILTER_LIST))
 
         # Remove any empty tuples ('', '')
         filter_list = [tup for tup in unique_tuples if (len(tup[0]) + len(tup[1])) > 0]
+
+        # Sort the list because it's a mess now.
+        filter_list = sorted(filter_list)
 
         return filter_list
 
     # =============================================================================
     def generator_dev_var(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
         """
-        Placeholder
+        Shim to call the Fogbert.deviceAndVariableList utility method.
 
         :param str fltr:
         :param indigo.Dict values_dict:
@@ -624,7 +607,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def generator_dev_var_clean(self, fltr:str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
         """
-        Placeholder
+        Shim to call the Fogbert.deviceAndVariableList utility method.
 
         :param str fltr:
         :param indigo.Dict values_dict:
@@ -636,7 +619,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def generator_state_or_value(self, fltr:str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
         """
-        Placeholder
+        Shim to call the Fogbert.generatorStateOrValue utility method.
 
         :param str fltr:
         :param indigo.Dict values_dict:
@@ -656,7 +639,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def get_serial_ports(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> bool:  # noqa
         """
-        Placeholder
+        Shim to call the serial_ports.show_ports method.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -669,7 +652,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def indigo_inventory(no_log: bool = False) -> bool:  # noqa
         """
-        Placeholder
+        Shim to call the indigo_inventory.show_inventory method.
 
         :param bool no_log: If True, no output is logged.
         """
@@ -680,7 +663,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def inspect_method(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
         """
-        Placeholder
+        Shim to call the inspect_method.display_docstring method.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -691,7 +674,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def installed_plugins(no_log: bool = False) -> bool:
         """
-        Placeholder
+        Shim to call the installed_plugins.get_list method.
 
         :param bool no_log: If True, no output is logged.
         """
@@ -702,7 +685,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def list_of_plugin_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
         """
-        Placeholder
+        Shim to call the plugin_methods.list_methods method.
 
         :param str fltr:
         :param indigo.Dict values_dict:
@@ -714,7 +697,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def list_of_indigo_classes(fltr:str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
         """
-        Placeholder
+        Shim to call the indigo_classes.display_classes method.
 
         :param str fltr:
         :param indigo.Dict values_dict:
@@ -726,7 +709,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def list_of_indigo_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
         """
-        Placeholder
+        Shim to call the indigo_methods.display_methods method.
 
         :param str fltr:
         :param indigo.Dict values_dict:
@@ -738,7 +721,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def log_of_method(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
         """
-        Placeholder
+        Shim to call the log_of_method.display_inspection method.
 
         :param indigo.Dict values_dict:
         :param str type_id:
@@ -756,7 +739,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def modify_numeric_variable(action_group: indigo.actionGroup):
         """
-        Placeholder
+        Shim to call the modify_numeric_variable.modify method.
 
         :param action_group:
         """
@@ -766,7 +749,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def modify_time_variable(action_group: indigo.actionGroup):
         """
-        Placeholder
+        Shim to call the modify_time_variable.modify method.
 
         :param action_group:
         """
@@ -776,7 +759,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def network_ping_device_menu(values_dict: indigo.Dict, item_id: str) -> tuple[bool, dict]:
         """
-        Placeholder
+        Shim to call the ping_tool.do_the_ping method.
 
         :param indigo.Dict values_dict:
         :param str item_id:
@@ -928,7 +911,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def remove_all_delayed_actions(values_dict: indigo.Dict = None, type_id: str = "") -> bool:  # noqa
         """
-        Placeholder
+        Shim to call the remove_delayed_actions.remove_actions method.
 
         :param dict values_dict:
         :param type_id:
@@ -953,7 +936,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def running_plugins(no_log: bool = False) -> bool:
         """
-        Placeholder
+        Shim to call the running_plugins.show_running_plugins method.
 
         :param bool no_log: If True, no output is logged.
         """
@@ -964,7 +947,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def results_output(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:
         """
-        Placeholder
+        Shim to call the results_output.display_results method.
 
         :param dict values_dict:
         :param caller:
@@ -977,7 +960,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def object_directory(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:
         """
-        Placeholder
+        Shim to call the object_directory.display_results method.
 
         :param dict values_dict:
         :param caller:
@@ -990,7 +973,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def object_dependencies(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
         """
-        Placeholder
+        Shim to call the object_dependencies.display_results method.
 
         :param dict values_dict:
         :param caller:
@@ -1002,7 +985,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
         """
-        Placeholder
+        Shim to call the find_embedded_scripts.make_report method.
 
         :param dict values_dict:
         :param type_id:
@@ -1013,7 +996,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def search_linked_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
         """
-        Placeholder
+        Shim to call the find_linked_scripts.make_report method.
 
         :param dict values_dict:
         :param type_id:
@@ -1025,7 +1008,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def send_status_request(values_dict: indigo.Dict = None, type_id: str = "") -> tuple:  # noqa
         """
-        Placeholder
+        Shim to call the send_status_request.send_status method.
 
         :param dict values_dict:
         :param type_id:
@@ -1036,7 +1019,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def speak_string(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
         """
-        Placeholder
+        Shim to call the speak_string.speaker method.
 
         :param dict values_dict:
         :param type_id:
@@ -1047,7 +1030,7 @@ class Plugin(indigo.PluginBase):
     @staticmethod
     def subscribed_to_changes(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
         """
-        Placeholder
+        Shim to call the subscribe_to_changes.subscriber method.
 
         :param dict values_dict:
         :param type_id:
@@ -1220,6 +1203,8 @@ class MyThread(Thread):
     The MyThread class is used to subclass the Thread module so that blocking commands can run in the background and
     not block the Indigo UI. This allows select callbacks to fire in while allowing any Indigo dialogs to complete as
     normal (rather than staying open until the command execution is completed).
+
+    TODO: consider sending the network ping menu command to a thread.
     """
     def __init__(self, target, args=()):
         """

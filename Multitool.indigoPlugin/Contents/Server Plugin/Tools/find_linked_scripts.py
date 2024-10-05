@@ -37,7 +37,7 @@ def build_report(header: str) -> str:
     """
     # Note that we don't want to combine "duplicates" here because we are going to be showing the full path which might
     # be quite long.
-    report = f"\n{SPACER}{' ' + header + ' ':=^60}\n"
+    report = f"\n{SPACER}{' ' + header + ' ':=^100}\n"
     report += sort_obj_list(obj_list)  # put the objects in alpha order by name
     return report
 
@@ -54,7 +54,7 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
     :param values_dict:
     :param bool no_log: If True, no output is logged.
     """
-    result = "Indigo Objects with Linked Scripts"
+    result = f"{' Indigo Objects with Linked Scripts ':=^100}"
 
     # Check server version compatability
     if not indigo.server.version >= "2024.1.0":
@@ -95,5 +95,6 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
         result += build_report("Triggers")  # Only if there are results to return
 
     if not no_log:
+        result += f"\n{SPACER}" + '=' * 100
         indigo.server.log(result)
     return True, values_dict

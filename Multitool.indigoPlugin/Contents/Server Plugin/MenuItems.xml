@@ -230,11 +230,6 @@
         <CallbackMethod>network_ping_device_menu</CallbackMethod>
     </MenuItem>
 
-    <MenuItem id="installed_plugins">
-        <Name>Plugin Inventory</Name>
-        <CallbackMethod>installed_plugins</CallbackMethod>
-    </MenuItem>
-
     <MenuItem id="networkQuality">
         <Name>Network Quality Report</Name>
             <ConfigUI>
@@ -322,6 +317,11 @@
 
             </ConfigUI>
             <ButtonTitle>Close</ButtonTitle>
+    </MenuItem>
+
+    <MenuItem id="installed_plugins">
+        <Name>Plugin Inventory</Name>
+        <CallbackMethod>installed_plugins</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="running_plugins">

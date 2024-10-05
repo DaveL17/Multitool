@@ -54,6 +54,8 @@ def get_list(no_log: bool = False) -> None:
         # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
         # logging level.
         indigo.server.log(f"{' Installed Plugins ':{'='}^130}")
+        indigo.server.log(f"{'Plugin Name':<44} Last Comm Success")
+        indigo.server.log('=' * 130)
 
         for thing in plugin_name_list:
             indigo.server.log(f'{thing}')

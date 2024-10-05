@@ -20,6 +20,21 @@ DEBUG_LABELS = {
     50: "Critical Errors Only"
 }
 
+FILTER_LIST = [
+    ("all devices", "All Devices"),
+    ("indigo.controller", "indigo.controller"),
+    ("indigo.dimmer", "indigo.dimmer"),
+    ("indigo.insteon", "indigo.insteon"),
+    ("indigo.iodevice", "indigo.iodevice"),
+    ("indigo.relay", "indigo.relay"),
+    ("indigo.responder", "indigo.responder"),
+    ("indigo.sensor", "indigo.sensor"),
+    ("indigo.sprinkler", "indigo.sprinkler"),
+    ("indigo.thermostat", "indigo.thermostat"),
+    ("indigo.x10", "indigo.x10"),
+    ("indigo.zwave", "indigo.zwave"),
+]
+
 INSTANCE_TO_COMMAND_NAMESPACE = {
     indigo.ActionGroup: indigo.actionGroup,
     indigo.ControlPage: indigo.controlPage,
