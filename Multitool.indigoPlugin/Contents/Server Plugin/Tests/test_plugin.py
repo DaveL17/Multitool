@@ -151,7 +151,7 @@ class TestXml(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """ Set up the tests. """
-        cls.xml_files   = ['../Actions.xml', '../MenuItems.xml', '../Devices.xml', '../Events.xml']
+        cls.xml_files   = ['../PluginConfig.xml', '../Actions.xml', '../MenuItems.xml', '../Devices.xml', '../Events.xml']
         cls.field_types = ['button', 'checkbox', 'colorpicker', 'label', 'list', 'menu', 'separator', 'textfield']
         # Load the plugin.py code into a var for testing later.
         with open('../plugin.py', 'r', encoding='utf-8') as infile:
@@ -173,25 +173,27 @@ class TestXml(unittest.TestCase):
                     print(f"\"{file_type}\" file not present.")
                     continue
                 for item in root:
-                    # Test the 'id' attribute (required):
+                    # Test for the 'id' attribute (usually required):
+                    exceptions = ['SupportURL', 'Template']  # node tags that don't require an `id` attribute.
                     node_id = item.get('id')
-                    self.assertIsNotNone(node_id,
-                                         f"\"{file_type}\" element \"{item.tag}\" attribute 'id' is required.")
-                    self.assertIsInstance(node_id, str, "id names must be strings.")
-                    self.assertNotIn(' ', node_id, "`id` names should not contain spaces.")
+                    if item.tag not in exceptions:
+                        self.assertIsNotNone(node_id,
+                                             f"\"{file_type}\" element \"{item.tag}\" attribute 'id' is required.")
+                        self.assertIsInstance(node_id, str, "id names must be strings.")
+                        self.assertNotIn(' ', node_id, "`id` names should not contain spaces.")
 
                     # Test the 'deviceFilter' attribute:
                     dev_filter = item.get('deviceFilter')
-                    self.assertIsInstance(node_id, str, "`deviceFilter` values must be strings.")
-                    if dev_filter:  # None if not specified in item attributes
-                        self.assertIn(dev_filter, DEVICE_FILTERS, "'deviceFilter' values must be strings.")
+                    if dev_filter:
+                        self.assertIsInstance(node_id, str, "`deviceFilter` values must be strings.")
+                        if dev_filter:  # None if not specified in item attributes
+                            self.assertIn(dev_filter, DEVICE_FILTERS, "'deviceFilter' values must be strings.")
 
                     # Test the 'uiPath' attribute:
                     # The uiPath value can essentially be anything as plugins can create their own uiPaths, so we
                     # can only test a few things regarding its contents.
-                    ui_path = item.get('uiPath')
+                    ui_path = item.get('uiPath', '')
                     self.assertIsInstance(ui_path, str, "uiPath names must be strings.")
-                    # self.assertIn(ui_path, self.ui_paths)
 
                 # Test items that have a 'Name' element. The reference to `root.tag[:-1]` takes the tag name and
                 # converts it to the appropriate child element name. For example, `Actions` -> `Action`, etc.
@@ -207,12 +209,15 @@ class TestXml(unittest.TestCase):
                     self.assertTrue(f"def {thing.text}" in self.plugin_lines,
                                     f"The callback method \"{thing.text}\" does not exist in the plugin.py file.")
 
-                # Test items that have a 'configUI' element
-                for thing in root.findall(f"./{root.tag[:-1]}/ConfigUI/SupportURL"):
+                # Test items that have a 'configUI' element and a support url. It's okay if no valid urls are present.
+                # The test will go out to each support url to ensure it's valid.
+                support_urls = root.findall(f"./{root.tag[:-1]}/ConfigUI/SupportURL")
+                for thing in support_urls:
                     self.assertIsInstance(thing.text, str, "Config UI support URLs must be strings.")
-                    result = httpx.get(thing.text).status_code
+                    response = httpx.get(thing.text)
+                    result = response.status_code
                     self.assertEqual(result, 200,
-                                     f"ERROR: Got status code {result} -> {httpcodes[result]}.")
+                                     f"ERROR: Got status code {result} ({httpcodes[result]}) -> {thing.text}.")
 
                 # Test Config UI `Field` elements
                 for thing in root.findall(f"./{root.tag[:-1]}/ConfigUI/Field"):

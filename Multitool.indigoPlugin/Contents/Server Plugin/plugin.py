@@ -191,7 +191,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def getMenuActionConfigUiValues(self, menu_id: str = "") -> dict:  # noqa
         """
-        Standard Indigo method called when a config menu is openend.
+        Standard Indigo method called when a config menu is opened.
 
         :param str menu_id:
         :return indigo.Dict:
@@ -436,7 +436,6 @@ class Plugin(indigo.PluginBase):
         :param str menu_item:
         :param bool no_log: If True, no output is logged.
         """
-        indigo.server.log(f"-----> {menu_item}")
         device_last_successful_comm.report_comms(values_dict, menu_item, no_log)
 
     # =============================================================================

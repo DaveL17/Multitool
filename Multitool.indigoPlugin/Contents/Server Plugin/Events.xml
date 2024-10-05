@@ -3,7 +3,7 @@
     <Event id="ping_offline">
         <Name>Network Ping Device Offline</Name>
             <ConfigUI>
-                <SupportURL>https://IndigoDomotics.github.io/Multitool/</SupportURL>
+                <SupportURL>https://github.com/DaveL17/Multitool/wiki</SupportURL>
                 <Field id="deviceOfflineLabel" type="label">
                     <Label>The Multitool Plugin can fire a trigger if a plugin ping device has been found to be offline.  Select the device that you want to monitor.</Label>
                 </Field>
