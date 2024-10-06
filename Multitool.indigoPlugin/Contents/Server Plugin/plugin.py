@@ -1048,8 +1048,9 @@ class Plugin(indigo.PluginBase):
         """
         Dummy action to test return values
 
-        The test_action_return method is used to test return values for calls to plugin.executeAction() calls. The
-        plugin will return a value based on the 'return_value' type passed to the method.
+        The test_action_return method is used to test return values for calls to plugin.executeAction() calls. It is an
+        endpoint to be called when testing other code bases. The Multitool plugin will return a value based on the
+        'return_value' type passed to the method.
 
         :param action:
         :param return_value:
@@ -1069,129 +1070,21 @@ class Plugin(indigo.PluginBase):
         elif action.props['return_value'] == "list":
             return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
 
-    def test_foobar(self, action):
+    def my_tests(self, action=None):
         """
-        This method is used to create and delete a plugin device for unit testing
-
-        The unit test sends a "plugin.executeAction" command message via the IWS API with an instruction to either
-        create or delete a plugin device. The action passes the payload through to this method.
-
-        :param action:
-        """
-        props = action.props
-        # groupWithDevice=props.get('groupWithDevice', False),  # note GWD is expecting an obj, so we skip for now.
-        if props['instruction'] == "create":
-            dev = indigo.device.create(
-                address=props.get('address', ""),
-                configured=props.get('configured', True),
-                description=props.get('description', ""),
-                deviceTypeId=props.get('deviceTypeId', 'networkQuality'),
-                folder=props.get('folder', 0),
-                name=props.get('name', "Unit Test Device"),
-                pluginId='com.fogbert.indigoplugin.multitool',
-                props=props.get('props', None),
-                protocol=indigo.kProtocol.Plugin,
-            )
-            self.logger.info(f"Unit Test: Created device [{dev.deviceTypeId} - {dev.id}]")
-            return {'dev_id': dev.id}  # the id of the device that was created
-        if props['instruction'] == "delete":
-            indigo.device.delete(props['dev_id'])
-            self.logger.info(f"Unit Test: Deleted device [[{props['deviceTypeId']} - {props['dev_id']}]")
-            return "dev deleted"
-
-    def my_tests(self):
-        """
-        The my_tests method runs functional tests every time the plugin is (re)loaded in debug mode.
+        The my_tests method runs functional tests that are invoked by calling the my_test action.
 
         If it encounters an error, a message will be written to the Indigo events log. The tests will stop upon the
         first error (subsequent tests will not be run).
         """
-        test_case = TestCase()
-        self.logger.debug("Running startup tests. (Warning messages are normal.)")
         try:
-            # ===================================== About Indigo =====================================
-            test_case.assertTrue(self.about_indigo(no_log=True), "Method failed.")  # Implied `None` returned
-            # ===================================== Battery Level Report =====================================
-            test_case.assertTrue(self.battery_level_report(no_log=True), "Method failed.")  # Implied `None` returned
-            # ===================================== Color Picker =====================================
-            dicts = [
-                {'chosenColor': 'FF FF FF'},
-                {'chosenColor': 1},  # wrong value type
-                {'chosenColor': 'white'}  # wrong value type
-            ]
-            for test_dict in dicts:
-                test_case.assertTrue(self.color_picker(test_dict, no_log=True), "Method failed.")
-            # ===================================== Device Beep =====================================
-            # Standard Indigo command; may not need testing.
-            # ===================================== Device Inventory =====================================
-            values_dict = {'customThing': 'self', 'typeOfThing': 'Other'}
-            test_case.assertIsInstance(self.device_inventory(values_dict, no_log=True), dict, "Method failed.")
-            # ===================================== Device Last Comm =====================================
-            test_case.assertIsNone(self.device_last_successful_comm({'listOfDevices': 'indigo.relay'}, no_log=True), "Method failed.")
-            # ===================================== Device Ping =====================================
-            # ===================================== Environment Path =====================================
-            test_case.assertTrue(self.environment_path(no_log=True), "Method failed")
-            # ===================================== Error Inventory =====================================
-            for values_dict in [{'error_level': 'err'}, {'error_level': 'err_warn'}]:
-                test_case.assertTrue(self.error_inventory(values_dict, no_log=True), "Method failed")
-            # ===================================== Indigo Inventory =====================================
-            test_case.assertTrue(self.indigo_inventory(no_log=True), "Method failed")
-            # ===================================== Methods Indigo Base =====================================
-            # Standard Indigo command; may not need testing.
-            # ===================================== Methods Plugin Base =====================================
-            # Standard Indigo command; may not need testing.
-            # ===================================== Network Quality Report =====================================
-            # ===================================== Object Inspection =====================================
-            # It's best if the referenced objects are ones that will be around permanently.
-            for payload in [{'classOfThing': 'actionGroups', 'thingToPrint': 460267384},
-                            {'classOfThing': 'controlPages', 'thingToPrint': 37036932},
-                            {'classOfThing': 'devices', 'thingToPrint': 374100038},
-                            {'classOfThing': 'schedules', 'thingToPrint': 147884757},
-                            {'classOfThing': 'triggers', 'thingToPrint': 1789555909},
-                            {'classOfThing': 'variables', 'thingToPrint': 23078783}
-                            ]:
-                # Print Object Dict
-                test_case.assertTrue(self.results_output(payload, no_log=True), "Method failed.")
-                # Print Object Dir
-                test_case.assertTrue(self.object_directory(payload, no_log=True), "Method failed.")
-                # Print Object Dependencies
-                test_case.assertTrue(self.object_dependencies(payload, no_log=True), "Method failed.")
-            # ===================================== Ping Host =====================================
-            # Menu Call
-            for hostname in ['10.0.1.1', 'google.com', 'indigo']:
-                test_case.assertIsNone(ping_tool.do_the_ping({'hostname': hostname}, menu_call=True), "Method failed.")
-            # Action Call
-            values_dict = MagicMock()
-            values_dict.props = {'selected_device': 1655068310}
-            test_case.assertIsInstance(self.network_ping_device_action(values_dict), tuple, "Method failed.")
-            # ===================================== Plugin Inventory =====================================
-            test_case.assertTrue(self.installed_plugins(no_log=True), "Method failed.")
-            # ===================================== Plugins Online =====================================
-            test_case.assertTrue(self.running_plugins(no_log=True), "Method failed.")
-            # ===================================== Remove Delayed Actions =====================================
-            # Standard Indigo command; may not need testing.
-            # ===================================== Scripts Embedded =====================================
-            test_case.assertIsInstance(self.search_embedded_scripts({'search_string': ''}, no_log=True), tuple, "Method failed.")
-            test_case.assertTrue(self.search_embedded_scripts({'search_string': ''}, no_log=True)[0], "Method failed.")
-            test_case.assertIsInstance(self.search_embedded_scripts({'search_string': 'A'}, no_log=True), tuple, "Method failed.")
-            test_case.assertTrue(self.search_embedded_scripts({'search_string': 'A'}, no_log=True)[0], "Method failed.")
-            # ===================================== Scripts Linked =====================================
-            values_dict = {}
-            test_case.assertIsInstance(self.search_linked_scripts(values_dict, no_log=True), tuple, "Method failed.")
-            test_case.assertTrue(self.search_linked_scripts(values_dict, no_log=True)[0], "Method failed.")
-            # ===================================== Send Status Request =====================================
-            # Standard Indigo command; may not need testing.
-            # ===================================== Serial Ports =====================================
-            test_case.assertTrue(self.get_serial_ports({'ignoreBluetooth': True}, no_log=True), "Method failed.")
-            # ===================================== Speak String =====================================
-            # Standard Indigo command; may not need testing.
-            # ===================================== Subscribe to Changes =====================================
-            # Standard Indigo command; may not need testing.
-            # ===================================== Display Plugin Information =====================================
-            test_case.assertTrue(self.log_plugin_environment(), "Method failed.")
-        except AssertionError as err:
-            line_number = err.__traceback__.tb_lineno
-            indigo.server.log(f"Startup test failed: {err} at line {line_number}", level=logging.ERROR)
+            from Tests import test_create_device
+
+            test_create_device.TestPlugin.test_device_creation(self)
+            test_create_device.TestPlugin.test_plugin_functions(self)
+
+        except Exception as err:
+            indigo.server.log(str(err))
 
 
 # =============================================================================

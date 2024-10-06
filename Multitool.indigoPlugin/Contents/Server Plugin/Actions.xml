@@ -147,9 +147,14 @@
         <CallbackMethod>network_quality_device_action</CallbackMethod>
     </Action>
 
-    <Action id="test_foo" uiPath="hidden">
-        <Name>My Test Foo</Name>
-        <CallbackMethod>test_foobar</CallbackMethod>
+<!--    <Action id="test_foo" uiPath="hidden">-->
+<!--        <Name>My Test Foo</Name>-->
+<!--        <CallbackMethod>test_foobar</CallbackMethod>-->
+<!--    </Action>-->
+
+    <Action id="my_test" uiPath="hidden">
+        <Name>Run My Test</Name>
+        <CallbackMethod>my_tests</CallbackMethod>
     </Action>
 
 </Actions>

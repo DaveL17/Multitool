@@ -1,4 +1,8 @@
-""" The test_plugin.py file contains unit tests for the Multitool plugin. """
+"""
+The test_plugin.py file contains unit tests for the Multitool plugin.
+
+These are tests that can be run directly from the IDE because they don't rely on the plugin host process.
+"""
 import xml.etree.ElementTree as ET  # noqa
 import os
 import unittest
@@ -14,6 +18,7 @@ API_SECRET: str = os.environ["API_SECRET"]
 API_URL: str = os.environ["SERVER_API_URL"]
 API_BASE: str = os.environ["SERVER_API_BASE"]
 PLUGIN_ID: str = os.environ["PLUGIN_ID"]
+DEVICE_FOLDER  = int(os.environ["DEVICE_FOLDER"])
 
 
 class TestActions(unittest.TestCase):
@@ -40,7 +45,7 @@ class TestActions(unittest.TestCase):
         message = {
             "id": f"{self._testMethodName} - Run Network Quality action",
             "message": "plugin.executeAction",
-            "pluginId": "com.fogbert.indigoplugin.multitool",
+            "pluginId": PLUGIN_ID,
             "actionId": "networkQualityAction",
             "waitUntilDone": True,
         }
@@ -57,7 +62,7 @@ class TestActions(unittest.TestCase):
         message = {
             "id": f"{self._testMethodName} - Run Network Quality Device action",
             "message": "plugin.executeAction",
-            "pluginId": "com.fogbert.indigoplugin.multitool",
+            "pluginId": PLUGIN_ID,
             "actionId": "networkQualityDeviceAction",
             "props": {"selected_device": 609659860},
             "waitUntilDone": True,
@@ -67,78 +72,78 @@ class TestActions(unittest.TestCase):
         self.assertIsInstance(resp.json(), dict, "Response is not a dict")
 
 
-class TestDevices(unittest.TestCase):
-    """
-    The TestDevices class is used to test plugin devices
-
-    The devices are tested for creation, deletion, and communication (i.e., update, etc.) of each type of device
-    defined in `Devices.xml`. This is not meant to test aspects of the various APIs, but it uses the HTTP API to pass
-    commands to and receive updates from the Indigo server.
-    """
-    @classmethod
-    def setUpClass(cls):
-        ...
-
-    @staticmethod
-    def communicate(message: dict) -> httpx.Response:
-        """ Send the API command message """
-        headers = {'Authorization': f'Bearer {API_SECRET}'}
-        return httpx.post(API_URL, headers=headers, json=message, verify=False)
-
-    def test_api(self):
-        """
-        Tests the plugin API by creating, testing, and deleting a plugin device.
-
-        Note that this API method will fail in interesting ways if the temporary test device was previously created but
-        wasn't subsequently deleted. Indigo creates the device by name, and if the name already exists, it will get mad.
-        """
-        # ===== Network Quality Device =====
-        # Create the device
-        message = {
-            "id": f"{self._testMethodName} - Create device",
-            "message": "plugin.executeAction",
-            "pluginId": "com.fogbert.indigoplugin.multitool",
-            "actionId": "test_foo",
-            "props": {
-                'address': 1235,
-                'description': "My test description.",
-                'deviceTypeId': 'networkQuality',
-                'instruction': 'create',
-                'folder': 788686594,  # the multitool devices folder
-                'name': "Unit Test Device",
-                'props': {
-                    'outputVerification': False,
-                    'runDownloadTest': True,
-                    'runTestsSequentially': False,
-                    'runUploadTest': True,
-                    'usePrivateRelay': False,
-                    'verboseOutput': False
-                },
-            },
-            "waitUntilDone": True
-        }
-        resp = self.communicate(message)
-        self.assertEqual(resp.status_code, 200, "Error creating device")
-        self.assertIsInstance(resp.json(), dict, "Response is not a dict")
-
-        # Delete the device
-        # Get the dev id from the response above, so we can delete the device when we're done with it.
-        reply_dict = eval(resp.json()['reply_data'])
-        message = {
-            "id": f"{self._testMethodName} - Delete device",
-            "message": "plugin.executeAction",
-            "pluginId": "com.fogbert.indigoplugin.multitool",
-            "actionId": "test_foo",
-            "props": {
-                'instruction': 'delete',
-                'dev_id': reply_dict['dev_id'],
-                'deviceTypeId': 'networkQuality',
-            },
-            "waitUntilDone": True
-        }
-        resp = self.communicate(message)
-        self.assertEqual(resp.status_code, 200, "Error deleting device")
-        self.assertIsInstance(resp.json(), dict, "Response is not a dict")
+# class TestDevices(unittest.TestCase):
+#     """
+#     The TestDevices class is used to test plugin devices
+#
+#     The devices are tested for creation, deletion, and communication (i.e., update, etc.) of each type of device
+#     defined in `Devices.xml`. This is not meant to test aspects of the various APIs, but it uses the HTTP API to pass
+#     commands to and receive updates from the Indigo server.
+#     """
+#     @classmethod
+#     def setUpClass(cls):
+#         ...
+#
+#     @staticmethod
+#     def communicate(message: dict) -> httpx.Response:
+#         """ Send the API command message """
+#         headers = {'Authorization': f'Bearer {API_SECRET}'}
+#         return httpx.post(API_URL, headers=headers, json=message, verify=False)
+#
+#     def test_api(self):
+#         """
+#         Tests the plugin API by creating, testing, and deleting a plugin device.
+#
+#         Note that this API method will fail in interesting ways if the temporary test device was previously created but
+#         wasn't subsequently deleted. Indigo creates the device by name, and if the name already exists, it will get mad.
+#         """
+#         # ===== Network Quality Device =====
+#         # Create the device
+#         message = {
+#             "id": f"{self._testMethodName} - Create device",
+#             "message": "plugin.executeAction",
+#             "pluginId": PLUGIN_ID,
+#             "actionId": "test_foo",
+#             "props": {
+#                 'address': 1235,
+#                 'description': "My test description.",
+#                 'deviceTypeId': 'networkQuality',
+#                 'instruction': 'create',
+#                 'folder': DEVICE_FOLDER,  # the multitool devices folder
+#                 'name': "Unit Test Device",
+#                 'props': {
+#                     'outputVerification': False,
+#                     'runDownloadTest': True,
+#                     'runTestsSequentially': False,
+#                     'runUploadTest': True,
+#                     'usePrivateRelay': False,
+#                     'verboseOutput': False
+#                 },
+#             },
+#             "waitUntilDone": True
+#         }
+#         resp = self.communicate(message)
+#         self.assertEqual(resp.status_code, 200, "Error creating device")
+#         self.assertIsInstance(resp.json(), dict, "Response is not a dict")
+#
+#         # Delete the device
+#         # Get the dev id from the response above, so we can delete the device when we're done with it.
+#         reply_dict = eval(resp.json()['reply_data'])
+#         message = {
+#             "id": f"{self._testMethodName} - Delete device",
+#             "message": "plugin.executeAction",
+#             "pluginId": PLUGIN_ID,
+#             "actionId": "test_foo",
+#             "props": {
+#                 'instruction': 'delete',
+#                 'dev_id': reply_dict['dev_id'],
+#                 'deviceTypeId': 'networkQuality',
+#             },
+#             "waitUntilDone": True
+#         }
+#         resp = self.communicate(message)
+#         self.assertEqual(resp.status_code, 200, "Error deleting device")
+#         self.assertIsInstance(resp.json(), dict, "Response is not a dict")
 
 
 class TestXml(unittest.TestCase):
@@ -207,7 +212,7 @@ class TestXml(unittest.TestCase):
                     # We then search for the string `def <CALLBACK METHOD>` within the file as a proxy to doing a
                     # `dir()` to see if it's in there.
                     self.assertTrue(f"def {thing.text}" in self.plugin_lines,
-                                    f"The callback method \"{thing.text}\" does not exist in the plugin.py file.")
+                                    f"{file_type} - The callback method \"{thing.text}\" does not exist in the plugin.py file.")
 
                 # Test items that have a 'configUI' element and a support url. It's okay if no valid urls are present.
                 # The test will go out to each support url to ensure it's valid.

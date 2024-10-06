@@ -5,7 +5,7 @@
 	<key>PluginVersion</key>
 	<string>2024.1.0</string>
 	<key>ServerApiVersion</key>
-	<string>3.2</string>
+	<string>3.4</string>
 	<key>CFBundleDisplayName</key>
 	<string>Multitool</string>
 	<key>LoadPriority</key>
