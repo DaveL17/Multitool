@@ -1081,6 +1081,8 @@ class Plugin(indigo.PluginBase):
             from Tests import test_create_device
 
             test_create_device.TestPlugin.test_device_creation(self)
+            test_create_device.TestPlugin.test_action_group_creation(self)
+            test_create_device.TestPlugin.test_action_group_execution(self)
             test_create_device.TestPlugin.test_plugin_functions(self)
 
         except Exception as err:

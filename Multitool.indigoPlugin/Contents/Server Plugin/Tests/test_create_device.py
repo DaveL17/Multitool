@@ -11,22 +11,26 @@ from unittest.mock import MagicMock
 import indigo  # noqa
 from Tools import *
 
-dotenv.load_dotenv()
-test_case = TestCase()
 
-try:
-    DEVICE_FOLDER  = os.getenv("DEVICE_FOLDER")
-    TRIGGER_FOLDER = os.getenv("TRIGGER_FOLDER")
-    ACTION_FOLDER  = os.getenv("ACTION_FOLDER")
-    LOGGER         = logging.getLogger("Plugin")
-except Exception as e:
-    indigo.server.log(f"{e}")
+import sys
+sys.path.append('./Server Plugin/Tests')
+
+test_case = TestCase()
+dotenv.load_dotenv()
+DEVICE_FOLDER    = int(os.getenv("DEVICE_FOLDER"))
+TRIGGER_FOLDER   = int(os.getenv("TRIGGER_FOLDER"))
+ACTION_FOLDER    = int(os.getenv("ACTION_FOLDER"))
+ACTION_ID        = int(os.getenv("ACTION_ID"))
+ACTION_DEVICE_ID = int(os.getenv("ACTION_DEVICE_ID"))
+LOGGER           = logging.getLogger("Plugin")
+
 
 class TestPlugin(TestCase):
     def setUp(self):
         ...
 
     def test_device_creation(self):
+        """ """
         # ===================================== Create a ping device =====================================
         dev = indigo.device.create(
             protocol=indigo.kProtocol.Plugin,
@@ -68,13 +72,37 @@ class TestPlugin(TestCase):
         test_case.assertIsInstance(dev, indigo.Device, "Network Quality device was not created")
         test_case.assertTrue(dev.id in indigo.devices, "Network Quality device was not created.")
 
-        # Delete the ping device
+        # Delete the network quality device
         indigo.device.delete(dev.id)
         LOGGER.warning("Test network quality device deleted")
         test_case.assertTrue(dev.id not in indigo.devices, "Network Quality device was not deleted")
 
-    def test_action_group_create(self):
-        indigo.actionGroup.create(name='Test Action Group', description='Test Action Group', folder=ACTION_FOLDER)
+    def test_action_group_creation(self):
+        """  """
+        # ===================================== Create the Action Group =====================================
+        action = indigo.actionGroup.create(name='Test Action Group', description='Test Action Group', folder=ACTION_FOLDER)
+        LOGGER.warning("Test Action group created")
+        test_case.assertIsInstance(action, indigo.ActionGroup, "Action group was not created")
+        test_case.assertTrue(action.id in indigo.actionGroups, "Action group was not created.")
+        # TODO: Add a Multitool action to the action group
+        # TODO: Execute the action group
+
+        # ===================================== Delete the Action Group =====================================
+        indigo.actionGroup.delete(action.id)
+        LOGGER.warning("Test action group deleted")
+        test_case.assertTrue(action.id not in indigo.actionGroups, "Action group was not deleted")
+
+    def test_action_group_execution(self):
+        """
+
+
+        When executed, Action Groups return `None`
+        """
+        action = indigo.actionGroup.execute(ACTION_ID)
+        test_case.assertIsNone(action, "Error running action.")
+
+        action = indigo.actionGroup.execute(ACTION_DEVICE_ID)
+        test_case.assertIsNone(action, "Error running action.")
 
     def test_plugin_functions(self):
         """ Plugin methods are available here, even if the IDE doesn't think they are. """

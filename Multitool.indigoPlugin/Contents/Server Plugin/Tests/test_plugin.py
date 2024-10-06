@@ -13,12 +13,11 @@ from httpcodes import codes as httpcodes
 from indigo_devices_filters import DEVICE_FILTERS
 
 dotenv.load_dotenv()
-
-API_SECRET: str = os.environ["API_SECRET"]
-API_URL: str = os.environ["SERVER_API_URL"]
-API_BASE: str = os.environ["SERVER_API_BASE"]
-PLUGIN_ID: str = os.environ["PLUGIN_ID"]
-DEVICE_FOLDER  = int(os.environ["DEVICE_FOLDER"])
+API_SECRET: str     = os.getenv("API_SECRET")
+API_URL: str        = os.getenv("SERVER_API_URL")
+API_BASE: str       = os.getenv("SERVER_API_BASE")
+PLUGIN_ID: str      = os.getenv("PLUGIN_ID")
+DEVICE_FOLDER: str  = os.getenv("DEVICE_FOLDER")
 
 
 class TestActions(unittest.TestCase):
@@ -36,40 +35,40 @@ class TestActions(unittest.TestCase):
         headers = {'Authorization': f'Bearer {API_SECRET}'}
         return httpx.post(API_URL, headers=headers, json=message, verify=False, timeout=None)
 
-    def test_network_quality_action(self):
-        """
-        Note that the Network Quality Action can take some time to complete, and we wait for it to finish before
-        determining success.
-        """
-        # Run the action.
-        message = {
-            "id": f"{self._testMethodName} - Run Network Quality action",
-            "message": "plugin.executeAction",
-            "pluginId": PLUGIN_ID,
-            "actionId": "networkQualityAction",
-            "waitUntilDone": True,
-        }
-        resp = self.communicate(message)
-        self.assertEqual(resp.status_code, 200, "Error running action.")
-        self.assertIsInstance(resp.json(), dict, "Response is not a dict")
+    # def test_network_quality_action(self):
+    #     """
+    #     Note that the Network Quality Action can take some time to complete, and we wait for it to finish before
+    #     determining success.
+    #     """
+    #     # Run the action.
+    #     message = {
+    #         "id": f"{self._testMethodName} - Run Network Quality action",
+    #         "message": "plugin.executeAction",
+    #         "pluginId": PLUGIN_ID,
+    #         "actionId": "networkQualityAction",
+    #         "waitUntilDone": True,
+    #     }
+    #     resp = self.communicate(message)
+    #     self.assertEqual(resp.status_code, 200, "Error running action.")
+    #     self.assertIsInstance(resp.json(), dict, "Response is not a dict")
 
-    def test_network_quality_device_action(self):
-        """
-        Note that the Network Quality Action can take some time to complete, and we wait for it to finish before
-        determining success. This test will block until complete.
-        """
-        # Run the action.
-        message = {
-            "id": f"{self._testMethodName} - Run Network Quality Device action",
-            "message": "plugin.executeAction",
-            "pluginId": PLUGIN_ID,
-            "actionId": "networkQualityDeviceAction",
-            "props": {"selected_device": 609659860},
-            "waitUntilDone": True,
-        }
-        resp = self.communicate(message)
-        self.assertEqual(resp.status_code, 200, "Error running action.")
-        self.assertIsInstance(resp.json(), dict, "Response is not a dict")
+    # def test_network_quality_device_action(self):
+    #     """
+    #     Note that the Network Quality Action can take some time to complete, and we wait for it to finish before
+    #     determining success. This test will block until complete.
+    #     """
+    #     # Run the action.
+    #     message = {
+    #         "id": f"{self._testMethodName} - Run Network Quality Device action",
+    #         "message": "plugin.executeAction",
+    #         "pluginId": PLUGIN_ID,
+    #         "actionId": "networkQualityDeviceAction",
+    #         "props": {"selected_device": 609659860},
+    #         "waitUntilDone": True,
+    #     }
+    #     resp = self.communicate(message)
+    #     self.assertEqual(resp.status_code, 200, "Error running action.")
+    #     self.assertIsInstance(resp.json(), dict, "Response is not a dict")
 
 
 # class TestDevices(unittest.TestCase):
