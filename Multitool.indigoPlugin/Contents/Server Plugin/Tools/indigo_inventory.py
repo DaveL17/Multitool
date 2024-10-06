@@ -1,7 +1,8 @@
 """
-Title Placeholder
+Print a complete inventory of Indigo objects to the Indigo Events log
 
-Body placeholder
+Prints Action Groups, Control Pages, Devices, Schedules, Triggers and Variables. The report includes:
+object ID, name, folder ID, and folder name.
 
 :return:
 """
@@ -92,10 +93,10 @@ def show_inventory(no_log: bool = False) -> None:
         )
 
     # ====================== Generate Custom Table Settings =======================
-    col_0 = []
-    col_1 = []
-    col_2 = []
-    col_3 = []
+    col_0 = []  # object ID
+    col_1 = []  # object Name
+    col_2 = []  # object folder ID
+    col_3 = []  # object folder Name
 
     for key in inventory:
         col_0 += [item[0] for item in inventory[key]]
@@ -103,15 +104,10 @@ def show_inventory(no_log: bool = False) -> None:
         col_2 += [item[2] for item in inventory[key]]
         col_3 += [item[3] for item in inventory[key]]
 
-    # col0 = max([len(f"{item}") for item in col_0]) + 2
-    # col1 = max([len(f"{item}") for item in col_1]) + 2
-    # col2 = max([len(f"{item}") for item in col_2]) + 2
-    # col3 = max([len(f"{item}") for item in col_3]) + 2
-
     col0 = max(len(f"{item}") for item in col_0) + 2
-    col1 = max(len(f"{item}") for item in col_0) + 2
-    col2 = max(len(f"{item}") for item in col_0) + 2
-    col3 = max(len(f"{item}") for item in col_0) + 2
+    col1 = max(len(f"{item}") for item in col_1) + 2
+    col2 = max(len(f"{item}") for item in col_2) + 2
+    col3 = max(len(f"{item}") for item in col_3) + 2
 
     table_width = sum([col0, col1, col2, col3])
 
@@ -123,16 +119,14 @@ def show_inventory(no_log: bool = False) -> None:
             header = f" {object_type} "
             indigo.server.log(f"{header:{'='}^{table_width}}")
 
-            indigo.server.log(
-                f"{'ID':{col0}}{'Name':{col1}}{'Folder ID':{col2}}{'Folder Name':{col3}}"
-            )
+            indigo.server.log(f"{'ID':{col0}}{'Name':{col1}}{'Folder ID':{col2}}{'Folder Name':{col3}}")
             indigo.server.log("=" * table_width)
 
             for element in inventory[object_type]:
                 indigo.server.log(
                     f"{element[0]:<{col0}}"
                     f"{element[1]:<{col1}}"
-                    f"{element[2]:<{col2}}"
+                    f"{element[2] if element[2] != 0 else '':<{col2}}"  # print empty string instead of 0.
                     f"{element[3]:<{col3}}"
                 )
 

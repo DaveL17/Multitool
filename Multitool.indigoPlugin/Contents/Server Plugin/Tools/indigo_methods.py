@@ -14,7 +14,7 @@ def __init__():
     pass
 
 
-def display_methods(values_dict: indigo.Dict = None) -> list:
+def display_methods(values_dict: indigo.Dict = None):
     """
     Generate a list of Indigo methods given a user-selected class
 
@@ -28,7 +28,8 @@ def display_methods(values_dict: indigo.Dict = None) -> list:
 
         else:
             indigo_classes = getattr(indigo, values_dict['list_of_indigo_classes'])
-            directory = list(indigo_classes)
+            directory = dir(indigo_classes)
+            # directory = list(indigo_classes)
 
             if values_dict.get('include_hidden_methods', False):
                 return_value = [_ for _ in directory]

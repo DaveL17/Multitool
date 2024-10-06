@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<!--
+URLs to file (also works with reflector):
+https://localhost:8176/com.fogbert.indigoplugin.multitool/public/public.txt
+https://localhost:8176/com.fogbert.indigoplugin.multitool/static/index.html
+-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Title</title>
+<!--    <link rel="stylesheet" href="styles.css">-->
+</head>
+<body>
+    <header>
+        <img src="../images/icon.png" alt="Logo">
+        <h1>Hello World</h1>
+    </header>
+    <main>
+        <section>
+            <h2>About</h2>
+            <p>This is a brief description.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; DaveL17 <span id="year"></span> The Multitool plugin is distributed under the MIT license; however the author reserves the right to change the license at any time.</p>
+    </footer>
+    <script>
+        // Get the current year for the copyright block
+        const currentYear = new Date().getFullYear();
+        document.getElementById('year').textContent = currentYear.toString();
+    </script>
+</body>
+</html>
