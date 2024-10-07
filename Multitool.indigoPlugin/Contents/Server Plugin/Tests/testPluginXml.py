@@ -1,148 +1,16 @@
 """
-The test_plugin.py file contains unit tests for the Multitool plugin.
+The testPluginXml.py file contains unit tests for the Multitool plugin.
 
 These are tests that can be run directly from the IDE because they don't rely on the plugin host process.
 """
 import xml.etree.ElementTree as ET  # noqa
-import os
 import unittest
-import dotenv
 import httpx
-# from curlcodes import codes as curlcodes
 from httpcodes import codes as httpcodes
 from indigo_devices_filters import DEVICE_FILTERS
 
-dotenv.load_dotenv()
-API_SECRET: str     = os.getenv("API_SECRET")
-API_URL: str        = os.getenv("SERVER_API_URL")
-API_BASE: str       = os.getenv("SERVER_API_BASE")
-PLUGIN_ID: str      = os.getenv("PLUGIN_ID")
-DEVICE_FOLDER: str  = os.getenv("DEVICE_FOLDER")
-
-
-class TestActions(unittest.TestCase):
-    """
-    The TestActions class is used to test plugin actions
-    """
-
-    @classmethod
-    def setUpClass(cls):
-        ...
-
-    @staticmethod
-    def communicate(message):
-        """ Send the API command message """
-        headers = {'Authorization': f'Bearer {API_SECRET}'}
-        return httpx.post(API_URL, headers=headers, json=message, verify=False, timeout=None)
-
-    # def test_network_quality_action(self):
-    #     """
-    #     Note that the Network Quality Action can take some time to complete, and we wait for it to finish before
-    #     determining success.
-    #     """
-    #     # Run the action.
-    #     message = {
-    #         "id": f"{self._testMethodName} - Run Network Quality action",
-    #         "message": "plugin.executeAction",
-    #         "pluginId": PLUGIN_ID,
-    #         "actionId": "networkQualityAction",
-    #         "waitUntilDone": True,
-    #     }
-    #     resp = self.communicate(message)
-    #     self.assertEqual(resp.status_code, 200, "Error running action.")
-    #     self.assertIsInstance(resp.json(), dict, "Response is not a dict")
-
-    # def test_network_quality_device_action(self):
-    #     """
-    #     Note that the Network Quality Action can take some time to complete, and we wait for it to finish before
-    #     determining success. This test will block until complete.
-    #     """
-    #     # Run the action.
-    #     message = {
-    #         "id": f"{self._testMethodName} - Run Network Quality Device action",
-    #         "message": "plugin.executeAction",
-    #         "pluginId": PLUGIN_ID,
-    #         "actionId": "networkQualityDeviceAction",
-    #         "props": {"selected_device": 609659860},
-    #         "waitUntilDone": True,
-    #     }
-    #     resp = self.communicate(message)
-    #     self.assertEqual(resp.status_code, 200, "Error running action.")
-    #     self.assertIsInstance(resp.json(), dict, "Response is not a dict")
-
-
-# class TestDevices(unittest.TestCase):
-#     """
-#     The TestDevices class is used to test plugin devices
-#
-#     The devices are tested for creation, deletion, and communication (i.e., update, etc.) of each type of device
-#     defined in `Devices.xml`. This is not meant to test aspects of the various APIs, but it uses the HTTP API to pass
-#     commands to and receive updates from the Indigo server.
-#     """
-#     @classmethod
-#     def setUpClass(cls):
-#         ...
-#
-#     @staticmethod
-#     def communicate(message: dict) -> httpx.Response:
-#         """ Send the API command message """
-#         headers = {'Authorization': f'Bearer {API_SECRET}'}
-#         return httpx.post(API_URL, headers=headers, json=message, verify=False)
-#
-#     def test_api(self):
-#         """
-#         Tests the plugin API by creating, testing, and deleting a plugin device.
-#
-#         Note that this API method will fail in interesting ways if the temporary test device was previously created but
-#         wasn't subsequently deleted. Indigo creates the device by name, and if the name already exists, it will get mad.
-#         """
-#         # ===== Network Quality Device =====
-#         # Create the device
-#         message = {
-#             "id": f"{self._testMethodName} - Create device",
-#             "message": "plugin.executeAction",
-#             "pluginId": PLUGIN_ID,
-#             "actionId": "test_foo",
-#             "props": {
-#                 'address': 1235,
-#                 'description': "My test description.",
-#                 'deviceTypeId': 'networkQuality',
-#                 'instruction': 'create',
-#                 'folder': DEVICE_FOLDER,  # the multitool devices folder
-#                 'name': "Unit Test Device",
-#                 'props': {
-#                     'outputVerification': False,
-#                     'runDownloadTest': True,
-#                     'runTestsSequentially': False,
-#                     'runUploadTest': True,
-#                     'usePrivateRelay': False,
-#                     'verboseOutput': False
-#                 },
-#             },
-#             "waitUntilDone": True
-#         }
-#         resp = self.communicate(message)
-#         self.assertEqual(resp.status_code, 200, "Error creating device")
-#         self.assertIsInstance(resp.json(), dict, "Response is not a dict")
-#
-#         # Delete the device
-#         # Get the dev id from the response above, so we can delete the device when we're done with it.
-#         reply_dict = eval(resp.json()['reply_data'])
-#         message = {
-#             "id": f"{self._testMethodName} - Delete device",
-#             "message": "plugin.executeAction",
-#             "pluginId": PLUGIN_ID,
-#             "actionId": "test_foo",
-#             "props": {
-#                 'instruction': 'delete',
-#                 'dev_id': reply_dict['dev_id'],
-#                 'deviceTypeId': 'networkQuality',
-#             },
-#             "waitUntilDone": True
-#         }
-#         resp = self.communicate(message)
-#         self.assertEqual(resp.status_code, 200, "Error deleting device")
-#         self.assertIsInstance(resp.json(), dict, "Response is not a dict")
+FIELD_TYPES = ['button', 'checkbox', 'colorpicker', 'label', 'list', 'menu', 'separator', 'textfield']
+XML_FILES   = ['../PluginConfig.xml', '../Actions.xml', '../MenuItems.xml', '../Devices.xml', '../Events.xml']
 
 
 class TestXml(unittest.TestCase):
@@ -155,8 +23,6 @@ class TestXml(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         """ Set up the tests. """
-        cls.xml_files   = ['../PluginConfig.xml', '../Actions.xml', '../MenuItems.xml', '../Devices.xml', '../Events.xml']
-        cls.field_types = ['button', 'checkbox', 'colorpicker', 'label', 'list', 'menu', 'separator', 'textfield']
         # Load the plugin.py code into a var for testing later.
         with open('../plugin.py', 'r', encoding='utf-8') as infile:
             cls.plugin_lines = infile.read()
@@ -170,7 +36,7 @@ class TestXml(unittest.TestCase):
     def test_xml_files(self):
         """ Tests the various plugin XML files. """
         try:
-            for file_type in self.xml_files:
+            for file_type in XML_FILES:
                 try:
                     root = self.get_item_name(file_type, 0)
                 except FileNotFoundError:
@@ -204,14 +70,17 @@ class TestXml(unittest.TestCase):
                 for thing in root.findall(f"./{root.tag[:-1]}/Name"):
                     self.assertIsInstance(thing.text, str, "Action names must be strings.")
 
-                # Test items that have a 'CallBackMethod` element:
+                # Test items that have a 'CallBackMethod` element to ensure there's a corresponding method:
                 for thing in root.findall(f"./{root.tag[:-1]}/CallbackMethod"):
                     self.assertIsInstance(thing.text, str, "Action callback names must be strings.")
                     # We can't directly access the plugin.py file from here, so we read it into a variable instead.
                     # We then search for the string `def <CALLBACK METHOD>` within the file as a proxy to doing a
                     # `dir()` to see if it's in there.
-                    self.assertTrue(f"def {thing.text}" in self.plugin_lines,
-                                    f"{file_type} - The callback method \"{thing.text}\" does not exist in the plugin.py file.")
+                    self.assertTrue(
+                        f"def {thing.text}" in self.plugin_lines,
+                        f"{file_type} - The callback method \"{thing.text}\" does not exist in the "
+                        f"plugin.py file."
+                    )
 
                 # Test items that have a 'configUI' element and a support url. It's okay if no valid urls are present.
                 # The test will go out to each support url to ensure it's valid.
@@ -229,8 +98,8 @@ class TestXml(unittest.TestCase):
                     self.assertIsInstance(thing.attrib['id'], str, "Config UI field IDs must be strings.")
                     self.assertFalse(thing.attrib['id'] == "", "Config UI field IDs must not be an empty string.")
                     self.assertIsInstance(thing.attrib['type'], str, "Config UI field types must be strings.")
-                    self.assertIn(thing.attrib['type'].lower(), self.field_types,
-                                  f"Config UI field types must be one of {self.field_types}.")
+                    self.assertIn(thing.attrib['type'].lower(), FIELD_TYPES,
+                                  f"Config UI field types must be one of {FIELD_TYPES}.")
                     # Optional attributes
                     self.assertIsInstance(thing.attrib.get('defaultValue', ""), str,
                                           "Config UI defaultValue types must be strings.")

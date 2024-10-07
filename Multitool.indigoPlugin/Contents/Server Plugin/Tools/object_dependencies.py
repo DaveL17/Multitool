@@ -39,9 +39,9 @@ def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: b
     if not no_log:
         indigo.server.log(f"{' ' + thing.name + ' Dependencies ':{'='}^80}")
         for obj_cat in dep_dict:
+            num_dep = 1
             indigo.server.log(f"{obj_cat}:")
             for dep in dep_dict[obj_cat]:
-                indigo.server.log(f"   {len(dep)}")
-                indigo.server.log(f"   {dep['Name']} ({dep['ID']})")
-
-        indigo.server.log("=" * 80)
+                indigo.server.log(f"   {num_dep}     {dep['Name']}     ({dep['ID']})")
+                num_dep += 1
+        indigo.server.log("=" * 80 + "\n")

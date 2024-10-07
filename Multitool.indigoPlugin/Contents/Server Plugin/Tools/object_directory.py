@@ -30,4 +30,4 @@ def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: b
         # logging level.
         indigo.server.log(f"{' ' + thing.name + ' ':{'='}^80}")
         indigo.server.log(f"\n{dir(thing)}")
-        indigo.server.log("=" * 80)
+        indigo.server.log("=" * 80 + "\n")

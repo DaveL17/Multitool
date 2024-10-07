@@ -218,7 +218,7 @@
 		<ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
                 <Field id="ping_label" type="Label">
-                    <Label>Run a ping against the server you specify.</Label>
+                    <Label>Run a ping against the server you specify. This dialog will block until the timeout value is reached. </Label>
                 </Field>
                 <Field id="hostname" type="textfield" tooltip="Supports IP, hostname, or alias.">
                     <Label>Hostname:</Label>

@@ -25,7 +25,6 @@ def report(no_log: bool = False) -> None:
     lat_long = indigo.server.getLatitudeAndLongitude()
     latitude = lat_long[0]
     longitude = lat_long[1]
-
     if not no_log:
         indigo.server.log(f"{' Indigo Status Information ':{'='}^130}")
         indigo.server.log(f"Server Version: {indigo.server.version}")
@@ -40,3 +39,5 @@ def report(no_log: bool = False) -> None:
             indigo.server.log("Connection Good.")
         else:
             indigo.server.log("Connection Bad.")
+
+        indigo.server.log("=" * 130 + "\n")

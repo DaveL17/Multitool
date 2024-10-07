@@ -128,7 +128,7 @@ class Fogbert:
         for line in sub_error:
             self.plugin.logger.critical(f"!!! {line}")
 
-        self.plugin.logger.critical("!" * 80)
+        self.plugin.logger.critical("!" * 80 + "\n")
 
     # =============================================================================
     def convertDebugLevel(self, debug_val: str = ""):  # noqa

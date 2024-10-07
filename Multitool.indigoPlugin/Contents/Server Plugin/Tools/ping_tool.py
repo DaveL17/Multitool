@@ -61,12 +61,12 @@ def do_the_ping(action, menu_call: bool = False):
         states_list = [{'key': 'status', 'value': True, 'uiValue': "Up"},
                        {'key': 'last_checked', 'value': check_time}
                        ]
-        indigo.server.log(f"Ping host: {hostname} is up.")
+        indigo.server.log(f"Network Ping host: {hostname} is up.")
     else:
         states_list = [{'key': 'status', 'value': False, 'uiValue': "Down"},
                        {'key': 'last_checked', 'value': check_time}
                        ]
-        indigo.server.log(f"Ping host: {hostname} is down.")
+        indigo.server.log(f"Network Ping host: {hostname} is down.")
 
     # If requested from menu, we don't have a device to update
     if menu_call:

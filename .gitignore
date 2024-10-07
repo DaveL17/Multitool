@@ -1,7 +1,4 @@
 /Multitool.indigoPlugin/Contents/Server Plugin/.env
-/Multitool.indigoPlugin/Contents/Server Plugin/Tests/.env
-/Multitool.wiki/.idea/.gitignore
-/Multitool.wiki/.idea/misc.xml
-/Multitool.wiki/.idea/modules.xml
-/Multitool.wiki/.idea/Multitool.wiki.iml
-/Multitool.wiki/.idea/vcs.xml
+/Multitool.indigoPlugin/Contents/Server Plugin/requirements.txt
+/Multitool.indigoPlugin/Contents/Server Plugin/Tests/
+/Multitool.wiki/.idea/

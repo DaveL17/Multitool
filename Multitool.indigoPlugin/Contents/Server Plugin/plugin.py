@@ -14,11 +14,10 @@ import datetime as dt
 import json
 import logging
 import platform
+import unittest
 from queue import Queue
 import subprocess
 from threading import Thread
-from unittest import TestCase
-from unittest.mock import MagicMock
 
 import indigo  # noqa
 # import pydevd
@@ -228,12 +227,6 @@ class Plugin(indigo.PluginBase):
 
         :return:
         """
-        if self.debug_level == 10:
-            self.my_tests()
-
-        # =========================== Audit Indigo Version ============================
-        self.Fogbert.audit_server_version(min_ver=2022)
-
         # ================ Subscribe to Indigo Object Changes =================
         if self.pluginPrefs.get('enableSubscribeToChanges', False):
             self.logger.warning(
@@ -1078,12 +1071,11 @@ class Plugin(indigo.PluginBase):
         first error (subsequent tests will not be run).
         """
         try:
-            from Tests import test_create_device
+            from Tests import TestPluginCode
 
-            test_create_device.TestPlugin.test_device_creation(self)
-            test_create_device.TestPlugin.test_action_group_creation(self)
-            test_create_device.TestPlugin.test_action_group_execution(self)
-            test_create_device.TestPlugin.test_plugin_functions(self)
+            TestPluginCode.TestPlugin.test_device_creation(self)
+            TestPluginCode.TestPlugin.test_action_group_execution(self)
+            TestPluginCode.TestPlugin.test_plugin_functions(self)
 
         except Exception as err:
             indigo.server.log(str(err))

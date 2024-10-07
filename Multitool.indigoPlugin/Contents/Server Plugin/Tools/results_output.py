@@ -29,5 +29,9 @@ def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: b
         # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
         # logging level.
         indigo.server.log(f"{' ' + thing.name + ' ':{'='}^80}")
-        indigo.server.log(f"\n{thing}")
-        indigo.server.log("=" * 80)
+        try:
+            indigo.server.log(f"\n{dict(thing)}")
+        except:
+            indigo.server.log(f"\n{thing}")
+
+        indigo.server.log("=" * 80 + "\n")
