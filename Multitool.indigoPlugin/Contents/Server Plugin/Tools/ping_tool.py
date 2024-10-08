@@ -17,12 +17,13 @@ def __init__():
     pass
 
 
-def do_the_ping(action, menu_call: bool = False):
+def do_the_ping(action, menu_call: bool = False, no_log: bool = False):
     """
     Conduct a simple ping to determine if a resource is up.
 
     :param indigo.actionGroup action:
     :param bool menu_call:
+    :param bool no_log:
     :return:
     """
     dev: indigo.device = None
@@ -39,7 +40,8 @@ def do_the_ping(action, menu_call: bool = False):
             LOGGER.warning("Pings from the plugin menu are limited to 5 seconds.")
             LOGGER.warning("Limiting ping to 5 seconds.")
             timeout = 5
-        indigo.server.log(f"Network Ping requested from menu")
+        if not no_log:
+            indigo.server.log(f"Network Ping requested from menu")
     # Ping requested from plugin action
     else:
         dev_id = int(action.props['selected_device'])
@@ -61,12 +63,14 @@ def do_the_ping(action, menu_call: bool = False):
         states_list = [{'key': 'status', 'value': True, 'uiValue': "Up"},
                        {'key': 'last_checked', 'value': check_time}
                        ]
-        indigo.server.log(f"Network Ping host: {hostname} is up.")
+        if not no_log:
+            indigo.server.log(f"Network Ping host: {hostname} is up.")
     else:
         states_list = [{'key': 'status', 'value': False, 'uiValue': "Down"},
                        {'key': 'last_checked', 'value': check_time}
                        ]
-        indigo.server.log(f"Network Ping host: {hostname} is down.")
+        if not no_log:
+            indigo.server.log(f"Network Ping host: {hostname} is down.")
 
     # If requested from menu, we don't have a device to update
     if menu_call:

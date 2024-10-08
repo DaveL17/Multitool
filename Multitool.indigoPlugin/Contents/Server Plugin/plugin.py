@@ -14,7 +14,7 @@ import datetime as dt
 import json
 import logging
 import platform
-import unittest
+# import unittest
 from queue import Queue
 import subprocess
 from threading import Thread
@@ -1072,7 +1072,6 @@ class Plugin(indigo.PluginBase):
         """
         try:
             from Tests import TestPluginCode
-
             TestPluginCode.TestPlugin.test_device_creation(self)
             TestPluginCode.TestPlugin.test_action_group_execution(self)
             TestPluginCode.TestPlugin.test_plugin_functions(self)
@@ -1089,8 +1088,6 @@ class MyThread(Thread):
     The MyThread class is used to subclass the Thread module so that blocking commands can run in the background and
     not block the Indigo UI. This allows select callbacks to fire in while allowing any Indigo dialogs to complete as
     normal (rather than staying open until the command execution is completed).
-
-    TODO: consider sending the network ping menu command to a thread.
     """
     def __init__(self, target, args=()):
         """
