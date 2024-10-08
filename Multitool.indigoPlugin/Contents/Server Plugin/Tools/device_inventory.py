@@ -44,13 +44,6 @@ def get_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bo
 
     if len(inventory) > 0:
         # ====================== Generate Custom Table Settings =======================
-        # x_0 = max([len(f"{thing[0]}") for thing in inventory]) + 2
-        # x_1 = max([len(f"{thing[1]}") for thing in inventory]) + 2
-        # x_2 = max([len(f"{thing[2]}") for thing in inventory]) + 2
-        # x_3 = max([len(f"{thing[3]}") for thing in inventory])
-        # x_4 = max([len(f"{thing[4]}") for thing in inventory])
-        # table_width = sum((x_0, x_1, x_2, x_3, x_4)) + 6
-
         x_0 = max(len(f"{thing[0]}") for thing in inventory) + 2
         x_1 = max(len(f"{thing[1]}") for thing in inventory) + 2
         x_2 = max(len(f"{thing[2]}") for thing in inventory) + 2
@@ -72,13 +65,14 @@ def get_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bo
             indigo.server.log("=" * table_width)
 
             # ============================= Output the Table ==============================
+            checkmark = "\u2714"
             for thing in inventory:
                 indigo.server.log(
                     f"{thing[0]:<{x_0}} "
                     f"{f'[{thing[1]}]':<{x_1}} "
                     f"{thing[2]:<{x_2}} "
                     f"{dt.datetime.strftime(thing[3], '%Y-%m-%d %H:%M:%S'):<{x_3}} "
-                    f"[ {thing[4]:^3} ]"
+                    f"[ {checkmark if thing[4] == 1 else '':^3} ]"
                 )
     else:
         if not no_log:

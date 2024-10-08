@@ -47,7 +47,7 @@
         <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
-                <Label>Some filters are not available in all Indigo versions.</Label>
+                <Label>Select from the dropdown list to print a report to the log. Some filters are not available in all Indigo versions.</Label>
             </Field>
             <Field id="typeOfThing" type="menu" defaultValue="pickone">
                 <Label>Device Class:</Label>

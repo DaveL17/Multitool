@@ -946,7 +946,7 @@ class Plugin(indigo.PluginBase):
         :param bool no_log: If True, no output is logged.
         """
         results_output.display_results(values_dict, caller, no_log)
-        return True, values_dict
+        return values_dict
 
     # =============================================================================
     @staticmethod
@@ -959,7 +959,7 @@ class Plugin(indigo.PluginBase):
         :param bool no_log: If True, no output is logged.
         """
         object_directory.display_results(values_dict, caller, no_log)
-        return True, values_dict
+        return values_dict
 
     # =============================================================================
     @staticmethod
@@ -972,7 +972,7 @@ class Plugin(indigo.PluginBase):
         :param bool no_log: If True, no output is logged.
         """
         object_dependencies.display_results(values_dict, caller, no_log)
-        return True, values_dict
+        return values_dict
 
     # =============================================================================
     def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
