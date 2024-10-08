@@ -36,20 +36,22 @@ def show_inventory(values_dict: indigo.Dict = None, no_log: bool = False) -> boo
     full_path = f"{log_folder}Multitool Plugin Error Inventory {i}.txt"
 
     # ============================= Iterate Log Files =============================
-    with open(full_path, 'w', encoding='utf-8') as outfile:
-        for root, sub, files in os.walk(log_folder):
-            for filename in files:
-                if filename.endswith((".log", ".txt")) \
-                        and not filename.startswith('Multitool Plugin Error Inventory'):
-                    with open(os.path.join(root, filename), "r", encoding="utf-8") as infile:
-                        log_file = infile.read()
+    log_lines = []
 
-                        for line in log_file.split('\n'):
-                            if any(item in line for item in check_list):
-                                # If unit test, don't write out the file. Tough to unit test quality of output, so we
-                                # will rely on reports of problems.
-                                if not no_log:
-                                    outfile.write(f"{filename:<26}{line}\n")
+    for root, sub, files in os.walk(log_folder):
+        for filename in files:
+            if filename.endswith((".log", ".txt")) and not filename.startswith('Multitool Plugin Error Inventory'):
+                with open(os.path.join(root, filename), "r", encoding="utf-8") as infile:
+                    log_file = infile.read()
+
+                    for line in log_file.split('\n'):
+                        if any(item in line for item in check_list):
+                            log_lines.append(f"{filename:<26}{line}")
+
+    # Write to outfile only if no_log is False
+    if not no_log:
+        with open(full_path, 'w', encoding='utf-8') as outfile:
+            outfile.writelines(log_lines)
 
     if not no_log:
         # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
