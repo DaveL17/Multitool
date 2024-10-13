@@ -52,10 +52,8 @@ def show_inventory(values_dict: indigo.Dict = None, no_log: bool = False) -> boo
     if not no_log:
         with open(full_path, 'w', encoding='utf-8') as outfile:
             outfile.writelines(log_lines)
-
-    if not no_log:
-        # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
-        # logging level.
-        indigo.server.log(f"Error message inventory saved to: {full_path}")
+            # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
+            # logging level.
+            indigo.server.log(f"Error message inventory saved to: {full_path}")
 
     return True

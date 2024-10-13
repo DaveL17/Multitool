@@ -1071,10 +1071,10 @@ class Plugin(indigo.PluginBase):
         first error (subsequent tests will not be run).
         """
         try:
-            from Tests import TestPluginCode
-            TestPluginCode.TestPlugin.test_device_creation(self)
-            TestPluginCode.TestPlugin.test_action_group_execution(self)
-            TestPluginCode.TestPlugin.test_plugin_functions(self)
+            from Tests import testPluginCode
+            testPluginCode.TestPlugin.test_device_creation(self)
+            testPluginCode.TestPlugin.test_action_group_execution(self)
+            testPluginCode.TestPlugin.test_plugin_functions(self)
 
         except Exception as err:
             indigo.server.log(str(err))

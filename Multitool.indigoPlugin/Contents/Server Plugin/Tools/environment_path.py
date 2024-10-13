@@ -30,6 +30,6 @@ def show_path(no_log: bool = False) -> None:
         indigo.server.log(f"{' Current System Path ':{'='}^130}")
         for item in sys.path:
             indigo.server.log(item)
-        indigo.server.log(f"{' (Sorted) ':{'='}^130}")
+        indigo.server.log(f"\n{' Current System Path (Sorted) ':{'='}^130}")
         for item in sorted(sys.path):
             indigo.server.log(item)
