@@ -20,7 +20,6 @@ import subprocess
 from threading import Thread
 
 import indigo  # noqa
-# import pydevd
 
 # My modules
 import DLFramework.DLFramework as Dave  # noqa
@@ -33,7 +32,7 @@ __author__    = Dave.__author__
 __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
-__title__     = 'Multitool Plugin for Indigo Home Control'
+__title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
 __version__   = '2024.1.0'
 
 
@@ -76,12 +75,6 @@ class Plugin(indigo.PluginBase):
         self.command_thread = MyThread(target=self.execute_command, args=(self.cmd_queue, self.nq_queue))
         # self.command_thread = Thread(target=self.execute_command, args=(self.cmd_queue, self.nq_queue))
         self.command_thread.start()
-
-        # ============================= Remote Debugging ==============================
-        # try:
-        #     pydevd.settrace(port=5678, 'localhost', stdoutToServer=True, stderrToServer=True, suspend=False)
-        # except:
-        #     pass
 
     def log_plugin_environment(self) -> bool:
         """
