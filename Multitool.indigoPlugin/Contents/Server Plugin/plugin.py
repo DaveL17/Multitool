@@ -13,6 +13,7 @@ plugins for Indigo.
 import datetime as dt
 import json
 import logging
+import lorem  # https://github.com/sfischer13/python-lorem
 import platform
 # import unittest
 from queue import Queue
@@ -721,6 +722,19 @@ class Plugin(indigo.PluginBase):
     #     return man_page.display_page(values_dict)
 
     # =============================================================================
+
+    @staticmethod
+    def lorem_ipsum(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
+        """
+        Shim to call the lorem ipsum tool.
+
+        :param indigo.Dict values_dict:
+        :param str type_id:
+        :param bool no_log: If True, no output is logged.
+        """
+        lorem_ipsum.report(values_dict)
+        return True, values_dict
+
     @staticmethod
     def modify_numeric_variable(action_group: indigo.actionGroup):
         """

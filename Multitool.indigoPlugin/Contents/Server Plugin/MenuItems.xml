@@ -191,6 +191,26 @@
         </ConfigUI>
     </MenuItem>
 
+    <MenuItem id="lorem_ipsum">
+        <Name>Lorem Ipsum</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <Field id="instructions" type="label">
+                <Label>Prints generated text to the Indigo Events Log.</Label>
+            </Field>
+            <Field id="text_level" type="menu" defaultValue="p">
+                <Label>Level:</Label>
+                <List>
+                    <Option value="sentence">Sentence</Option>
+                    <Option value="paragraph">Paragraph</Option>
+                    <Option value="text">Text</Option>
+                </List>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>lorem_ipsum</CallbackMethod>
+    </MenuItem>
+
+
     <MenuItem id="methodSignature">
         <Name>Methods - Plugin Base...</Name>
         <ConfigUI>

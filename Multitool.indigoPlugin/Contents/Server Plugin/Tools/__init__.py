@@ -21,6 +21,7 @@ __all__ = [
     "inspect_method",
     "installed_plugins",
     "log_of_method",
+    "lorem_ipsum",
     # "man_page",
     "modify_numeric_variable",
     "modify_time_variable",
