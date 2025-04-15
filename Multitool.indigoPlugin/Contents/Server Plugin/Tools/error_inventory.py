@@ -46,7 +46,7 @@ def show_inventory(values_dict: indigo.Dict = None, no_log: bool = False) -> boo
 
                     for line in log_file.split('\n'):
                         if any(item in line for item in check_list):
-                            log_lines.append(f"{filename:<26}{line}")
+                            log_lines.append(f"{filename:<26}{line}\n")
 
     # Write to outfile only if no_log is False
     if not no_log:
