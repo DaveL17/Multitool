@@ -29,7 +29,7 @@ def modify(action_group: indigo.actionGroup = None) -> bool:
 
     except SyntaxError:
         LOGGER.debug("Error: ", exc_info=True)
-        LOGGER.critical("Error modifying variable %s." % var.name)
+        LOGGER.critical("Error modifying variable %s.", var.name)
         return_value = False
 
     return return_value

@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress PyStatementEffect -->
 <Actions>
 
     <!-- The only thing this action does is return a value to a caller using plugin.executeAction(). -->

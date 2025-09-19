@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<!--suppress PyStatementEffect -->
 <MenuItems>
 
     <MenuItem id="separator1" type="separator"/>
@@ -146,7 +147,7 @@
         <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
             <Field id="instructions" type="label">
-                <Label>Create an inventory of messages from Indigo log files and save a file called 'Multitool Plugin Error Inventory _#_.txt to the active Indigo Logs folder.)</Label>
+                <Label>Create an inventory of messages from Indigo log files and save a file called 'Multitool Plugin Error Inventory _#_.txt' to the active Indigo Logs folder.)</Label>
             </Field>
             <Field id="error_level" type="menu" defaultValue="err">
                 <Label>Level:</Label>
@@ -162,6 +163,25 @@
     <MenuItem id="indigo_inventory">
         <Name>Indigo Inventory</Name>
         <CallbackMethod>indigo_inventory</CallbackMethod>
+    </MenuItem>
+
+    <MenuItem id="lorem_ipsum">
+        <Name>Lorem Ipsum</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <Field id="instructions" type="label">
+                <Label>Prints generated text to the Indigo Events Log.</Label>
+            </Field>
+            <Field id="text_level" type="menu" defaultValue="p">
+                <Label>Level:</Label>
+                <List>
+                    <Option value="sentence">Sentence</Option>
+                    <Option value="paragraph">Paragraph</Option>
+                    <Option value="text">Text</Option>
+                </List>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>lorem_ipsum</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="indigoSignature">
@@ -190,26 +210,6 @@
             </Field>
         </ConfigUI>
     </MenuItem>
-
-    <MenuItem id="lorem_ipsum">
-        <Name>Lorem Ipsum</Name>
-        <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
-            <Field id="instructions" type="label">
-                <Label>Prints generated text to the Indigo Events Log.</Label>
-            </Field>
-            <Field id="text_level" type="menu" defaultValue="p">
-                <Label>Level:</Label>
-                <List>
-                    <Option value="sentence">Sentence</Option>
-                    <Option value="paragraph">Paragraph</Option>
-                    <Option value="text">Text</Option>
-                </List>
-            </Field>
-        </ConfigUI>
-        <CallbackMethod>lorem_ipsum</CallbackMethod>
-    </MenuItem>
-
 
     <MenuItem id="methodSignature">
         <Name>Methods - Plugin Base...</Name>
@@ -475,47 +475,6 @@
 
             </ConfigUI>
     </MenuItem>
-
-<!--    <MenuItem id="substitution_generator">-->
-<!--        <Name>Substitution Generator...</Name>-->
-<!--        <CallbackMethod>substitution_generator</CallbackMethod>-->
-<!--        <ConfigUI>-->
-<!--            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>-->
-
-<!--            <Field id="subGeneratorLabel" type="label" alignText="right">-->
-<!--                <Label>Substitution Generator</Label>-->
-<!--            </Field>-->
-
-<!--            <Field id="substitutionTextLabel" type="Label">-->
-<!--                <Label>Select a device or variable from the first dropdown list and then select the device state or variable value from the second dropdown list.</Label>-->
-<!--            </Field>-->
-
-<!--            <Field id="substitutionTextLabelNote" type="Label" fontSize="small">-->
-<!--                <Label>Note: beginning with Indigo 2021.2, you can simply right-click on a variable or device state and select "Copy Substitution String".</Label>-->
-<!--            </Field>-->
-
-<!--            <Field id="subGeneratorSeparator" type="separator"/>-->
-
-<!--            <Field id="devVarMenu" type="menu" tooltip="Please select a device or variable.">-->
-<!--                <Label>Device / Variable</Label>-->
-<!--                <List class="self" filter="" method="generator_dev_var_clean" dynamicReload="true"/>-->
-<!--                <CallbackMethod>__dummyCallback__</CallbackMethod>-->
-<!--            </Field>-->
-
-<!--            <Field id="generator_state_or_value" type="menu" tooltip="Please select a device state or variable value.">-->
-<!--                <Label>State / Value</Label>-->
-<!--                <List class="self" filter="" method="generator_state_or_value" dynamicReload="true"/>-->
-<!--            </Field>-->
-
-<!--            <Field id="subGeneratorButton" type="button" tooltip="Generate the substitution.">-->
-<!--                <Label/>-->
-<!--                <Title>Generate Substitution</Title>-->
-<!--                <CallbackMethod>generator_substitutions</CallbackMethod>-->
-<!--            </Field>-->
-
-<!--        </ConfigUI>-->
-<!--        <ButtonTitle>Close</ButtonTitle>-->
-<!--    </MenuItem>-->
 
     <MenuItem id="titleSeparator" type="separator"/>
 

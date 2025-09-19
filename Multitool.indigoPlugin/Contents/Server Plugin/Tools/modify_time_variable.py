@@ -43,5 +43,5 @@ def modify(action_group: indigo.actionGroup = None) -> bool:
 
     except ValueError:
         LOGGER.critical("Error: ", exc_info=True)
-        LOGGER.critical(f"Error modifying variable %s." % var.name)
+        LOGGER.critical(f"Error modifying variable %s.", var.name)
         return False

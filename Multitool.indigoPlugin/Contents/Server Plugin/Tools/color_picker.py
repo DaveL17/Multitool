@@ -28,7 +28,7 @@ def picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = Fa
     :return:
     """
     try:
-        logger.debug(f"values_dict: {values_dict}")
+        logger.debug("values_dict: %s", values_dict)
         if not values_dict['chosenColor']:
             values_dict['chosenColor'] = "FF FF FF"
 
@@ -39,4 +39,4 @@ def picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = Fa
             indigo.server.log(f"Hex: #{values_dict['chosenColor'].replace(' ', '')}")
             indigo.server.log(f"RGB: {tuple([int(thing, 16) for thing in values_dict['chosenColor'].split(' ')])}")
     except (AttributeError, ValueError) as err:
-        logger.warning("Can not convert: input value %s is wrong type." % values_dict['chosenColor'])
+        logger.warning("Can not convert: input value %s is wrong type.", values_dict['chosenColor'])

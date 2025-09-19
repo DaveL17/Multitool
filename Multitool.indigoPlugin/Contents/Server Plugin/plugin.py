@@ -13,12 +13,12 @@ plugins for Indigo.
 import datetime as dt
 import json
 import logging
-import lorem  # https://github.com/sfischer13/python-lorem
-import platform
-# import unittest
 from queue import Queue
+import platform
 import subprocess
 from threading import Thread
+import lorem  # noqa https://github.com/sfischer13/python-lorem
+# import unittest
 
 import indigo  # noqa
 
@@ -179,6 +179,7 @@ class Plugin(indigo.PluginBase):
 
     @staticmethod
     def get_device_list(filter: str="", type_id: int=0, values_dict: indigo.Dict=None, target_id: int=0) -> list:  # noqa
+        """PLACEHOLDER"""
         return [(dev.id, dev.name) for dev in indigo.devices.iter(filter="self")]
 
     # =============================================================================
@@ -192,7 +193,7 @@ class Plugin(indigo.PluginBase):
         # Grab the setting values for the "Subscribe to Changes" tool
         if menu_id == 'subscribeToChanges':
             changes_dict = indigo.Dict()
-            changes_dict['enableSubscribeToChanges'] = (self.pluginPrefs.get('enableSubscribeToChanges', False))
+            changes_dict['enableSubscribeToChanges'] = self.pluginPrefs.get('enableSubscribeToChanges', False)
             changes_dict['subscribedDevices'] = self.pluginPrefs.get('subscribedDevices', '')
             return_value = changes_dict
 
@@ -498,7 +499,7 @@ class Plugin(indigo.PluginBase):
                 break
             try:
                 # Run command and log result.
-                self.logger.debug(f"Command line argument: [ {my_command} ]")
+                self.logger.debug("Command line argument: [ %s ]", my_command)
                 indigo.server.log(
                     "Running network quality test. Results will be displayed when the test is complete (may take some "
                     "time)."
@@ -756,7 +757,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def network_ping_device_menu(values_dict: indigo.Dict, item_id: str) -> tuple[bool, dict]:
+    def network_ping_device_menu(values_dict: indigo.Dict, item_id: str) -> tuple[bool, dict]:  # noqa
         """
         Shim to call the ping_tool.do_the_ping method.
 
@@ -816,16 +817,16 @@ class Plugin(indigo.PluginBase):
         command: list = self.network_quality_flags(dev.pluginProps)  # ['networkQuality', '-u', '-v']
         command.append('-c')  # computer readable format (json) ['networkQuality', '-u', '-v', '-c']
         command = [' '.join(command)]  # ['networkQuality -u -v -c']
-        self.logger.debug(f"Command line args: {command}")
+        self.logger.debug("Command line args: %s", command)
 
         # Run the test and get the result.
         result = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT, universal_newlines=True)
         results = json.loads(result)
-        self.logger.debug(f"Results payload: {results}")
+        self.logger.debug("Results payload: %s", results)
 
         # The key 'error_code' only exists if there's a problem. For example, NSURLErrorDomain -1009.
         if 'error_code' in results:
-            self.logger.warning(f"Warning: error code {results['error_code']} returned.")
+            self.logger.warning("Warning: error code %s returned.", results['error_code'])
             return False
 
         # Calculate the test duration in seconds.
@@ -833,7 +834,7 @@ class Plugin(indigo.PluginBase):
         start = dt.datetime.strptime(results['end_date'], fmt)
         stop = dt.datetime.strptime(results['start_date'], fmt)
         elapsed_time = (start - stop).total_seconds()
-        self.logger.info(f"Network quality test took approximately {round(elapsed_time, 3)} seconds to complete.")
+        self.logger.info("Network quality test took approximately %s seconds to complete.", round(elapsed_time, 3))
 
         # Build the device states list
         states_list = [
@@ -891,7 +892,7 @@ class Plugin(indigo.PluginBase):
         return command
 
     # =============================================================================
-    def network_quality(self, action_group: indigo.actionGroup, action_id: str = "") -> bool:
+    def network_quality(self, action_group: indigo.actionGroup, action_id: str = "") -> bool:  # noqa
         """
         Run the macOS command line Network Quality tool and log the result
 
@@ -919,6 +920,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def run_concurrent_thread(self):
+        """PLACEHOLDER"""
         try:
             while True:
                 self.sleep(1)
@@ -1044,7 +1046,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def test_action_return(action, return_value=None):
+    def test_action_return(action):
         """
         Dummy action to test return values
 
@@ -1053,24 +1055,24 @@ class Plugin(indigo.PluginBase):
         'return_value' type passed to the method.
 
         :param action:
-        :param return_value:
         """
         if action.props['return_value'] in [None, ""]:
             return None
-        elif action.props['return_value'] == "int":
+        if action.props['return_value'] == "int":
             return 1
-        elif action.props['return_value'] == "float":
+        if action.props['return_value'] == "float":
             return 1.0
-        elif action.props['return_value'] == "str":
+        if action.props['return_value'] == "str":
             return "string"
-        elif action.props['return_value'] == "tuple":
+        if action.props['return_value'] == "tuple":
             return tuple((None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()))
-        elif action.props['return_value'] == "dict":
+        if action.props['return_value'] == "dict":
             return {'a': None, 'b': 1, 'c': 2.0, 'd': "string", 'e': (), 'f': indigo.Dict(), 'g': indigo.List()}
-        elif action.props['return_value'] == "list":
+        if action.props['return_value'] == "list":
             return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
+        return None
 
-    def my_tests(self, action=None):
+    def my_tests(self, action=None):  # noqa
         """
         The my_tests method runs functional tests that are invoked by calling the my_test action.
 

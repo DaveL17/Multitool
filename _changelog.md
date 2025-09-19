@@ -1,3 +1,8 @@
+### v2025.1.2
+- Minor change to menu item order.
+- Performance and stability improvements.
+- Code refinements.
+
 ### v2024.1.0
 - Adds tool to find Indigo objects with embedded scripts.
 - Adds tool to find Indigo objects with linked scripts.
