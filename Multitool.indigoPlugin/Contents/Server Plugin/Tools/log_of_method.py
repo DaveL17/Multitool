@@ -32,7 +32,7 @@ def display_inspection(values_dict: indigo.Dict = None) -> None:
 # TODO: Update this to improve the instances where the underlying item isn't callable.
 # import inspect
 #
-# foo = inspect.getdoc(indigo.host.debugMode)  <== this is an example of something that's not callable.
-# # indigo.server.log(f"{foo}")
+# get_attrib_dict = inspect.getdoc(indigo.host.debugMode)  <== this is an example of something that's not callable.
+# # indigo.server.log(f"{get_attrib_dict}")
 # bar = callable(indigo.host.debugMode)
 # indigo.server.log(f"{bar}")

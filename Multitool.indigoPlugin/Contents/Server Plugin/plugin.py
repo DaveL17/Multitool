@@ -111,6 +111,23 @@ class Plugin(indigo.PluginBase):
 
         return values_dict
 
+    @staticmethod
+    def get_attrib_dict(orig_obj, new_obj, exclude: tuple) -> dict:
+        attrib_list = [
+            attr
+            for attr in dir(orig_obj)
+            if not callable(getattr(orig_obj, attr))
+            and "__" not in attr
+            and attr not in exclude
+        ]
+        attrib_dict = {
+            attrib: (getattr(orig_obj, attrib), getattr(new_obj, attrib))
+            for attrib in attrib_list
+            if getattr(orig_obj, attrib) != getattr(new_obj, attrib)
+        }
+
+        return attrib_dict
+
     # =============================================================================
     def deviceUpdated(self, orig_dev: indigo.Device = None, new_dev: indigo.Device = None):  # noqa
         """
@@ -144,15 +161,7 @@ class Plugin(indigo.PluginBase):
                     'ownerProps',
                     'states'
                 )
-                attrib_list = [
-                    attr for attr in dir(orig_dev) if not callable(getattr(orig_dev, attr))
-                    and '__' not in attr and attr not in exclude_list
-                ]
-                attrib_dict = {
-                    attrib: (getattr(orig_dev, attrib), getattr(new_dev, attrib))
-                    for attrib in attrib_list
-                    if getattr(orig_dev, attrib) != getattr(new_dev, attrib)
-                }
+                attrib_dict = self.get_attrib_dict(orig_obj=orig_dev, new_obj=new_dev, exclude=exclude_list)
 
                 # Property changes
                 orig_props = dict(orig_dev.ownerProps)
@@ -272,17 +281,9 @@ class Plugin(indigo.PluginBase):
             # If var id in list of tracked items
             if orig_var.id in subscribed_items:
 
-                # Attribute changes
+                # # Attribute changes
                 exclude_list = ('globalProps', 'lastChanged', 'lastSuccessfulComm')
-                attrib_list = [
-                    attr for attr in dir(orig_var) if not callable(getattr(orig_var, attr))
-                    and '__' not in attr and attr not in exclude_list
-                ]
-                attrib_dict = {
-                    attrib: (getattr(orig_var, attrib), getattr(new_var, attrib))
-                    for attrib in attrib_list
-                    if getattr(orig_var, attrib) != getattr(new_var, attrib)
-                }
+                attrib_dict = self.get_attrib_dict(orig_obj=orig_var, new_obj=new_var, exclude=exclude_list)
 
                 # Variable value
                 val_dict = {}

@@ -1,3 +1,6 @@
+### v2025.1.3
+- Reduces duplicate code
+
 ### v2025.1.2
 - Minor change to menu item order.
 - Performance and stability improvements.
