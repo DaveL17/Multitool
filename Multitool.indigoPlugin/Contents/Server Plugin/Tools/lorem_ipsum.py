@@ -35,14 +35,3 @@ def report(values_dict: indigo.Dict(), no_log: bool = False) -> None:
     #  Prints multiple paragraphs of text.
     elif values_dict['text_level'] == 'text':
         LOGGER.info(f"{lorem.text()}")
-
-    # TODO: any need to do a more complex example?
-    # from lorem.text import TextLorem
-    #
-    # # separate words by '-'
-    # # sentence length should be between 2 and 3
-    # # choose words from A, B, C and D
-    # lorem = TextLorem(wsep='-', srange=(2, 3), words="A B C D".split())
-    #
-    # s1 = lorem.sentence()  # 'C-B.'
-    # s2 = lorem.sentence()  # 'C-A-C.'
