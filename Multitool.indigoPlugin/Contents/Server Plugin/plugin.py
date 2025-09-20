@@ -113,6 +113,7 @@ class Plugin(indigo.PluginBase):
 
     @staticmethod
     def get_attrib_dict(orig_obj, new_obj, exclude: tuple) -> dict:
+        """ Return a dictionary of attributes where the new object has the attributes removed."""
         attrib_list = [
             attr
             for attr in dir(orig_obj)
@@ -245,6 +246,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def shutdown(self):
+        """ Standed Indigo shutdown method."""
         self.command_thread.stop()
 
     def trigger_start_processing(self, trigger: indigo.Trigger):
@@ -716,15 +718,7 @@ class Plugin(indigo.PluginBase):
         """
         log_of_method.display_inspection(values_dict)
 
-    # Apparently Apple removed this functionality in Ventura
     # =============================================================================
-    # @staticmethod
-    # def man_page(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
-    #     """ Placeholder """
-    #     return man_page.display_page(values_dict)
-
-    # =============================================================================
-
     @staticmethod
     def lorem_ipsum(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
         """

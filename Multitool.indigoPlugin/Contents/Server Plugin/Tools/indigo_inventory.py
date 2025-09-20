@@ -98,7 +98,7 @@ def show_inventory(no_log: bool = False) -> None:
     col_2 = []  # object folder ID
     col_3 = []  # object folder Name
 
-    for key in inventory:
+    for key in inventory.items():
         col_0 += [item[0] for item in inventory[key]]
         col_1 += [item[1] for item in inventory[key]]
         col_2 += [item[2] for item in inventory[key]]

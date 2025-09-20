@@ -49,4 +49,3 @@ def pinger(values_dict: indigo.Dict = None) -> None:
     except (ValueError, TypeError):
         LOGGER.critical("Error: ", exc_info=True)
         LOGGER.critical("Error sending ping.")
-
