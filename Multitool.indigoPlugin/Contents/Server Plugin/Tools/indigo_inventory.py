@@ -45,10 +45,11 @@ def show_inventory(no_log: bool = False) -> None:
 
     for page in indigo.controlPages.iter():
         inventory['Control Pages'].append(
-            (page.id,
-             page.name,
-             page.folderId,
-             indigo.controlPages.folders.getName(page.folderId)
+            (
+                page.id,
+                page.name,
+                page.folderId,
+                indigo.controlPages.folders.getName(page.folderId)
              )
         )
 
@@ -98,7 +99,7 @@ def show_inventory(no_log: bool = False) -> None:
     col_2 = []  # object folder ID
     col_3 = []  # object folder Name
 
-    for key in inventory.items():
+    for key in inventory.keys():
         col_0 += [item[0] for item in inventory[key]]
         col_1 += [item[1] for item in inventory[key]]
         col_2 += [item[2] for item in inventory[key]]
