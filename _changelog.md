@@ -1,3 +1,6 @@
+### v2025.1.4
+- Fixes bug in battery level report tool.
+
 ### v2025.1.3
 - Reduces duplicate code
 - Fixes bug in Indigo Inventory tool.

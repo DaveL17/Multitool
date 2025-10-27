@@ -34,7 +34,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.1.3'
+__version__   = '2025.1.4'
 
 
 # =============================================================================
