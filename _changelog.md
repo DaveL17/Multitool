@@ -1,3 +1,9 @@
+### v2025.2.1
+- Adds new Email Battery Level Report Action.
+- Truncates very long device names in Battery Level Report.
+- Consolidates report tools under a single menu item "Reports".
+- Reorders items in plugin Actions menus.
+
 ### v2025.1.4
 - Fixes bug in battery level report tool.
 

@@ -1,2 +1,1 @@
-- Last comm has a button [Print List]; Device Inventory prints when you select from dropdown. All should be like last comm.
-- Consider reorganizing menu items to group like items together. For example, group all the report tools together.
+- Nothing

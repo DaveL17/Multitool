@@ -15,6 +15,7 @@ import json
 import logging
 from queue import Queue
 import platform
+import re
 import subprocess
 from threading import Thread
 import lorem  # noqa https://github.com/sfischer13/python-lorem
@@ -34,7 +35,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.1.4'
+__version__   = '2025.2.1'
 
 
 # =============================================================================
@@ -246,7 +247,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def shutdown(self):
-        """ Standed Indigo shutdown method."""
+        """ Standard Indigo shutdown method."""
         self.command_thread.stop()
 
     def trigger_start_processing(self, trigger: indigo.Trigger):
@@ -310,6 +311,15 @@ class Plugin(indigo.PluginBase):
         :return:
         """
         error_msg_dict = indigo.Dict()
+
+        # ========================== Modify Numeric Variable ==========================
+        if type_id == "emailBatteryLevelReport":
+            # addr_list = action_dict['email_address'].split(",")
+            addr_list = [self.substitute(a) for a in action_dict['email_address'].replace(' ', '').split(",")]
+            for addr in addr_list:
+                pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
+                if not re.match(pattern, addr) is not None:
+                    error_msg_dict['email_address'] = "One or more addresses are not valid. Check address(es) and ensure there are no extra commas."
 
         # ========================== Modify Numeric Variable ==========================
         if type_id == "modify_numeric_variable":
@@ -391,6 +401,28 @@ class Plugin(indigo.PluginBase):
         battery_level.report(no_log)
         return True
 
+    def reports_processor(self, action: indigo.Dict = None, type_id: str = ""):
+        values_dict = indigo.Dict()
+        error_msg_dict = indigo.Dict()
+        my_action = action['actionMenu']
+        action_map = {
+            "about_indigo": self.about_indigo,
+            "battery_level_report": self.battery_level_report,
+            "environment_path": self.environment_path,
+            "indigo_inventory": self.indigo_inventory,
+            "installed_plugins": self.installed_plugins,
+            "running_plugins": self.running_plugins,
+            "log_plugin_environment": self.log_plugin_environment,
+        }
+
+        if my_action in action_map:
+            method = getattr(self, my_action)
+            method()
+            return values_dict
+        else:
+            indigo.server.log("Trying to access an invalid report.", level=logging.WARNING)
+            return error_msg_dict
+
     # =============================================================================
     @staticmethod
     def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
@@ -462,6 +494,90 @@ class Plugin(indigo.PluginBase):
         :param str target_id:
         """
         return dict_to_print.print_dict(values_dict)
+
+    # =============================================================================
+    def email_battery_level_report(self, action_group):
+        """
+        Mail battery health report
+
+        Only Email+ for sending. Supports Indigo substitutions
+
+        configured : True
+        delayAmount : 900
+        description : battery health report
+        deviceId : 0
+        pluginId : com.fogbert.indigoplugin.multitool
+        pluginTypeId : emailBatteryHealthReport
+        props : com.fogbert.indigoplugin.multitool : (dict)
+             email_address : %%v:15036036%%, (string)
+             email_device : 144258876 (string)
+        replaceExisting : True
+        textToSpeak :
+
+        """
+        # Generate list of address(es)
+        address_list = action_group.props['email_address'].replace(' ', '').split(",")
+        email_device = int(action_group.props['email_device'])
+
+        # Generate battery health report
+        message = battery_level.report(no_log=True)
+
+        # Format the report for html display
+        style_stub = """<style>
+                            html {
+                                background-color: whitesmoke;
+                                color: black;
+                                font-family: Arial, sans-serif;
+                                width: 100%;
+                                overflow-x: hidden;
+                                margin: 5px;
+                            }
+                            pre {
+                                white-space: pre;
+                                margin: 0;
+                                font-family: 'Courier New', Courier, monospace;
+                                max-width: 100%;
+                                font-size: 3.5vw; /* Larger viewport-based size */
+                                line-height: 1.2;
+                            }
+                            
+                            /* Cap the size on larger screens */
+                            @media screen and (min-width: 800px) {
+                                pre {
+                                    font-size: 14px;
+                                }
+                            }
+                        </style>
+                        """
+        email_stub = f"""<!DOCTYPE html>
+                        <html lang="en">
+                        <head>
+                            <title>Battery Level Report</title>
+                            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                        </head>
+                        {style_stub}
+                        <body>
+                            <pre>{message}</pre>
+                        </body>
+                        </html>
+                        """
+        # Email report
+        for addr in address_list:
+            plugin = indigo.server.getPlugin("com.indigodomo.email")
+            if plugin.isEnabled():
+                plugin.executeAction(
+                    "sendEmail",
+                    deviceId=email_device,
+                    props={
+                        "emailTo": self.substitute(addr),
+                        "emailSubject": "Battery Level Report",
+                        "emailMessage": email_stub,
+                        'emailFormat': 'html'
+
+                    },
+                )
+
+        return True
 
     # =============================================================================
     @staticmethod

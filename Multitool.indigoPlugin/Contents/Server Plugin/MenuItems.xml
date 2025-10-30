@@ -4,15 +4,31 @@
 
     <MenuItem id="separator1" type="separator"/>
 
-    <MenuItem id="indigoProperties">
-        <Name>About Indigo</Name>
-        <CallbackMethod>about_indigo</CallbackMethod>
+    <MenuItem id="multiToolReports">
+        <Name>Reports...</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <Field id="actionMenu" type="menu">
+                <Label>Select report:</Label>
+                <List>
+                    <Option value="about_indigo">About Indigo</Option>
+                    <Option value="battery_level_report">Battery Level Report</Option>
+                    <Option value="environment_path">Environment Path Report</Option>
+                    <Option value="indigo_inventory">Indigo Inventory Report</Option>
+                    <Option value="installed_plugins">Plugins Inventory Report</Option>
+                    <Option value="running_plugins">Plugins Online Report</Option>
+                    <Option value="log_plugin_environment">Multitool Plugin Information</Option>
+                </List>
+            </Field>
+
+            <Field id="executeButton" type="button">
+                <Title>Execute</Title>
+                <CallbackMethod>reports_processor</CallbackMethod>
+            </Field>
+        </ConfigUI>
     </MenuItem>
 
-    <MenuItem id="batteryLevelReport">
-        <Name>Battery Level Report</Name>
-        <CallbackMethod>battery_level_report</CallbackMethod>
-    </MenuItem>
+    <MenuItem id="separator2" type="separator"/>
 
     <MenuItem id="pickColor">
         <Name>Color Picker...</Name>
@@ -137,11 +153,6 @@
         <ButtonTitle>Close</ButtonTitle>
     </MenuItem>
 
-    <MenuItem id="environment_path">
-        <Name>Environment Path</Name>
-        <CallbackMethod>environment_path</CallbackMethod>
-    </MenuItem>
-
     <MenuItem id="error_inventory">
         <Name>Error Inventory...</Name>
         <ConfigUI>
@@ -158,11 +169,6 @@
             </Field>
         </ConfigUI>
         <CallbackMethod>error_inventory</CallbackMethod>
-    </MenuItem>
-
-    <MenuItem id="indigo_inventory">
-        <Name>Indigo Inventory</Name>
-        <CallbackMethod>indigo_inventory</CallbackMethod>
     </MenuItem>
 
     <MenuItem id="lorem_ipsum">
@@ -339,16 +345,6 @@
             <ButtonTitle>Close</ButtonTitle>
     </MenuItem>
 
-    <MenuItem id="installed_plugins">
-        <Name>Plugin Inventory</Name>
-        <CallbackMethod>installed_plugins</CallbackMethod>
-    </MenuItem>
-
-    <MenuItem id="running_plugins">
-        <Name>Plugins Online</Name>
-        <CallbackMethod>running_plugins</CallbackMethod>
-    </MenuItem>
-
     <MenuItem id="remove_all_delayed_actions">
         <Name>Remove Delayed Actions...</Name>
         <ConfigUI>
@@ -474,13 +470,6 @@
                 </Field>
 
             </ConfigUI>
-    </MenuItem>
-
-    <MenuItem id="titleSeparator" type="separator"/>
-
-    <MenuItem id="print_environment_info" uiPath="plugin_tools">
-        <Name>Display Plugin Information</Name>
-        <CallbackMethod>log_plugin_environment</CallbackMethod>
     </MenuItem>
 
 </MenuItems>
