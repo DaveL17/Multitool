@@ -34,7 +34,7 @@ def pinger(values_dict: indigo.Dict = None) -> None:
     zwave_enabled = plugin.isEnabled()
 
     try:
-        if insteon_enabled and zwave_enabled:
+        if insteon_enabled or zwave_enabled:
             if dev.enabled and dev.configured:
                 # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's
                 # current logging level.

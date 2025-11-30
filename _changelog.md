@@ -1,3 +1,6 @@
+### v2025.2.2
+- Fixes bug in device ping tool where it only succeeded if both Z-Wave and Insteon interfaces were present and enabled.
+
 ### v2025.2.1
 - Adds new Email Battery Level Report Action.
 - Truncates very long device names in Battery Level Report.
