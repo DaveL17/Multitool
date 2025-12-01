@@ -143,6 +143,10 @@
                 <List class="self" filter="" method="generator_enabled_device_list" dynamicReload="true"/>
             </Field>
 
+            <Field id="suppressLogging" type="checkbox" defaultValue="False">
+                <Label>Suppress Logging:</Label>
+            </Field>
+
             <Field id="subGeneratorButton" type="button" tooltip="Ping the device.">
                 <Label/>
                 <Title>Send Ping</Title>
