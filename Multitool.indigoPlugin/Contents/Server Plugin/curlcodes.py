@@ -41,7 +41,7 @@ codes = {
           "generic and can be one out of several problems, see the error message for details.",
     "17": "FTP couldn't set binary. Couldn't change transfer method to binary.",
     "18": "Partial file. Only a part of the file was transferred.",
-    "19": "FTP couldn’t download/access the given file, the RETR (or similar) command failed.",
+    "19": "FTP couldn’t download/access the given file, the `RETR` (or similar) command failed.",
     "21": "FTP quote error. A quote command returned error from the server.",
     "22": "HTTP page not retrieved. The requested url was not found or returned another error "
           "with the HTTP error  code being 400 or above. This return code only appears if -f, "

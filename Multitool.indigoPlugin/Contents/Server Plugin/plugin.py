@@ -319,7 +319,9 @@ class Plugin(indigo.PluginBase):
             for addr in addr_list:
                 pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
                 if not re.match(pattern, addr) is not None:
-                    error_msg_dict['email_address'] = "One or more addresses are not valid. Check address(es) and ensure there are no extra commas."
+                    error_msg_dict['email_address'] = (
+                        "One or more addresses are not valid. Check address(es) and ensure there are no extra commas."
+                    )
 
         # ========================== Modify Numeric Variable ==========================
         if type_id == "modify_numeric_variable":
@@ -401,7 +403,7 @@ class Plugin(indigo.PluginBase):
         battery_level.report(no_log)
         return True
 
-    def reports_processor(self, action: indigo.Dict = None, type_id: str = ""):
+    def reports_processor(self, action: indigo.Dict = None, type_id: str = ""):  # noqa
         values_dict = indigo.Dict()
         error_msg_dict = indigo.Dict()
         my_action = action['actionMenu']

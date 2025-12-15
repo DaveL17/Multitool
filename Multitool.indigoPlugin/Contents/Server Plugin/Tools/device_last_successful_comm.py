@@ -15,7 +15,7 @@ def __init__():
     pass
 
 
-def report_comms(values_dict: indigo.Dict = None, menu_item: str = "", no_log: bool = False) -> None:
+def report_comms(values_dict: indigo.Dict = None, menu_item: str = "", no_log: bool = False) -> None:  # noqa
     """
     Print information on the last successful communication
 

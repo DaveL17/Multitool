@@ -18,7 +18,7 @@ def __init__():
     pass
 
 
-def picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> None:
+def picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> None:  # noqa
     """
     Print raw, hex, and rgb color values to the Indigo events log
 
@@ -38,5 +38,5 @@ def picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = Fa
             indigo.server.log(f"Raw: {values_dict['chosenColor']}")
             indigo.server.log(f"Hex: #{values_dict['chosenColor'].replace(' ', '')}")
             indigo.server.log(f"RGB: {tuple([int(thing, 16) for thing in values_dict['chosenColor'].split(' ')])}")
-    except (AttributeError, ValueError) as err:
+    except (AttributeError, ValueError):
         logger.warning("Can not convert: input value %s is wrong type.", values_dict['chosenColor'])

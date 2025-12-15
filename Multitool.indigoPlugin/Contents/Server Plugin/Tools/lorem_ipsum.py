@@ -18,7 +18,7 @@ def __init__():
     pass
 
 
-def report(values_dict: indigo.Dict(), no_log: bool = False) -> None:
+def report(values_dict: indigo.Dict, no_log: bool = False) -> None:  # noqa
     """
     Prints lorem text to the Indigo Events Log
 

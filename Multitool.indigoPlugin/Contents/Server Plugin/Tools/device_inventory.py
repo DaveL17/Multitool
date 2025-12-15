@@ -14,7 +14,7 @@ def __init__():
     pass
 
 
-def get_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> dict:
+def get_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> dict:  # noqa
     """
     Print an inventory of devices to the Indigo Events log
 
