@@ -1,3 +1,6 @@
+### v2025.2.3
+- Adds a `pip3 freeze` report to the Reports menu.
+
 ### v2025.2.2
 - Fixes bug in device ping tool where it only succeeded if both Z-Wave and Insteon interfaces were present and enabled.
 

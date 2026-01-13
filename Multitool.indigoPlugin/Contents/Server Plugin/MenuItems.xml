@@ -17,6 +17,7 @@
                     <Option value="indigo_inventory">Indigo Inventory Report</Option>
                     <Option value="installed_plugins">Plugins Inventory Report</Option>
                     <Option value="running_plugins">Plugins Online Report</Option>
+                    <Option value="pip_freeze_report">Pip Freeze Report</Option>
                     <Option value="log_plugin_environment">Multitool Plugin Information</Option>
                 </List>
             </Field>

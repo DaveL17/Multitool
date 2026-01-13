@@ -28,6 +28,7 @@ __all__ = [
     "object_dependencies",
     "object_directory",
     "ping_tool",
+    "pip_freeze",
     "plugin_methods",
     "remove_delayed_actions",
     "results_output",

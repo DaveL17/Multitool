@@ -35,7 +35,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.2.2'
+__version__   = '2025.2.3'
 
 
 # =============================================================================
@@ -414,6 +414,7 @@ class Plugin(indigo.PluginBase):
             "indigo_inventory": self.indigo_inventory,
             "installed_plugins": self.installed_plugins,
             "running_plugins": self.running_plugins,
+            "pip_freeze_report": self.pip_freeze_report,
             "log_plugin_environment": self.log_plugin_environment,
         }
 
@@ -1018,6 +1019,13 @@ class Plugin(indigo.PluginBase):
 
         command = self.network_quality_flags(action_group)
         self.cmd_queue.put(command)
+        return True
+
+    # =============================================================================
+    @staticmethod
+    def pip_freeze_report (values_dict: indigo.Dict = None, type_id: str = "") -> bool:  # noqa
+
+        pip_freeze.report()
         return True
 
     # =============================================================================
