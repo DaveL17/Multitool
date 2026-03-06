@@ -10,10 +10,10 @@
                 <Label>Field 1:</Label>
             </Field>
             <Field id="field2" type="textfield">
-                <Label>Field 1:</Label>
+                <Label>Field 2:</Label>
             </Field>
             <Field id="field3" type="textfield">
-                <Label>Field 1:</Label>
+                <Label>Field 3:</Label>
             </Field>
         </ConfigUI>
         <CallbackMethod>test_action_return</CallbackMethod>
