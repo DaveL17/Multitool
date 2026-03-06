@@ -40,19 +40,15 @@ __version__   = '2025.2.3'
 
 # =============================================================================
 class Plugin(indigo.PluginBase):
-    """
-    Standard Indigo Plugin Class
-
-    :param indigo.PluginBase:
-    """
+    """Standard Indigo Plugin Class providing the Multitool feature set."""
     def __init__(self, plugin_id, plugin_display_name, plugin_version, plugin_prefs):
-        """
-        Plugin initialization
+        """Plugin initialization.
 
-        :param str plugin_id:
-        :param str plugin_display_name:
-        :param str plugin_version:
-        :param indigo.Dict plugin_prefs:
+        Args:
+            plugin_id: Unique plugin identifier string.
+            plugin_display_name: Display name shown in the Indigo UI.
+            plugin_version: Current plugin version string.
+            plugin_prefs: Persistent plugin preferences dictionary.
         """
         super().__init__(plugin_id, plugin_display_name, plugin_version, plugin_prefs)
 
@@ -79,8 +75,10 @@ class Plugin(indigo.PluginBase):
         self.command_thread.start()
 
     def log_plugin_environment(self) -> bool:
-        """
-        Log pluginEnvironment information when plugin is first started
+        """Log pluginEnvironment information when the plugin is first started.
+
+        Returns:
+            bool: True on success.
         """
         self.Fogbert.pluginEnvironment()
         return True
@@ -89,12 +87,14 @@ class Plugin(indigo.PluginBase):
     # ============================== Indigo Methods ===============================
     # =============================================================================
     def closedPrefsConfigUi(self, values_dict: indigo.Dict = None, user_cancelled: bool = False) -> dict:  # noqa
-        """
-        Standard Indigo method called when plugin preferences dialog is closed.
+        """Standard Indigo method called when the plugin preferences dialog is closed.
 
-        :param indigo.Dict values_dict:
-        :param bool user_cancelled:
-        :return:
+        Args:
+            values_dict: Dictionary of preference values from the dialog.
+            user_cancelled: True if the user cancelled the dialog without saving.
+
+        Returns:
+            indigo.Dict: The values dictionary, updated as needed.
         """
         if not user_cancelled:
             # Ensure that self.pluginPrefs includes any recent changes.
@@ -114,7 +114,17 @@ class Plugin(indigo.PluginBase):
 
     @staticmethod
     def get_attrib_dict(orig_obj, new_obj, exclude: tuple) -> dict:
-        """ Return a dictionary of attributes where the new object has the attributes removed."""
+        """Return a dict of attributes that differ between orig_obj and new_obj.
+
+        Args:
+            orig_obj: The original Indigo object (before the update).
+            new_obj: The updated Indigo object (after the update).
+            exclude: Tuple of attribute names to exclude from comparison.
+
+        Returns:
+            dict: Mapping of attribute name to a (old_value, new_value) tuple for
+            each attribute that changed.
+        """
         attrib_list = [
             attr
             for attr in dir(orig_obj)
@@ -132,12 +142,14 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def deviceUpdated(self, orig_dev: indigo.Device = None, new_dev: indigo.Device = None):  # noqa
-        """
-        Standard Indigo method called when device is updated.
+        """Standard Indigo method called when a device is updated.
 
-        :param indigo.Dict orig_dev:
-        :param indigo.Dict new_dev:
-        :return:
+        Logs attribute, property, and state changes for subscribed devices when
+        the Subscribe to Changes feature is enabled.
+
+        Args:
+            orig_dev: The device object before the update.
+            new_dev: The device object after the update.
         """
         # Call the base implementation first just to make sure all the right things happen
         # elsewhere.
@@ -190,16 +202,28 @@ class Plugin(indigo.PluginBase):
 
     @staticmethod
     def get_device_list(filter: str="", type_id: int=0, values_dict: indigo.Dict=None, target_id: int=0) -> list:  # noqa
-        """PLACEHOLDER"""
+        """Return a list of (id, name) tuples for all plugin-owned devices.
+
+        Args:
+            filter: Device type filter string (unused).
+            type_id: Device type identifier (unused).
+            values_dict: Dialog values dictionary (unused).
+            target_id: Target device identifier (unused).
+
+        Returns:
+            list: List of (device_id, device_name) tuples.
+        """
         return [(dev.id, dev.name) for dev in indigo.devices.iter(filter="self")]
 
     # =============================================================================
     def getMenuActionConfigUiValues(self, menu_id: str = "") -> dict:  # noqa
-        """
-        Standard Indigo method called when a config menu is opened.
+        """Standard Indigo method called when a config menu is opened.
 
-        :param str menu_id:
-        :return indigo.Dict:
+        Args:
+            menu_id: Identifier string for the menu being opened.
+
+        Returns:
+            indigo.Dict: Pre-populated values dictionary for the menu dialog.
         """
         # Grab the setting values for the "Subscribe to Changes" tool
         if menu_id == 'subscribeToChanges':
@@ -216,22 +240,27 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def sendDevicePing(dev_id: int = 0, suppress_logging: bool = False) -> dict:  # noqa
-        """
-        Standard Indigo method called when a ping request sent to a plugin device.
+        """Standard Indigo method called when a ping request is sent to a plugin device.
 
-        :param int dev_id: Indigo device ID.
-        :param bool suppress_logging: Suppress logging? [True | False]
-        :return dict:
+        Multitool devices do not support ping; this method logs a message and
+        returns a failure result.
+
+        Args:
+            dev_id: Indigo device ID of the device being pinged.
+            suppress_logging: If True, suppresses log output.
+
+        Returns:
+            dict: Result dictionary with ``{'result': 'Failure'}``.
         """
         indigo.server.log("Multitool Plugin devices do not support the ping function.")
         return {'result': 'Failure'}
 
     # =============================================================================
     def startup(self):
-        """
-        Standard Indigo startup method.
+        """Standard Indigo startup method.
 
-        :return:
+        Subscribes to device and variable change notifications if the
+        Subscribe to Changes feature is enabled in plugin preferences.
         """
         # ================ Subscribe to Indigo Object Changes =================
         if self.pluginPrefs.get('enableSubscribeToChanges', False):
@@ -251,23 +280,27 @@ class Plugin(indigo.PluginBase):
         self.command_thread.stop()
 
     def trigger_start_processing(self, trigger: indigo.Trigger):
-        """
-        Standard Indigo method called when a trigger starts processing.
+        """Standard Indigo method called when a trigger starts processing.
 
-        :param indigo.Trigger trigger: a dict of triggers with the key being the device the trigger tracks and the
-        value being the trigger object.
+        Registers the trigger in the local trigger dictionary, keyed by the
+        offline device ID it monitors.
+
+        Args:
+            trigger: The Indigo trigger object to register.
         """
         if trigger.id not in self.my_triggers:
             self.my_triggers[trigger.pluginProps['offlineDevice']] = trigger
 
     # =============================================================================
     def variableUpdated(self, orig_var: indigo.Variable, new_var: indigo.Variable) -> None:  # noqa
-        """
-        Standard Indigo method called when a variable is updated.
+        """Standard Indigo method called when a variable is updated.
 
-        :param indigo.Variable orig_var:
-        :param indigo.Variable new_var:
-        :return:
+        Logs attribute and value changes for subscribed variables when the
+        Subscribe to Changes feature is enabled.
+
+        Args:
+            orig_var: The variable object before the update.
+            new_var: The variable object after the update.
         """
         # Call the base implementation first just to make sure all the right things happen elsewhere
         indigo.PluginBase.variableUpdated(self, orig_var, new_var)
@@ -302,13 +335,20 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def validateActionConfigUi(self, action_dict: indigo.Dict = None, type_id: str = "", device_id: int = 0) -> tuple:  # noqa
-        """
-        Standard method called to validate action config dialogs.
+        """Standard method called to validate action config dialogs.
 
-        :param indigo.Dict action_dict:
-        :param int type_id:
-        :param int device_id:
-        :return:
+        Validates email addresses for the emailBatteryLevelReport action,
+        and validates numeric/time variable values for their respective
+        modification actions.
+
+        Args:
+            action_dict: Dictionary of action configuration values.
+            type_id: Identifier for the action type being validated.
+            device_id: Indigo device ID associated with the action.
+
+        Returns:
+            tuple: ``(True, action_dict)`` on success, or
+            ``(False, action_dict, error_msg_dict)`` when validation fails.
         """
         error_msg_dict = indigo.Dict()
 
@@ -368,24 +408,26 @@ class Plugin(indigo.PluginBase):
     # ============================== Plugin Methods ===============================
     # =============================================================================
     def __dummyCallback__(self, values_dict: indigo.Dict = None, type_id: str = "") -> None:
-        """
-        Dummy callback to cause refresh of dialog elements
+        """Dummy callback used to force a refresh of dialog elements.
 
-        The __dummyCallback__ method is used and a placeholder callback to force a refresh of
-        dialog elements based for controls with dynamic refresh attributes.
+        Assigned to controls with dynamic refresh attributes so that Indigo
+        redraws the dialog when the control value changes.
 
-        :param indigo.Dict values_dict:
-        :param int type_id:
-        :return:
+        Args:
+            values_dict: Dictionary of current dialog values.
+            type_id: Identifier for the dialog type.
         """
 
     # =============================================================================
     @staticmethod
     def about_indigo(no_log: bool = False) -> bool:
-        """
-        Shim to call the About Indigo tool.
+        """Shim to call the About Indigo tool.
 
-        :param bool no_log: If True, no output is logged.
+        Args:
+            no_log: If True, suppresses log output.
+
+        Returns:
+            bool: True on success.
         """
         about_indigo.report(no_log)
         return True
@@ -393,17 +435,31 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def battery_level_report(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
-        """
-        SHim to call the Battery level report tool.
+        """Shim to call the Battery Level Report tool.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+            no_log: If True, suppresses log output.
+
+        Returns:
+            bool: True on success.
         """
         battery_level.report(no_log)
         return True
 
     def reports_processor(self, action: indigo.Dict = None, type_id: str = ""):  # noqa
+        """Dispatch menu-invoked report actions to their corresponding methods.
+
+        Args:
+            action: Action dictionary containing the ``actionMenu`` key that
+                identifies which report to run.
+            type_id: Action type identifier (unused).
+
+        Returns:
+            indigo.Dict: Empty values dictionary on success, or an empty error
+            dictionary if the requested action is not recognized.
+        """
         values_dict = indigo.Dict()
         error_msg_dict = indigo.Dict()
         my_action = action['actionMenu']
@@ -429,12 +485,15 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
-        """
-        Shim to call the ColorPicker tool.
+        """Shim to call the ColorPicker tool.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+            no_log: If True, suppresses log output.
+
+        Returns:
+            tuple: ``(True, values_dict)``
         """
         color_picker.picker(values_dict, "", no_log)
         return True, values_dict
@@ -442,12 +501,15 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def device_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> dict:  # noqa
-        """
-        Shim to call the DeviceInventory tool.
+        """Shim to call the Device Inventory tool.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+            no_log: If True, suppresses log output.
+
+        Returns:
+            indigo.Dict: The values dictionary.
         """
         device_inventory.get_inventory(values_dict, type_id, no_log)
         return values_dict
@@ -455,23 +517,26 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def device_last_successful_comm(values_dict: indigo.Dict = None, menu_item: str = "", no_log: bool = False):
-        """
-        Shim to call the Device_last_successful_comm tool.
+        """Shim to call the Device Last Successful Comm tool.
 
-        :param indigo.Dict values_dict:
-        :param str menu_item:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            menu_item: Identifier for the menu item that triggered this call.
+            no_log: If True, suppresses log output.
         """
         device_last_successful_comm.report_comms(values_dict, menu_item, no_log)
 
     # =============================================================================
     @staticmethod
     def device_to_beep(values_dict: indigo.Dict = None, type_id: str = "") -> tuple[bool, dict]:  # noqa
-        """
-        Shim to call the Device_to_beep tool.
+        """Shim to call the Device Beep tool.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+
+        Returns:
+            tuple: ``(True, values_dict)``
         """
         device_beep.beeper(values_dict)
         return True, values_dict
@@ -479,44 +544,44 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def device_to_ping(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
-        """
-        Shim to call the Device_to_ping tool.
+        """Shim to call the Device Ping tool.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
         """
         device_ping.pinger(values_dict)
 
     # =============================================================================
     @staticmethod
     def dict_to_print(fltr:str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
-        """
-        Shim to call the dict_to_print tool.
+        """Shim to call the dict_to_print tool.
 
-        :param indigo.Dict values_dict:
-        :param str target_id:
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary passed to the tool.
+            target_id: Target identifier (unused).
+
+        Returns:
+            list: The printed dict result from the tool.
         """
         return dict_to_print.print_dict(values_dict)
 
     # =============================================================================
     def email_battery_level_report(self, action_group):
-        """
-        Mail battery health report
+        """Email a formatted battery health report using the Email+ plugin.
 
-        Only Email+ for sending. Supports Indigo substitutions
+        Generates the battery level report, wraps it in HTML, and sends it to
+        each recipient address via the Email+ plugin. Supports Indigo variable
+        substitutions in the address field.
 
-        configured : True
-        delayAmount : 900
-        description : battery health report
-        deviceId : 0
-        pluginId : com.fogbert.indigoplugin.multitool
-        pluginTypeId : emailBatteryHealthReport
-        props : com.fogbert.indigoplugin.multitool : (dict)
-             email_address : %%v:15036036%%, (string)
-             email_device : 144258876 (string)
-        replaceExisting : True
-        textToSpeak :
+        Args:
+            action_group: Indigo action group containing ``email_address``
+                (comma-separated, substitution-enabled) and ``email_device``
+                (Email+ device ID) in its props.
 
+        Returns:
+            bool: True on success.
         """
         # Generate list of address(es)
         address_list = action_group.props['email_address'].replace(' ', '').split(",")
@@ -585,10 +650,13 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def environment_path(no_log: bool = False) -> bool:
-        """
-        Shim to call the environment_path tool.
+        """Shim to call the Environment Path tool.
 
-        :param bool no_log: If True, no output is logged.
+        Args:
+            no_log: If True, suppresses log output.
+
+        Returns:
+            bool: True on success.
         """
         environment_path.show_path(no_log)
         return True
@@ -596,23 +664,29 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def error_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> bool:  # noqa
-        """
-        Shim to call the error_inventory tool.
+        """Shim to call the Error Inventory tool.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+            no_log: If True, suppresses log output.
+
+        Returns:
+            bool: True on success.
         """
         error_inventory.show_inventory(values_dict, no_log)
         return True
 
     # =============================================================================
     def execute_command(self, command_queue: Queue, result_queue: Queue) -> None:
-        """
-        Get command from queue, run it, and capture the output.
+        """Get a command from the queue, run it, and put the output on the result queue.
 
-        :param Queue command_queue:
-        :param Queue result_queue:
+        Runs in a background thread. Loops until a ``None`` sentinel is received.
+        Shell output (stdout + stderr) is captured and placed on ``result_queue``.
+
+        Args:
+            command_queue: Queue from which shell command lists are consumed.
+            result_queue: Queue onto which command output strings are placed.
         """
         while True:
             my_command = command_queue.get()
@@ -639,51 +713,65 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def generator_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
-        """
-        Shim to call the Fogbert.deviceList utility method.
+        """Shim to call the Fogbert.deviceList utility method.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool target_id:
+        Args:
+            fltr: Device type filter string passed to deviceList.
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+            target_id: Target device identifier (unused).
+
+        Returns:
+            list: List of (device_id, device_name) tuples.
         """
         return self.Fogbert.deviceList(dev_filter=fltr)
 
     # =============================================================================
     def generator_variable_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
-        """
-        SHim to call the Fogbert.variableList utility method.
+        """Shim to call the Fogbert.variableList utility method.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool target_id:
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+            target_id: Target identifier (unused).
+
+        Returns:
+            list: List of (variable_id, variable_name) tuples.
         """
         return self.Fogbert.variableList()
 
     # =============================================================================
     def generator_enabled_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
-        """
-        Shim to call the deviceListEnabled utility method.
+        """Shim to call the Fogbert.deviceListEnabled utility method.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool target_id:
+        Args:
+            fltr: Device type filter string passed to deviceListEnabled.
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+            target_id: Target device identifier (unused).
+
+        Returns:
+            list: List of (device_id, device_name) tuples for enabled devices only.
         """
         return self.Fogbert.deviceListEnabled(dev_filter=fltr)
 
     # =============================================================================
     # @staticmethod
     def generator_device_filter(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
-        """
-        Build a list of device filters
+        """Build a sorted, deduplicated list of device filter options.
 
-        Will include all the standard Indigo filters (indigo.relay, indigo.sensor, etc.) and plugin IDs.
+        Combines standard Indigo device type filters with plugin identifiers
+        discovered from the current device list.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool target_id:
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+            target_id: Target device identifier (unused).
+
+        Returns:
+            list: Sorted list of (filter_id, filter_label) tuples.
         """
         # Add plugin identifiers to standard filters
         _ = [FILTER_LIST.append((dev.pluginId, dev.pluginId))
@@ -703,37 +791,52 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def generator_dev_var(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
-        """
-        Shim to call the Fogbert.deviceAndVariableList utility method.
+        """Shim to call the Fogbert.deviceAndVariableList utility method.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool target_id:
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+            target_id: Target identifier (unused).
+
+        Returns:
+            list: Combined list of (id, name) tuples for devices and variables.
         """
         return self.Fogbert.deviceAndVariableList()
 
     # =============================================================================
     def generator_dev_var_clean(self, fltr:str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
-        """
-        Shim to call the Fogbert.deviceAndVariableList utility method.
+        """Shim to call the Fogbert.deviceAndVariableListClean utility method.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool target_id:
+        Returns a combined device and variable list with names sanitized for
+        use in UI controls.
+
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+            target_id: Target identifier (unused).
+
+        Returns:
+            list: Combined list of (id, name) tuples with cleaned display names.
         """
         return self.Fogbert.deviceAndVariableListClean()
 
     # =============================================================================
     def generator_state_or_value(self, fltr:str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
-        """
-        Shim to call the Fogbert.generatorStateOrValue utility method.
+        """Shim to call the Fogbert.generatorStateOrValue utility method.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool target_id:
+        Returns state keys for a selected device or the value for a selected
+        variable, depending on what is selected in the ``devVarMenu`` control.
+
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary; ``devVarMenu`` key is read.
+            type_id: Action type identifier (unused).
+            target_id: Target identifier (unused).
+
+        Returns:
+            list: List of (state_key, label) tuples for the selected object.
         """
         return self.Fogbert.generatorStateOrValue(values_dict.get('devVarMenu', ""))
 
@@ -747,12 +850,15 @@ class Plugin(indigo.PluginBase):
 
     @staticmethod
     def get_serial_ports(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> bool:  # noqa
-        """
-        Shim to call the serial_ports.show_ports method.
+        """Shim to call the serial_ports.show_ports method.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+            no_log: If True, suppresses log output.
+
+        Returns:
+            bool: True on success.
         """
         serial_ports.show_ports(values_dict, no_log)
         return True
@@ -760,10 +866,13 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def indigo_inventory(no_log: bool = False) -> bool:  # noqa
-        """
-        Shim to call the indigo_inventory.show_inventory method.
+        """Shim to call the indigo_inventory.show_inventory method.
 
-        :param bool no_log: If True, no output is logged.
+        Args:
+            no_log: If True, suppresses log output.
+
+        Returns:
+            bool: True on success.
         """
         indigo_inventory.show_inventory(no_log)
         return True
@@ -771,21 +880,24 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def inspect_method(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
-        """
-        Shim to call the inspect_method.display_docstring method.
+        """Shim to call the inspect_method.display_docstring method.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
         """
         inspect_method.display_docstring(values_dict)
 
     # =============================================================================
     @staticmethod
     def installed_plugins(no_log: bool = False) -> bool:
-        """
-        Shim to call the installed_plugins.get_list method.
+        """Shim to call the installed_plugins.get_list method.
 
-        :param bool no_log: If True, no output is logged.
+        Args:
+            no_log: If True, suppresses log output.
+
+        Returns:
+            bool: True on success.
         """
         installed_plugins.get_list(no_log)
         return True
@@ -793,100 +905,130 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def list_of_plugin_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
-        """
-        Shim to call the plugin_methods.list_methods method.
+        """Shim to call the plugin_methods.list_methods method.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str target_id:
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary passed to the tool.
+            target_id: Target identifier (unused).
+
+        Returns:
+            list: List of method name tuples for the selected plugin.
         """
         return plugin_methods.list_methods(values_dict)
 
     # =============================================================================
     @staticmethod
     def list_of_indigo_classes(fltr:str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
-        """
-        Shim to call the indigo_classes.display_classes method.
+        """Shim to call the indigo_classes.display_classes method.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str target_id:
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary passed to the tool.
+            target_id: Target identifier (unused).
+
+        Returns:
+            list: List of Indigo class name tuples.
         """
         return indigo_classes.display_classes(values_dict)
 
     # =============================================================================
     @staticmethod
     def list_of_indigo_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
-        """
-        Shim to call the indigo_methods.display_methods method.
+        """Shim to call the indigo_methods.display_methods method.
 
-        :param str fltr:
-        :param indigo.Dict values_dict:
-        :param str target_id:
+        Args:
+            fltr: Filter string (unused).
+            values_dict: Dialog values dictionary passed to the tool.
+            target_id: Target identifier (unused).
+
+        Returns:
+            list: List of Indigo method name tuples.
         """
         return indigo_methods.display_methods(values_dict)
 
     # =============================================================================
     @staticmethod
     def log_of_method(values_dict: indigo.Dict = None, type_id: str = "") -> None:  # noqa
-        """
-        Shim to call the log_of_method.display_inspection method.
+        """Shim to call the log_of_method.display_inspection method.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
         """
         log_of_method.display_inspection(values_dict)
 
     # =============================================================================
     @staticmethod
     def lorem_ipsum(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
-        """
-        Shim to call the lorem ipsum tool.
+        """Shim to call the Lorem Ipsum tool.
 
-        :param indigo.Dict values_dict:
-        :param str type_id:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+            no_log: If True, suppresses log output.
+
+        Returns:
+            tuple: ``(True, values_dict)``
         """
         lorem_ipsum.report(values_dict)
         return True, values_dict
 
     @staticmethod
     def modify_numeric_variable(action_group: indigo.actionGroup):
-        """
-        Shim to call the modify_numeric_variable.modify method.
+        """Shim to call the modify_numeric_variable.modify method.
 
-        :param action_group:
+        Args:
+            action_group: Indigo action group containing the target variable ID
+                and modifier expression in its props.
+
+        Returns:
+            Result of modify_numeric_variable.modify.
         """
         return modify_numeric_variable.modify(action_group)
 
     # =============================================================================
     @staticmethod
     def modify_time_variable(action_group: indigo.actionGroup):
-        """
-        Shim to call the modify_time_variable.modify method.
+        """Shim to call the modify_time_variable.modify method.
 
-        :param action_group:
+        Args:
+            action_group: Indigo action group containing the target variable ID
+                and time delta values (days, hours, minutes, seconds) in its props.
+
+        Returns:
+            Result of modify_time_variable.modify.
         """
         return modify_time_variable.modify(action_group)
 
     # =============================================================================
     @staticmethod
     def network_ping_device_menu(values_dict: indigo.Dict, item_id: str) -> tuple[bool, dict]:  # noqa
-        """
-        Shim to call the ping_tool.do_the_ping method.
+        """Shim to call the ping_tool.do_the_ping method from a menu item.
 
-        :param indigo.Dict values_dict:
-        :param str item_id:
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            item_id: Menu item identifier (unused by the tool).
+
+        Returns:
+            tuple: ``(True, values_dict)``
         """
         ping_tool.do_the_ping(values_dict, menu_call=True)
         return True, values_dict
 
     # =============================================================================
     def network_ping_device_action(self, action_group: indigo.actionGroup) -> tuple[bool, dict]:
-        """
-        Shim used when running the network ping tool from an action.
+        """Shim to run the network ping tool from an action and fire any related triggers.
 
-        :param action_group:
+        After pinging, checks whether the updated ping device has a registered
+        offline trigger and executes it if the device is offline.
+
+        Args:
+            action_group: Indigo action group containing ``selected_device`` in
+                its props.
+
+        Returns:
+            tuple: ``(True, action_group)``
         """
         # Do the action and process call to update the device
         ping_tool.do_the_ping(action_group, menu_call=False)
@@ -907,19 +1049,29 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def network_quality_action(self, action_group: indigo.actionGroup) -> None:
-        """
-        Shim used when running the network quality tool from an action.
+        """Shim to run the network quality tool from an action.
 
-        :param action_group:
+        Args:
+            action_group: Indigo action group whose props are passed to
+                network_quality.
         """
         self.network_quality(action_group.props)
 
     # =============================================================================
     def network_quality_device_action(self,  action_group: indigo.actionGroup) -> bool:
-        """
-        Update network quality device states after running test.
+        """Run the network quality test and update a Network Quality device's states.
 
-        :param action_group:
+        Requires macOS 12.0 or later. Runs ``networkQuality -c`` and parses the
+        JSON output to populate device states including throughput, responsiveness,
+        base RTT, and timestamps.
+
+        Args:
+            action_group: Indigo action group containing ``selected_device``
+                and network quality flag props.
+
+        Returns:
+            bool: True on success, False if the OS check fails or an error code
+            is returned by the networkQuality tool.
         """
         self.logger.info("Running network quality test. The plugin will be unresponsive until the test is complete.")
 
@@ -967,7 +1119,11 @@ class Plugin(indigo.PluginBase):
         return True
 
     def network_quality_test_os(self) -> bool:
-        """ Test the OS version to ensure that the network quality test tool is available """
+        """Test the OS version to ensure the networkQuality tool is available.
+
+        Returns:
+            bool: True if macOS 12.0 or later, False otherwise.
+        """
         # Test OS compatability
         plat_form = platform.mac_ver()[0].split('.')  # ['14', '4', '1']
         if (float(plat_form[0])) < 12.0:
@@ -977,10 +1133,17 @@ class Plugin(indigo.PluginBase):
 
     @staticmethod
     def network_quality_flags(props) -> list:
-        """
-        Parse the config preferences into the appropriate command line arguments.
+        """Parse plugin props into a networkQuality command-line argument list.
 
-        :param dict props:
+        Args:
+            props: Device or action props dict containing boolean flags for
+                ``runDownloadTest``, ``runUploadTest``, ``usePrivateRelay``,
+                ``runTestsSequentially``, ``verboseOutput``, and
+                ``outputVerification``.
+
+        Returns:
+            list: Command list starting with ``'networkQuality'`` followed by
+            any applicable flags.
         """
         # Build command line argument
         command = ['networkQuality']
@@ -1007,11 +1170,20 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     def network_quality(self, action_group: indigo.actionGroup, action_id: str = "") -> bool:  # noqa
-        """
-        Run the macOS command line Network Quality tool and log the result
+        """Run the macOS networkQuality tool and log the result asynchronously.
 
-        :param indigo.actionGroup action_group:
-        :param str action_id:
+        Builds the command-line arguments from ``action_group`` props and puts
+        the command on the background command queue. Output is logged when the
+        concurrent thread processes the result queue.
+
+        Args:
+            action_group: Action props dict or action group containing network
+                quality flag settings.
+            action_id: Action identifier (unused).
+
+        Returns:
+            bool: True if the OS check passes and the command is queued,
+            False otherwise.
         """
 
         if not self.network_quality_test_os():
@@ -1023,25 +1195,40 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def pip_freeze_report (values_dict: indigo.Dict = None, type_id: str = "") -> bool:  # noqa
+    def pip_freeze_report(values_dict: indigo.Dict = None, type_id: str = "") -> bool:  # noqa
+        """Shim to call the pip_freeze.report method.
 
+        Args:
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+
+        Returns:
+            bool: True on success.
+        """
         pip_freeze.report()
         return True
 
     # =============================================================================
     @staticmethod
     def remove_all_delayed_actions(values_dict: indigo.Dict = None, type_id: str = "") -> bool:  # noqa
-        """
-        Shim to call the remove_delayed_actions.remove_actions method.
+        """Shim to call the remove_delayed_actions.remove_actions method.
 
-        :param dict values_dict:
-        :param type_id:
+        Args:
+            values_dict: Dialog values dictionary (unused).
+            type_id: Action type identifier (unused).
+
+        Returns:
+            bool: Result of remove_delayed_actions.remove_actions.
         """
         return remove_delayed_actions.remove_actions()
 
     # =============================================================================
     def run_concurrent_thread(self):
-        """PLACEHOLDER"""
+        """Standard Indigo concurrent thread; drains the network quality result queue.
+
+        Runs continuously, sleeping one second per iteration. Logs any pending
+        network quality results accumulated in ``nq_queue``.
+        """
         try:
             while True:
                 self.sleep(1)
@@ -1057,10 +1244,13 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def running_plugins(no_log: bool = False) -> bool:
-        """
-        Shim to call the running_plugins.show_running_plugins method.
+        """Shim to call the running_plugins.show_running_plugins method.
 
-        :param bool no_log: If True, no output is logged.
+        Args:
+            no_log: If True, suppresses log output.
+
+        Returns:
+            bool: True on success.
         """
         running_plugins.show_running_plugins(no_log)
         return True
@@ -1068,12 +1258,15 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def results_output(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:
-        """
-        Shim to call the results_output.display_results method.
+        """Shim to call the results_output.display_results method.
 
-        :param dict values_dict:
-        :param caller:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            caller: Identifier for the calling context.
+            no_log: If True, suppresses log output.
+
+        Returns:
+            indigo.Dict: The values dictionary.
         """
         results_output.display_results(values_dict, caller, no_log)
         return values_dict
@@ -1081,12 +1274,15 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def object_directory(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:
-        """
-        Shim to call the object_directory.display_results method.
+        """Shim to call the object_directory.display_results method.
 
-        :param dict values_dict:
-        :param caller:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            caller: Identifier for the calling context.
+            no_log: If True, suppresses log output.
+
+        Returns:
+            indigo.Dict: The values dictionary.
         """
         object_directory.display_results(values_dict, caller, no_log)
         return values_dict
@@ -1094,68 +1290,87 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def object_dependencies(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
-        """
-        Shim to call the object_dependencies.display_results method.
+        """Shim to call the object_dependencies.display_results method.
 
-        :param dict values_dict:
-        :param caller:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            caller: Identifier for the calling context.
+            no_log: If True, suppresses log output.
+
+        Returns:
+            indigo.Dict: The values dictionary.
         """
         object_dependencies.display_results(values_dict, caller, no_log)
         return values_dict
 
     # =============================================================================
     def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
-        """
-        Shim to call the find_embedded_scripts.make_report method.
+        """Shim to call the find_embedded_scripts.make_report method.
 
-        :param dict values_dict:
-        :param type_id:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+            no_log: If True, suppresses log output.
+
+        Returns:
+            Result of find_embedded_scripts.make_report.
         """
         return find_embedded_scripts.make_report(values_dict, no_log)
 
     # =============================================================================
     def search_linked_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
-        """
-        Shim to call the find_linked_scripts.make_report method.
+        """Shim to call the find_linked_scripts.make_report method.
 
-        :param dict values_dict:
-        :param type_id:
-        :param bool no_log: If True, no output is logged.
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+            no_log: If True, suppresses log output.
+
+        Returns:
+            Result of find_linked_scripts.make_report.
         """
         return find_linked_scripts.make_report(values_dict, no_log)
 
     # =============================================================================
     @staticmethod
     def send_status_request(values_dict: indigo.Dict = None, type_id: str = "") -> tuple:  # noqa
-        """
-        Shim to call the send_status_request.send_status method.
+        """Shim to call the send_status_request.get_status method.
 
-        :param dict values_dict:
-        :param type_id:
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+
+        Returns:
+            tuple: ``(True, result)`` where result is the return value of
+            send_status_request.get_status.
         """
         return True, send_status_request.get_status(values_dict)
 
     # =============================================================================
     @staticmethod
     def speak_string(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
-        """
-        Shim to call the speak_string.speaker method.
+        """Shim to call the speak_string.speaker method.
 
-        :param dict values_dict:
-        :param type_id:
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+
+        Returns:
+            Result of speak_string.speaker.
         """
         return speak_string.speaker(values_dict)
 
     # =============================================================================
     @staticmethod
     def subscribed_to_changes(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
-        """
-        Shim to call the subscribe_to_changes.subscriber method.
+        """Shim to call the subscribe_to_changes.subscriber method.
 
-        :param dict values_dict:
-        :param type_id:
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Action type identifier (unused).
+
+        Returns:
+            Result of subscribe_to_changes.subscriber.
         """
         return subscribe_to_changes.subscriber(values_dict)
 
@@ -1168,14 +1383,19 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def test_action_return(action):
-        """
-        Dummy action to test return values
+        """Dummy action that returns a typed value for testing plugin.executeAction() callers.
 
-        The test_action_return method is used to test return values for calls to plugin.executeAction() calls. It is an
-        endpoint to be called when testing other code bases. The Multitool plugin will return a value based on the
-        'return_value' type passed to the method.
+        Acts as a test endpoint for other plugins to verify how they handle
+        various return types from executeAction calls.
 
-        :param action:
+        Args:
+            action: Indigo action object; ``action.props['return_value']`` must
+                be one of ``''``, ``None``, ``'int'``, ``'float'``, ``'str'``,
+                ``'tuple'``, ``'dict'``, or ``'list'``.
+
+        Returns:
+            The value corresponding to the requested return type, or None if the
+            type is unrecognized or empty.
         """
         if action.props['return_value'] in [None, ""]:
             return None
@@ -1194,11 +1414,14 @@ class Plugin(indigo.PluginBase):
         return None
 
     def my_tests(self, action=None):  # noqa
-        """
-        The my_tests method runs functional tests that are invoked by calling the my_test action.
+        """Run functional tests invoked by the my_test action.
 
-        If it encounters an error, a message will be written to the Indigo events log. The tests will stop upon the
-        first error (subsequent tests will not be run).
+        Executes device creation, action group, and plugin function tests from
+        the testPluginCode module. Stops on the first error and logs it to the
+        Indigo events log.
+
+        Args:
+            action: Indigo action object (unused).
         """
         try:
             from Tests import testPluginCode
@@ -1212,19 +1435,17 @@ class Plugin(indigo.PluginBase):
 
 # =============================================================================
 class MyThread(Thread):
-    """
-    Subclass of the threading.Thread module for blocking commands.
+    """Thread subclass for running blocking shell commands in the background.
 
-    The MyThread class is used to subclass the Thread module so that blocking commands can run in the background and
-    not block the Indigo UI. This allows select callbacks to fire in while allowing any Indigo dialogs to complete as
-    normal (rather than staying open until the command execution is completed).
+    Allows long-running commands (e.g. networkQuality) to execute without
+    blocking the Indigo UI or keeping dialogs open.
     """
     def __init__(self, target, args=()):
-        """
-        Placeholder
+        """Initialize the thread with a target callable and its arguments.
 
-        :param target:
-        :param args:
+        Args:
+            target: Callable to invoke when the thread runs.
+            args: Tuple of positional arguments passed to ``target``.
         """
         super().__init__()
         self.target = target
@@ -1233,12 +1454,12 @@ class MyThread(Thread):
         self.logger = logging.getLogger("Plugin")
 
     def stop(self):
-        """ Stop the thread when the stop event is called (like plugin shutdown/reload). """
+        """Signal the thread to stop on its next iteration (e.g. on plugin shutdown)."""
         self.logger.debug("Stopping command thread.")
         self.stop_event = True
 
     def run(self):
-        """ Run the thread. """
+        """Run the thread, invoking ``target`` repeatedly until stopped."""
         while not self.stop_event:
             if self.target:
                 self.target(*self.args)
