@@ -18,6 +18,7 @@ import platform
 import re
 import subprocess
 from threading import Thread
+from typing import Any, Callable
 import lorem  # noqa https://github.com/sfischer13/python-lorem
 # import unittest
 
@@ -41,7 +42,7 @@ __version__   = '2025.2.3'
 # =============================================================================
 class Plugin(indigo.PluginBase):
     """Standard Indigo Plugin Class providing the Multitool feature set."""
-    def __init__(self, plugin_id, plugin_display_name, plugin_version, plugin_prefs):
+    def __init__(self, plugin_id: str, plugin_display_name: str, plugin_version: str, plugin_prefs: indigo.Dict) -> None:
         """Plugin initialization.
 
         Args:
@@ -86,7 +87,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     # ============================== Indigo Methods ===============================
     # =============================================================================
-    def closedPrefsConfigUi(self, values_dict: indigo.Dict = None, user_cancelled: bool = False) -> dict:  # noqa
+    def closedPrefsConfigUi(self, values_dict: indigo.Dict = None, user_cancelled: bool = False) -> indigo.Dict:  # noqa
         """Standard Indigo method called when the plugin preferences dialog is closed.
 
         Args:
@@ -113,7 +114,7 @@ class Plugin(indigo.PluginBase):
         return values_dict
 
     @staticmethod
-    def get_attrib_dict(orig_obj, new_obj, exclude: tuple) -> dict:
+    def get_attrib_dict(orig_obj: Any, new_obj: Any, exclude: tuple[str, ...]) -> dict[str, tuple[Any, Any]]:
         """Return a dict of attributes that differ between orig_obj and new_obj.
 
         Args:
@@ -141,7 +142,7 @@ class Plugin(indigo.PluginBase):
         return attrib_dict
 
     # =============================================================================
-    def deviceUpdated(self, orig_dev: indigo.Device = None, new_dev: indigo.Device = None):  # noqa
+    def deviceUpdated(self, orig_dev: indigo.Device = None, new_dev: indigo.Device = None) -> None:  # noqa
         """Standard Indigo method called when a device is updated.
 
         Logs attribute, property, and state changes for subscribed devices when
@@ -201,7 +202,7 @@ class Plugin(indigo.PluginBase):
                     )
 
     @staticmethod
-    def get_device_list(filter: str="", type_id: int=0, values_dict: indigo.Dict=None, target_id: int=0) -> list:  # noqa
+    def get_device_list(filter: str = "", type_id: str = "", values_dict: indigo.Dict = None, target_id: int = 0) -> list[tuple[int, str]]:  # noqa
         """Return a list of (id, name) tuples for all plugin-owned devices.
 
         Args:
@@ -216,7 +217,7 @@ class Plugin(indigo.PluginBase):
         return [(dev.id, dev.name) for dev in indigo.devices.iter(filter="self")]
 
     # =============================================================================
-    def getMenuActionConfigUiValues(self, menu_id: str = "") -> dict:  # noqa
+    def getMenuActionConfigUiValues(self, menu_id: str = "") -> indigo.Dict:  # noqa
         """Standard Indigo method called when a config menu is opened.
 
         Args:
@@ -239,7 +240,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def sendDevicePing(dev_id: int = 0, suppress_logging: bool = False) -> dict:  # noqa
+    def sendDevicePing(dev_id: int = 0, suppress_logging: bool = False) -> dict[str, str]:  # noqa
         """Standard Indigo method called when a ping request is sent to a plugin device.
 
         Multitool devices do not support ping; this method logs a message and
@@ -256,7 +257,7 @@ class Plugin(indigo.PluginBase):
         return {'result': 'Failure'}
 
     # =============================================================================
-    def startup(self):
+    def startup(self) -> None:
         """Standard Indigo startup method.
 
         Subscribes to device and variable change notifications if the
@@ -275,11 +276,11 @@ class Plugin(indigo.PluginBase):
             # indigo.controlPages.subscribeToChanges()  # Not implemented
 
     # =============================================================================
-    def shutdown(self):
+    def shutdown(self) -> None:
         """ Standard Indigo shutdown method."""
         self.command_thread.stop()
 
-    def trigger_start_processing(self, trigger: indigo.Trigger):
+    def trigger_start_processing(self, trigger: indigo.Trigger) -> None:
         """Standard Indigo method called when a trigger starts processing.
 
         Registers the trigger in the local trigger dictionary, keyed by the
@@ -334,7 +335,7 @@ class Plugin(indigo.PluginBase):
                     )
 
     # =============================================================================
-    def validateActionConfigUi(self, action_dict: indigo.Dict = None, type_id: str = "", device_id: int = 0) -> tuple:  # noqa
+    def validateActionConfigUi(self, action_dict: indigo.Dict = None, type_id: str = "", device_id: int = 0) -> tuple[bool, indigo.Dict] | tuple[bool, indigo.Dict, indigo.Dict]:  # noqa
         """Standard method called to validate action config dialogs.
 
         Validates email addresses for the emailBatteryLevelReport action,
@@ -434,7 +435,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def battery_level_report(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
+    def battery_level_report(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> bool:  # noqa
         """Shim to call the Battery Level Report tool.
 
         Args:
@@ -448,7 +449,7 @@ class Plugin(indigo.PluginBase):
         battery_level.report(no_log)
         return True
 
-    def reports_processor(self, action: indigo.Dict = None, type_id: str = ""):  # noqa
+    def reports_processor(self, action: indigo.Dict = None, type_id: str = "") -> indigo.Dict:  # noqa
         """Dispatch menu-invoked report actions to their corresponding methods.
 
         Args:
@@ -484,7 +485,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
+    def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, indigo.Dict]:  # noqa
         """Shim to call the ColorPicker tool.
 
         Args:
@@ -500,7 +501,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def device_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> dict:  # noqa
+    def device_inventory(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> indigo.Dict:  # noqa
         """Shim to call the Device Inventory tool.
 
         Args:
@@ -516,7 +517,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def device_last_successful_comm(values_dict: indigo.Dict = None, menu_item: str = "", no_log: bool = False):
+    def device_last_successful_comm(values_dict: indigo.Dict = None, menu_item: str = "", no_log: bool = False) -> None:
         """Shim to call the Device Last Successful Comm tool.
 
         Args:
@@ -528,7 +529,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def device_to_beep(values_dict: indigo.Dict = None, type_id: str = "") -> tuple[bool, dict]:  # noqa
+    def device_to_beep(values_dict: indigo.Dict = None, type_id: str = "") -> tuple[bool, indigo.Dict]:  # noqa
         """Shim to call the Device Beep tool.
 
         Args:
@@ -568,7 +569,7 @@ class Plugin(indigo.PluginBase):
         return dict_to_print.print_dict(values_dict)
 
     # =============================================================================
-    def email_battery_level_report(self, action_group):
+    def email_battery_level_report(self, action_group: indigo.actionGroup) -> bool:
         """Email a formatted battery health report using the Email+ plugin.
 
         Generates the battery level report, wraps it in HTML, and sends it to
@@ -712,7 +713,7 @@ class Plugin(indigo.PluginBase):
                 result_queue.put(str(e))
 
     # =============================================================================
-    def generator_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+    def generator_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list[tuple[int, str]]:  # noqa
         """Shim to call the Fogbert.deviceList utility method.
 
         Args:
@@ -727,7 +728,7 @@ class Plugin(indigo.PluginBase):
         return self.Fogbert.deviceList(dev_filter=fltr)
 
     # =============================================================================
-    def generator_variable_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+    def generator_variable_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list[tuple[int, str]]:  # noqa
         """Shim to call the Fogbert.variableList utility method.
 
         Args:
@@ -742,7 +743,7 @@ class Plugin(indigo.PluginBase):
         return self.Fogbert.variableList()
 
     # =============================================================================
-    def generator_enabled_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+    def generator_enabled_device_list(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list[tuple[int, str]]:  # noqa
         """Shim to call the Fogbert.deviceListEnabled utility method.
 
         Args:
@@ -758,7 +759,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     # @staticmethod
-    def generator_device_filter(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+    def generator_device_filter(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list[tuple[str, str]]:  # noqa
         """Build a sorted, deduplicated list of device filter options.
 
         Combines standard Indigo device type filters with plugin identifiers
@@ -790,7 +791,7 @@ class Plugin(indigo.PluginBase):
         return filter_list
 
     # =============================================================================
-    def generator_dev_var(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+    def generator_dev_var(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list[tuple[int, str]]:  # noqa
         """Shim to call the Fogbert.deviceAndVariableList utility method.
 
         Args:
@@ -805,7 +806,7 @@ class Plugin(indigo.PluginBase):
         return self.Fogbert.deviceAndVariableList()
 
     # =============================================================================
-    def generator_dev_var_clean(self, fltr:str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+    def generator_dev_var_clean(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list[tuple[int, str]]:  # noqa
         """Shim to call the Fogbert.deviceAndVariableListClean utility method.
 
         Returns a combined device and variable list with names sanitized for
@@ -823,7 +824,7 @@ class Plugin(indigo.PluginBase):
         return self.Fogbert.deviceAndVariableListClean()
 
     # =============================================================================
-    def generator_state_or_value(self, fltr:str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list:  # noqa
+    def generator_state_or_value(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list[tuple[str, str]]:  # noqa
         """Shim to call the Fogbert.generatorStateOrValue utility method.
 
         Returns state keys for a selected device or the value for a selected
@@ -904,7 +905,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def list_of_plugin_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
+    def list_of_plugin_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list[tuple[str, str]]:  # noqa
         """Shim to call the plugin_methods.list_methods method.
 
         Args:
@@ -919,7 +920,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def list_of_indigo_classes(fltr:str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
+    def list_of_indigo_classes(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list[tuple[str, str]]:  # noqa
         """Shim to call the indigo_classes.display_classes method.
 
         Args:
@@ -934,7 +935,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def list_of_indigo_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list:  # noqa
+    def list_of_indigo_methods(fltr: str = "", values_dict: indigo.Dict = None, target_id: str = "") -> list[tuple[str, str]]:  # noqa
         """Shim to call the indigo_methods.display_methods method.
 
         Args:
@@ -960,7 +961,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def lorem_ipsum(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
+    def lorem_ipsum(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, indigo.Dict]:  # noqa
         """Shim to call the Lorem Ipsum tool.
 
         Args:
@@ -975,7 +976,7 @@ class Plugin(indigo.PluginBase):
         return True, values_dict
 
     @staticmethod
-    def modify_numeric_variable(action_group: indigo.actionGroup):
+    def modify_numeric_variable(action_group: indigo.actionGroup) -> Any:
         """Shim to call the modify_numeric_variable.modify method.
 
         Args:
@@ -989,7 +990,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def modify_time_variable(action_group: indigo.actionGroup):
+    def modify_time_variable(action_group: indigo.actionGroup) -> Any:
         """Shim to call the modify_time_variable.modify method.
 
         Args:
@@ -1003,7 +1004,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def network_ping_device_menu(values_dict: indigo.Dict, item_id: str) -> tuple[bool, dict]:  # noqa
+    def network_ping_device_menu(values_dict: indigo.Dict, item_id: str) -> tuple[bool, indigo.Dict]:  # noqa
         """Shim to call the ping_tool.do_the_ping method from a menu item.
 
         Args:
@@ -1017,7 +1018,7 @@ class Plugin(indigo.PluginBase):
         return True, values_dict
 
     # =============================================================================
-    def network_ping_device_action(self, action_group: indigo.actionGroup) -> tuple[bool, dict]:
+    def network_ping_device_action(self, action_group: indigo.actionGroup) -> tuple[bool, indigo.actionGroup]:
         """Shim to run the network ping tool from an action and fire any related triggers.
 
         After pinging, checks whether the updated ping device has a registered
@@ -1132,7 +1133,7 @@ class Plugin(indigo.PluginBase):
         return True
 
     @staticmethod
-    def network_quality_flags(props) -> list:
+    def network_quality_flags(props: dict) -> list[str]:
         """Parse plugin props into a networkQuality command-line argument list.
 
         Args:
@@ -1223,7 +1224,7 @@ class Plugin(indigo.PluginBase):
         return remove_delayed_actions.remove_actions()
 
     # =============================================================================
-    def run_concurrent_thread(self):
+    def run_concurrent_thread(self) -> None:
         """Standard Indigo concurrent thread; drains the network quality result queue.
 
         Runs continuously, sleeping one second per iteration. Logs any pending
@@ -1257,7 +1258,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def results_output(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:
+    def results_output(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> indigo.Dict:
         """Shim to call the results_output.display_results method.
 
         Args:
@@ -1273,7 +1274,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def object_directory(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:
+    def object_directory(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> indigo.Dict:
         """Shim to call the object_directory.display_results method.
 
         Args:
@@ -1289,7 +1290,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def object_dependencies(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> tuple[bool, dict]:  # noqa
+    def object_dependencies(values_dict: indigo.Dict = None, caller: str = "", no_log: bool = False) -> indigo.Dict:  # noqa
         """Shim to call the object_dependencies.display_results method.
 
         Args:
@@ -1304,7 +1305,7 @@ class Plugin(indigo.PluginBase):
         return values_dict
 
     # =============================================================================
-    def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
+    def search_embedded_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> Any:  # noqa
         """Shim to call the find_embedded_scripts.make_report method.
 
         Args:
@@ -1318,7 +1319,7 @@ class Plugin(indigo.PluginBase):
         return find_embedded_scripts.make_report(values_dict, no_log)
 
     # =============================================================================
-    def search_linked_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False):  # noqa
+    def search_linked_scripts(self, values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> Any:  # noqa
         """Shim to call the find_linked_scripts.make_report method.
 
         Args:
@@ -1333,7 +1334,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def send_status_request(values_dict: indigo.Dict = None, type_id: str = "") -> tuple:  # noqa
+    def send_status_request(values_dict: indigo.Dict = None, type_id: str = "") -> tuple[bool, indigo.Dict]:  # noqa
         """Shim to call the send_status_request.get_status method.
 
         Args:
@@ -1348,7 +1349,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def speak_string(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
+    def speak_string(values_dict: indigo.Dict = None, type_id: str = "") -> Any:  # noqa
         """Shim to call the speak_string.speaker method.
 
         Args:
@@ -1362,7 +1363,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def subscribed_to_changes(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
+    def subscribed_to_changes(values_dict: indigo.Dict = None, type_id: str = "") -> Any:  # noqa
         """Shim to call the subscribe_to_changes.subscriber method.
 
         Args:
@@ -1382,7 +1383,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def test_action_return(action):
+    def test_action_return(action: indigo.actionGroup) -> int | float | str | tuple | dict | list | None:
         """Dummy action that returns a typed value for testing plugin.executeAction() callers.
 
         Acts as a test endpoint for other plugins to verify how they handle
@@ -1413,7 +1414,7 @@ class Plugin(indigo.PluginBase):
             return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
         return None
 
-    def my_tests(self, action=None):  # noqa
+    def my_tests(self, action: indigo.actionGroup | None = None) -> None:  # noqa
         """Run functional tests invoked by the my_test action.
 
         Executes device creation, action group, and plugin function tests from
@@ -1440,7 +1441,7 @@ class MyThread(Thread):
     Allows long-running commands (e.g. networkQuality) to execute without
     blocking the Indigo UI or keeping dialogs open.
     """
-    def __init__(self, target, args=()):
+    def __init__(self, target: Callable, args: tuple = ()) -> None:
         """Initialize the thread with a target callable and its arguments.
 
         Args:
@@ -1453,12 +1454,12 @@ class MyThread(Thread):
         self.stop_event = False
         self.logger = logging.getLogger("Plugin")
 
-    def stop(self):
+    def stop(self) -> None:
         """Signal the thread to stop on its next iteration (e.g. on plugin shutdown)."""
         self.logger.debug("Stopping command thread.")
         self.stop_event = True
 
-    def run(self):
+    def run(self) -> None:
         """Run the thread, invoking ``target`` repeatedly until stopped."""
         while not self.stop_event:
             if self.target:
