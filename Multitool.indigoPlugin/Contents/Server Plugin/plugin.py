@@ -92,7 +92,7 @@ class Plugin(indigo.PluginBase):
 
         Args:
             values_dict: Dictionary of preference values from the dialog.
-            user_cancelled: True if the user cancelled the dialog without saving.
+            user_cancelled: True if the user canceled the dialog without saving.
 
         Returns:
             indigo.Dict: The values dictionary, updated as needed.
@@ -591,7 +591,7 @@ class Plugin(indigo.PluginBase):
         # Generate battery health report
         message = battery_level.report(no_log=True)
 
-        # Format the report for html display
+        # Format the report for HTML display
         style_stub = """<style>
                             html {
                                 background-color: whitesmoke;
