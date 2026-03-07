@@ -1383,7 +1383,7 @@ class Plugin(indigo.PluginBase):
 
     # =============================================================================
     @staticmethod
-    def test_action_return(action: indigo.actionGroup) -> int | float | str | tuple | dict | list | None:
+    def test_action_return(action: indigo.actionGroup):
         """Dummy action that returns a typed value for testing plugin.executeAction() callers.
 
         Acts as a test endpoint for other plugins to verify how they handle
@@ -1414,7 +1414,7 @@ class Plugin(indigo.PluginBase):
             return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
         return None
 
-    def my_tests(self, action: indigo.actionGroup | None = None) -> None:  # noqa
+    def my_tests(self, action=None) -> None:  # noqa
         """Run functional tests invoked by the my_test action.
 
         Executes device creation, action group, and plugin function tests from
