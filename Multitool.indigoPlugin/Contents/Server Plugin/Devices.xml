@@ -5,10 +5,10 @@
 		<Name>Network Quality Device</Name>
 		<ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
-                <Field id="networkQualityLabel" type="Label">
+                <Field id="networkQualityLabel" type="label">
                     <Label>This tool runs the macOS Network Quality command line tool using the options configured below.</Label>
                 </Field>
-                <Field id="networkQualityLabel2" type="Label" fontColor="red">
+                <Field id="networkQualityLabel2" type="label" fontColor="red">
                     <Label>Important! Device updates will only take place after running a device update action. See the help page for more information.</Label>
                 </Field>
                 <Field id="nqSeparator" type="separator"/>
@@ -88,10 +88,10 @@
 		<Name>Network Ping Device</Name>
 		<ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
-                <Field id="ping_label" type="Label">
+                <Field id="ping_label" type="label">
                     <Label>This tool runs a ping against the server you specify.</Label>
                 </Field>
-                <Field id="ping_label_2" type="Label" fontColor="red">
+                <Field id="ping_label_2" type="label" fontColor="red">
                     <Label>Important! Device updates will only take place after running a device update action. See the help page for more information.</Label>
                 </Field>
                 <Field id="hostname" type="textfield">

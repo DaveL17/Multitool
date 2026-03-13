@@ -1414,25 +1414,6 @@ class Plugin(indigo.PluginBase):
             return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
         return None
 
-    def my_tests(self, action=None) -> None:  # noqa
-        """Run functional tests invoked by the my_test action.
-
-        Executes device creation, action group, and plugin function tests from
-        the testPluginCode module. Stops on the first error and logs it to the
-        Indigo events log.
-
-        Args:
-            action: Indigo action object (unused).
-        """
-        try:
-            from Tests import testPluginCode
-            testPluginCode.TestPlugin.test_device_creation(self)
-            testPluginCode.TestPlugin.test_action_group_execution(self)
-            testPluginCode.TestPlugin.test_plugin_functions(self)
-
-        except Exception as err:
-            indigo.server.log(str(err))
-
 
 # =============================================================================
 class MyThread(Thread):

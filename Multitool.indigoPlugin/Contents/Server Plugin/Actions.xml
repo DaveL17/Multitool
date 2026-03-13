@@ -29,7 +29,7 @@
                 <Label>Mail Device:</Label>
                 <List class="indigo.devices" filter="com.indigodomo.email"/>
             </Field>
-            <Field id="email_address" type="textField" tooltip="Enter the recipient's email address.">
+            <Field id="email_address" type="textfield" tooltip="Enter the recipient's email address.">
                 <Label>Email Address:</Label>
             </Field>
             <Field id="emailAddressInstructions" type="label">
@@ -58,7 +58,7 @@
             <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/actions</SupportURL>
 
-                <Field id="networkQualityLabel" type="Label">
+                <Field id="networkQualityLabel" type="label">
                     <Label>This action runs the macOS Network Quality command line tool using the options configured below. It may take some time for the results to appear in the Indigo events log.</Label>
                 </Field>
                 <Field id="nqSeparator" type="separator"/>

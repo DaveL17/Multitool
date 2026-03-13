@@ -38,7 +38,7 @@
             <Field id="instructions" type="label">
                 <Label>Use this tool to identify color information.&#13;&#13;Note: depending on your system settings, you may have to adjust the color profile settings (gear icon). Recommended setting: "Device RGB".&#13;</Label>
             </Field>
-            <Field id="chosenColor" type="colorPicker">
+            <Field id="chosenColor" type="colorpicker">
                 <Label>Color:</Label>
             </Field>
         </ConfigUI>
@@ -248,7 +248,7 @@
         <Name>Network Ping Host...</Name>
 		<ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/devices</SupportURL>
-                <Field id="ping_label" type="Label">
+                <Field id="ping_label" type="label">
                     <Label>Run a ping against the server you specify. This dialog will block until the timeout value is reached. </Label>
                 </Field>
                 <Field id="hostname" type="textfield" tooltip="Supports IP, hostname, or alias.">
@@ -266,10 +266,10 @@
             <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
-                <Field id="networkQualityLabel" type="Label">
+                <Field id="networkQualityLabel" type="label">
                     <Label>This tool runs the macOS Network Quality command line tool using the options configured below. It may take some time for the results to appear in the Indigo events log. The test results will be output to the Events log.</Label>
                 </Field>
-                <Field id="networkQualityLabel2" type="Label" fontColor="red">
+                <Field id="networkQualityLabel2" type="label" fontColor="red">
                     <Label>Using the tool from the plugin menu does *not* update any network quality devices you may have.</Label>
                 </Field>
                 <Field id="nqSeparator" type="separator"/>
@@ -412,7 +412,7 @@
             <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
-                <Field id="getSerialPortsLabel" type="Label">
+                <Field id="getSerialPortsLabel" type="label">
                     <Label>List serial ports known to the Indigo server. To include any Bluetooth ports, uncheck the "Ignore Bluetooth" button.</Label>
                 </Field>
 
@@ -429,7 +429,7 @@
             <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
-                <Field id="speakStringLabel" type="Label">
+                <Field id="speakStringLabel" type="label">
                     <Label>Enter the text to speak.  The text field supports device and variable substitutions: %%d:DEVID:STATENAME%% and %%v:VARID%%</Label>
                 </Field>
 
@@ -453,11 +453,11 @@
             <ConfigUI>
             <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
 
-                <Field id="subscribeToChangesLabel" type="Label">
+                <Field id="subscribeToChangesLabel" type="label">
                     <Label>The Subscribe to Changes tool only subscribes to object updates (not objects created or deleted). Enabling or disabling subscriptions will cause a plugin restart to effect the change. This is normal.</Label>
                 </Field>
 
-                <Field id="subscriptionChangeLabel" type="Label" fontColor="red">
+                <Field id="subscriptionChangeLabel" type="label" fontColor="red">
                     <Label>It's recommended that you return here to disable subscriptions when you're done using the tool in order to reduce traffic between the server and plugin.</Label>
                 </Field>
 
@@ -470,7 +470,7 @@
                     <List class="self" method="generator_dev_var_clean"/>
                 </Field>
 
-                <Field id="subscribedDevicesLabel" type="Label" alignWithControl="true">
+                <Field id="subscribedDevicesLabel" type="label" alignWithControl="true">
                     <Label>Select device and/or variable IDs to subscribe to (press and hold CMD to select more than one item). Subscriptions to other object types are not supported.</Label>
                 </Field>
 
