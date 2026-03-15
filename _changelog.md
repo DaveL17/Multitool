@@ -1,5 +1,8 @@
 ### v2025.2.3
 - Adds a `pip3 freeze` report to the Reports menu.
+- Standardized project `.gitignore` file.
+- Removes unused variables from `tests/.env` file.
+- Removes empty plugin directories.
 
 ### v2025.2.2
 - Fixes bug in device ping tool where it only succeeded if both Z-Wave and Insteon interfaces were present and enabled.
