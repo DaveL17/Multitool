@@ -55,13 +55,13 @@
 ### v2022.1.10
 - Updates plugin to API `3.2`.
 - Notes that Indigo 2021.2 added ability to create a substitution string natively.
- 
+
 ### v2022.1.9
 - Adds trap to `object_dependencies.py` to account for unsupported object types.
 - Updates Object Inspection Tool in plugin Wiki to include expanded dependency inspection.
 
 ### v2022.1.8
-- Adds feature to print object dependencies to Object Inspection Tool, and removes Device Dependencies Tool from 
+- Adds feature to print object dependencies to Object Inspection Tool, and removes Device Dependencies Tool from
   plugin menu.
 - Fixes minor validation bug in Color Picker tool.
 
@@ -171,9 +171,6 @@
 - Substitution Generator Tool - Changed button title from 'Execute' to 'Close'.
 - Removes plugin update notifications.
 
-### v1.0.22
-- Synchronize self.pluginPrefs in closedPrefsConfigUi().
-- 
 ### v1.0.22
 - Synchronize self.pluginPrefs in closedPrefsConfigUi().
 
