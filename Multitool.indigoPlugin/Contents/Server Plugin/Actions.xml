@@ -2,6 +2,27 @@
 <!--suppress PyStatementEffect -->
 <Actions>
 
+    <!-- Test shim that simulates the multiToolReports menu item via plugin.executeAction(). -->
+    <Action id="menu_item_reports" uiPath="hidden">
+        <Name>Menu Item Reports (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="actionMenu" type="menu">
+                <Label>Report:</Label>
+                <List>
+                    <Option value="about_indigo">About Indigo</Option>
+                    <Option value="battery_level_report">Battery Level Report</Option>
+                    <Option value="environment_path">Environment Path Report</Option>
+                    <Option value="indigo_inventory">Indigo Inventory</Option>
+                    <Option value="installed_plugins">Installed Plugins</Option>
+                    <Option value="running_plugins">Running Plugins</Option>
+                    <Option value="pip_freeze_report">Pip Freeze Report</Option>
+                    <Option value="log_plugin_environment">Log Plugin Environment</Option>
+                </List>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_reports_action</CallbackMethod>
+    </Action>
+
     <!-- The only thing this action does is return a value to a caller using plugin.executeAction(). -->
     <Action id="test_action_return" uiPath="hidden">
         <Name>Test Action Return</Name>

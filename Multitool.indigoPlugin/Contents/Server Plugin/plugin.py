@@ -484,6 +484,28 @@ class Plugin(indigo.PluginBase):
             return error_msg_dict
 
     # =============================================================================
+    def menu_item_reports_action(self, action_group: indigo.actionGroup) -> indigo.Dict:
+        """Bridge action callback for the hidden ``menu_item_reports`` test-shim action.
+
+        Menu item callbacks (like ``reports_processor``) receive an ``indigo.Dict``
+        and access props via direct dictionary keys. Plugin action callbacks receive
+        an ``indigo.actionGroup`` and access props via ``.props``. This wrapper
+        translates the action-callback calling convention into the form that
+        ``reports_processor`` expects, allowing the test suite to exercise menu item
+        logic via ``plugin.executeAction()`` without duplicating the dispatch table.
+
+        Args:
+            action_group: Indigo action group whose ``props['actionMenu']`` identifies
+                which report to run.
+
+        Returns:
+            indigo.Dict: Forwarded return value from ``reports_processor``.
+        """
+        proxy = indigo.Dict()
+        proxy['actionMenu'] = action_group.props['actionMenu']
+        return self.reports_processor(action=proxy)
+
+    # =============================================================================
     @staticmethod
     def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, indigo.Dict]:  # noqa
         """Shim to call the ColorPicker tool.
