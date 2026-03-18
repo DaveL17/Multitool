@@ -754,6 +754,128 @@ class Plugin(indigo.PluginBase):
         return self.subscribed_to_changes(values_dict=proxy)
 
     # =============================================================================
+    def _make_print_dict_proxy(self, action_group: indigo.actionGroup) -> indigo.Dict:
+        """Build a proxy ``indigo.Dict`` from the shared props used by all printDict test shims.
+
+        Args:
+            action_group: Indigo action group containing ``props['classOfThing']``
+                and ``props['thingToPrint']``.
+
+        Returns:
+            indigo.Dict: Proxy with ``classOfThing`` and ``thingToPrint`` populated.
+        """
+        proxy = indigo.Dict()
+        proxy['classOfThing'] = action_group.props['classOfThing']
+        proxy['thingToPrint'] = action_group.props['thingToPrint']
+        return proxy
+
+    # =============================================================================
+    def menu_item_print_dict_action(self, action_group: indigo.actionGroup) -> indigo.Dict:  # noqa
+        """Bridge action callback for the hidden ``menu_item_print_dict`` test-shim action.
+
+        Simulates the "Print Object Dict" button from the ``printDict`` menu item.
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['classOfThing']``
+                and ``props['thingToPrint']``.
+
+        Returns:
+            indigo.Dict: Forwarded return value from ``results_output``.
+        """
+        return self.results_output(values_dict=self._make_print_dict_proxy(action_group))
+
+    # =============================================================================
+    def menu_item_print_dir_action(self, action_group: indigo.actionGroup) -> indigo.Dict:  # noqa
+        """Bridge action callback for the hidden ``menu_item_print_dir`` test-shim action.
+
+        Simulates the "Print Object Dir()" button from the ``printDict`` menu item.
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['classOfThing']``
+                and ``props['thingToPrint']``.
+
+        Returns:
+            indigo.Dict: Forwarded return value from ``object_directory``.
+        """
+        return self.object_directory(values_dict=self._make_print_dict_proxy(action_group))
+
+    # =============================================================================
+    def menu_item_print_dependencies_action(self, action_group: indigo.actionGroup) -> indigo.Dict:  # noqa
+        """Bridge action callback for the hidden ``menu_item_print_dependencies`` test-shim action.
+
+        Simulates the "Print Object Dependencies" button from the ``printDict`` menu item.
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['classOfThing']``
+                and ``props['thingToPrint']``.
+
+        Returns:
+            indigo.Dict: Forwarded return value from ``object_dependencies``.
+        """
+        return self.object_dependencies(values_dict=self._make_print_dict_proxy(action_group))
+
+    # =============================================================================
+    def menu_item_indigo_signature_action(self, action_group: indigo.actionGroup) -> None:  # noqa
+        """Bridge action callback for the hidden ``menu_item_indigo_signature`` test-shim action.
+
+        The ``indigoSignature`` menu item populates ``list_of_indigo_classes`` and
+        ``list_of_indigo_methods`` dynamically at runtime. Passing known values directly
+        bypasses the dynamic menus and exercises the inspection logic. ``include_hidden_methods``
+        is only used by the list generator, not the callback, so it is not forwarded.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['list_of_indigo_classes']``
+                and ``props['list_of_indigo_methods']``.
+        """
+        proxy = indigo.Dict()
+        proxy['list_of_indigo_classes'] = action_group.props['list_of_indigo_classes']
+        proxy['list_of_indigo_methods'] = action_group.props['list_of_indigo_methods']
+        self.log_of_method(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_method_signature_action(self, action_group: indigo.actionGroup) -> None:  # noqa
+        """Bridge action callback for the hidden ``menu_item_method_signature`` test-shim action.
+
+        The ``methodSignature`` menu item populates ``list_of_plugin_methods`` dynamically
+        at runtime. Passing a method name directly bypasses the dynamic menu and exercises
+        the inspection logic. ``include_hidden_methods`` is only used by the list generator,
+        not the callback, so it is not forwarded.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['list_of_plugin_methods']``.
+        """
+        proxy = indigo.Dict()
+        proxy['list_of_plugin_methods'] = action_group.props['list_of_plugin_methods']
+        self.inspect_method(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_color_picker_action(self, action_group: indigo.actionGroup) -> tuple[bool, indigo.Dict]:  # noqa
+        """Bridge action callback for the hidden ``menu_item_color_picker`` test-shim action.
+
+        The macOS color picker dialog populates ``chosenColor`` as a space-separated
+        hex string (e.g. ``'FF 00 80'``). Passing a predetermined value here bypasses
+        the dialog entirely and exercises the conversion logic directly.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['chosenColor']``.
+
+        Returns:
+            tuple: Forwarded return value from ``color_picker``.
+        """
+        proxy = indigo.Dict()
+        proxy['chosenColor'] = action_group.props['chosenColor']
+        return self.color_picker(values_dict=proxy)
+
+    # =============================================================================
     @staticmethod
     def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, indigo.Dict]:  # noqa
         """Shim to call the ColorPicker tool.

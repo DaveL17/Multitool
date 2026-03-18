@@ -23,6 +23,78 @@
         <CallbackMethod>menu_item_reports_action</CallbackMethod>
     </Action>
 
+    <Action id="menu_item_print_dict" uiPath="hidden">
+        <Name>Menu Item Print Object Dict (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="classOfThing" type="textfield">
+                <Label>Class:</Label>
+            </Field>
+            <Field id="thingToPrint" type="textfield">
+                <Label>Object ID:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_print_dict_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_print_dir" uiPath="hidden">
+        <Name>Menu Item Print Object Dir (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="classOfThing" type="textfield">
+                <Label>Class:</Label>
+            </Field>
+            <Field id="thingToPrint" type="textfield">
+                <Label>Object ID:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_print_dir_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_print_dependencies" uiPath="hidden">
+        <Name>Menu Item Print Object Dependencies (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="classOfThing" type="textfield">
+                <Label>Class:</Label>
+            </Field>
+            <Field id="thingToPrint" type="textfield">
+                <Label>Object ID:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_print_dependencies_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_indigo_signature" uiPath="hidden">
+        <Name>Menu Item Indigo Signature (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="list_of_indigo_classes" type="textfield">
+                <Label>Class:</Label>
+            </Field>
+            <Field id="list_of_indigo_methods" type="textfield">
+                <Label>Method:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_indigo_signature_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_method_signature" uiPath="hidden">
+        <Name>Menu Item Method Signature (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="list_of_plugin_methods" type="textfield">
+                <Label>Method:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_method_signature_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_color_picker" uiPath="hidden">
+        <Name>Menu Item Color Picker (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="chosenColor" type="textfield">
+                <Label>Color:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_color_picker_action</CallbackMethod>
+    </Action>
+
     <Action id="menu_item_beep_device" uiPath="hidden">
         <Name>Menu Item Beep Device (Test Shim)</Name>
         <ConfigUI>
