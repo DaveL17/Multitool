@@ -23,6 +23,170 @@
         <CallbackMethod>menu_item_reports_action</CallbackMethod>
     </Action>
 
+    <Action id="menu_item_beep_device" uiPath="hidden">
+        <Name>Menu Item Beep Device (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="listOfDevices" type="textfield">
+                <Label>Device ID:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_beep_device_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_device_inventory" uiPath="hidden">
+        <Name>Menu Item Device Inventory (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="typeOfThing" type="textfield">
+                <Label>Device Class:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_device_inventory_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_device_last_comm" uiPath="hidden">
+        <Name>Menu Item Device Last Comm (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="listOfDevices" type="textfield">
+                <Label>Filter:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_device_last_comm_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_ping_device" uiPath="hidden">
+        <Name>Menu Item Ping Device (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="listOfDevices" type="textfield">
+                <Label>Device ID:</Label>
+            </Field>
+            <Field id="suppressLogging" type="textfield">
+                <Label>Suppress Logging:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_ping_device_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_error_inventory" uiPath="hidden">
+        <Name>Menu Item Error Inventory (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="error_level" type="textfield">
+                <Label>Level:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_error_inventory_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_lorem_ipsum" uiPath="hidden">
+        <Name>Menu Item Lorem Ipsum (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="text_level" type="textfield">
+                <Label>Level:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_lorem_ipsum_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_network_ping" uiPath="hidden">
+        <Name>Menu Item Network Ping (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="hostname" type="textfield">
+                <Label>Hostname:</Label>
+            </Field>
+            <Field id="timeout" type="textfield">
+                <Label>Timeout:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_network_ping_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_network_quality" uiPath="hidden">
+        <Name>Menu Item Network Quality (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="runDownloadTest" type="textfield">
+                <Label>Download:</Label>
+            </Field>
+            <Field id="runUploadTest" type="textfield">
+                <Label>Upload:</Label>
+            </Field>
+            <Field id="usePrivateRelay" type="textfield">
+                <Label>Private Relay:</Label>
+            </Field>
+            <Field id="runTestsSequentially" type="textfield">
+                <Label>Sequential Tests:</Label>
+            </Field>
+            <Field id="verboseOutput" type="textfield">
+                <Label>Verbose:</Label>
+            </Field>
+            <Field id="outputVerification" type="textfield">
+                <Label>Verification:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_network_quality_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_remove_delayed_actions" uiPath="hidden">
+        <Name>Menu Item Remove Delayed Actions (Test Shim)</Name>
+        <CallbackMethod>menu_item_remove_delayed_actions_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_embedded_scripts" uiPath="hidden">
+        <Name>Menu Item Embedded Scripts (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="search_string" type="textfield">
+                <Label>Filter:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_embedded_scripts_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_linked_scripts" uiPath="hidden">
+        <Name>Menu Item Linked Scripts (Test Shim)</Name>
+        <CallbackMethod>menu_item_linked_scripts_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_send_status_request" uiPath="hidden">
+        <Name>Menu Item Send Status Request (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="listOfDevices" type="textfield">
+                <Label>Device ID:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_send_status_request_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_get_serial_ports" uiPath="hidden">
+        <Name>Menu Item Get Serial Ports (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="ignoreBluetooth" type="textfield">
+                <Label>Ignore Bluetooth:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_get_serial_ports_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_speak_string" uiPath="hidden">
+        <Name>Menu Item Speak String (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="thingToSpeak" type="textfield">
+                <Label>Thing to Speak:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_speak_string_action</CallbackMethod>
+    </Action>
+
+    <Action id="menu_item_subscribe_to_changes" uiPath="hidden">
+        <Name>Menu Item Subscribe to Changes (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="enableSubscribeToChanges" type="textfield">
+                <Label>Subscribe to Changes:</Label>
+            </Field>
+            <Field id="subscribedDevices" type="textfield">
+                <Label>Subscribed Devices:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_subscribe_to_changes_action</CallbackMethod>
+    </Action>
+
     <!-- The only thing this action does is return a value to a caller using plugin.executeAction(). -->
     <Action id="test_action_return" uiPath="hidden">
         <Name>Test Action Return</Name>

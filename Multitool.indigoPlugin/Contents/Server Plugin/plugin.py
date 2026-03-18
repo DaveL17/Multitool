@@ -506,6 +506,254 @@ class Plugin(indigo.PluginBase):
         return self.reports_processor(action=proxy)
 
     # =============================================================================
+    def menu_item_beep_device_action(self, action_group: indigo.actionGroup) -> tuple[bool, indigo.Dict]:  # noqa
+        """Bridge action callback for the hidden ``menu_item_beep_device`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['listOfDevices']``.
+
+        Returns:
+            tuple: Forwarded return value from ``device_to_beep``.
+        """
+        proxy = indigo.Dict()
+        proxy['listOfDevices'] = action_group.props['listOfDevices']
+        return self.device_to_beep(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_device_inventory_action(self, action_group: indigo.actionGroup) -> indigo.Dict:  # noqa
+        """Bridge action callback for the hidden ``menu_item_device_inventory`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['typeOfThing']``.
+
+        Returns:
+            indigo.Dict: Forwarded return value from ``device_inventory``.
+        """
+        proxy = indigo.Dict()
+        proxy['typeOfThing'] = action_group.props['typeOfThing']
+        return self.device_inventory(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_device_last_comm_action(self, action_group: indigo.actionGroup) -> None:  # noqa
+        """Bridge action callback for the hidden ``menu_item_device_last_comm`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['listOfDevices']``.
+        """
+        proxy = indigo.Dict()
+        proxy['listOfDevices'] = action_group.props['listOfDevices']
+        self.device_last_successful_comm(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_ping_device_action(self, action_group: indigo.actionGroup) -> None:  # noqa
+        """Bridge action callback for the hidden ``menu_item_ping_device`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['listOfDevices']`` and
+                ``props['suppressLogging']``.
+        """
+        proxy = indigo.Dict()
+        proxy['listOfDevices']  = action_group.props['listOfDevices']
+        proxy['suppressLogging'] = action_group.props['suppressLogging']
+        self.device_to_ping(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_error_inventory_action(self, action_group: indigo.actionGroup) -> bool:  # noqa
+        """Bridge action callback for the hidden ``menu_item_error_inventory`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['error_level']``.
+
+        Returns:
+            bool: Forwarded return value from ``error_inventory``.
+        """
+        proxy = indigo.Dict()
+        proxy['error_level'] = action_group.props['error_level']
+        return self.error_inventory(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_lorem_ipsum_action(self, action_group: indigo.actionGroup) -> tuple[bool, indigo.Dict]:  # noqa
+        """Bridge action callback for the hidden ``menu_item_lorem_ipsum`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['text_level']``.
+
+        Returns:
+            tuple: Forwarded return value from ``lorem_ipsum``.
+        """
+        proxy = indigo.Dict()
+        proxy['text_level'] = action_group.props['text_level']
+        return self.lorem_ipsum(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_network_ping_action(self, action_group: indigo.actionGroup) -> tuple[bool, indigo.Dict]:  # noqa
+        """Bridge action callback for the hidden ``menu_item_network_ping`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['hostname']`` and
+                ``props['timeout']``.
+
+        Returns:
+            tuple: Forwarded return value from ``network_ping_device_menu``.
+        """
+        proxy = indigo.Dict()
+        proxy['hostname'] = action_group.props['hostname']
+        proxy['timeout']  = action_group.props['timeout']
+        return self.network_ping_device_menu(values_dict=proxy, item_id="")
+
+    # =============================================================================
+    def menu_item_network_quality_action(self, action_group: indigo.actionGroup) -> bool:  # noqa
+        """Bridge action callback for the hidden ``menu_item_network_quality`` test-shim action.
+
+        Although ``network_quality`` accepts an ``indigo.actionGroup``, it passes the argument
+        directly to ``network_quality_flags`` which calls ``.get()``. ``PluginAction`` objects
+        do not support ``.get()``, so a proxy ``indigo.Dict`` is required here like all other
+        bridge methods.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing network quality flag props.
+
+        Returns:
+            bool: Forwarded return value from ``network_quality``.
+        """
+        proxy = indigo.Dict()
+        proxy['runDownloadTest']     = action_group.props['runDownloadTest']
+        proxy['runUploadTest']       = action_group.props['runUploadTest']
+        proxy['usePrivateRelay']     = action_group.props['usePrivateRelay']
+        proxy['runTestsSequentially'] = action_group.props['runTestsSequentially']
+        proxy['verboseOutput']       = action_group.props['verboseOutput']
+        proxy['outputVerification']  = action_group.props['outputVerification']
+        return self.network_quality(action_group=proxy)
+
+    # =============================================================================
+    def menu_item_remove_delayed_actions_action(self, action_group: indigo.actionGroup) -> bool:  # noqa
+        """Bridge action callback for the hidden ``menu_item_remove_delayed_actions`` test-shim action.
+
+        This menu item requires no props, so an empty proxy is passed.
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group (no props required).
+
+        Returns:
+            bool: Forwarded return value from ``remove_all_delayed_actions``.
+        """
+        return self.remove_all_delayed_actions(values_dict=indigo.Dict())
+
+    # =============================================================================
+    def menu_item_embedded_scripts_action(self, action_group: indigo.actionGroup):  # noqa
+        """Bridge action callback for the hidden ``menu_item_embedded_scripts`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['search_string']``.
+
+        Returns:
+            Result of ``search_embedded_scripts``.
+        """
+        proxy = indigo.Dict()
+        proxy['search_string'] = action_group.props['search_string']
+        return self.search_embedded_scripts(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_linked_scripts_action(self, action_group: indigo.actionGroup):  # noqa
+        """Bridge action callback for the hidden ``menu_item_linked_scripts`` test-shim action.
+
+        This menu item requires no props, so an empty proxy is passed.
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group (no props required).
+
+        Returns:
+            Result of ``search_linked_scripts``.
+        """
+        return self.search_linked_scripts(values_dict=indigo.Dict())
+
+    # =============================================================================
+    def menu_item_send_status_request_action(self, action_group: indigo.actionGroup) -> tuple[bool, indigo.Dict]:  # noqa
+        """Bridge action callback for the hidden ``menu_item_send_status_request`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['listOfDevices']``.
+
+        Returns:
+            tuple: Forwarded return value from ``send_status_request``.
+        """
+        proxy = indigo.Dict()
+        proxy['listOfDevices'] = action_group.props['listOfDevices']
+        return self.send_status_request(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_get_serial_ports_action(self, action_group: indigo.actionGroup) -> bool:  # noqa
+        """Bridge action callback for the hidden ``menu_item_get_serial_ports`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['ignoreBluetooth']``.
+
+        Returns:
+            bool: Forwarded return value from ``get_serial_ports``.
+        """
+        proxy = indigo.Dict()
+        proxy['ignoreBluetooth'] = action_group.props['ignoreBluetooth']
+        return self.get_serial_ports(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_speak_string_action(self, action_group: indigo.actionGroup):  # noqa
+        """Bridge action callback for the hidden ``menu_item_speak_string`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['thingToSpeak']``.
+
+        Returns:
+            Result of ``speak_string``.
+        """
+        proxy = indigo.Dict()
+        proxy['thingToSpeak'] = action_group.props['thingToSpeak']
+        return self.speak_string(values_dict=proxy)
+
+    # =============================================================================
+    def menu_item_subscribe_to_changes_action(self, action_group: indigo.actionGroup):  # noqa
+        """Bridge action callback for the hidden ``menu_item_subscribe_to_changes`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['enableSubscribeToChanges']``
+                and ``props['subscribedDevices']``.
+
+        Returns:
+            Result of ``subscribed_to_changes``.
+        """
+        proxy = indigo.Dict()
+        proxy['enableSubscribeToChanges'] = action_group.props['enableSubscribeToChanges']
+        proxy['subscribedDevices']        = action_group.props['subscribedDevices']
+        return self.subscribed_to_changes(values_dict=proxy)
+
+    # =============================================================================
     @staticmethod
     def color_picker(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> tuple[bool, indigo.Dict]:  # noqa
         """Shim to call the ColorPicker tool.
