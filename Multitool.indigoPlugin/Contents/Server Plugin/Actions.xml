@@ -167,10 +167,4 @@
         </ConfigUI>
         <CallbackMethod>modify_time_variable</CallbackMethod>
     </Action>
-
-    <Action id="my_test" uiPath="hidden">
-        <Name>Run My Test</Name>
-        <CallbackMethod>my_tests</CallbackMethod>
-    </Action>
-
 </Actions>
