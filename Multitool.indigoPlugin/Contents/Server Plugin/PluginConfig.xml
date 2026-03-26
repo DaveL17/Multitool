@@ -13,7 +13,7 @@
 	</Field>
 
     <!-- Debugging Template -->
-    <Template file="DLFramework/template_debugging.xml"/>
+    <Template id="debug_template" file="DLFramework/template_debugging.xml"/>
 
     <!-- Hidden Controls -->
 	<Field id="enableSubscribeToChanges" type="checkbox" defaultValue="false" hidden="true">

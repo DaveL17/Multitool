@@ -225,7 +225,7 @@
     <MenuItem id="methodSignature">
         <Name>Methods - Plugin Base...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the method that you would like to inspect. Note that some of these methods are designed to only be available within a plugin environment, and you may not be able to access them from within an Indigo scripting shell.</Label>
             </Field>
@@ -264,7 +264,7 @@
     <MenuItem id="networkQuality">
         <Name>Network Quality Report</Name>
             <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
 
                 <Field id="networkQualityLabel" type="label">
                     <Label>This tool runs the macOS Network Quality command line tool using the options configured below. It may take some time for the results to appear in the Indigo events log. The test results will be output to the Events log.</Label>
@@ -304,7 +304,7 @@
     <MenuItem id="printDict">
         <Name>Object Inspection...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
 
             <Field id="instructions" type="label">
                 <Label>Select the class and item from the class.</Label>
@@ -353,7 +353,7 @@
     <MenuItem id="remove_all_delayed_actions">
         <Name>Remove Delayed Actions...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Use this tool to remove all delayed actions that are currently scheduled.</Label>
             </Field>
@@ -370,7 +370,7 @@
     <MenuItem id="embedded_scripts">
         <Name>Scripts - Embedded...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Use this tool to find Indigo objects with embedded scripts.</Label>
             </Field>
@@ -395,7 +395,7 @@
     <MenuItem id="send_status_request">
         <Name>Send Status Request...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to send the status request to.</Label>
             </Field>
@@ -410,7 +410,7 @@
     <MenuItem id="get_serial_ports">
         <Name>Serial Ports</Name>
             <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
 
                 <Field id="getSerialPortsLabel" type="label">
                     <Label>List serial ports known to the Indigo server. To include any Bluetooth ports, uncheck the "Ignore Bluetooth" button.</Label>
@@ -427,7 +427,7 @@
     <MenuItem id="speak_string">
         <Name>Speak String...</Name>
             <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
 
                 <Field id="speakStringLabel" type="label">
                     <Label>Enter the text to speak.  The text field supports device and variable substitutions: %%d:DEVID:STATENAME%% and %%v:VARID%%</Label>
@@ -451,7 +451,7 @@
         <Name>Subscribe to Changes...</Name>
         <CallbackMethod>subscribed_to_changes</CallbackMethod>
             <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
 
                 <Field id="subscribeToChangesLabel" type="label">
                     <Label>The Subscribe to Changes tool only subscribes to object updates (not objects created or deleted). Enabling or disabling subscriptions will cause a plugin restart to effect the change. This is normal.</Label>
