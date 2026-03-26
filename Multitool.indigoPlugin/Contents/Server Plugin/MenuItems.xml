@@ -7,7 +7,7 @@
     <MenuItem id="multiToolReports">
         <Name>Reports...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="actionMenu" type="menu">
                 <Label>Select report:</Label>
                 <List>
@@ -34,7 +34,7 @@
     <MenuItem id="pickColor">
         <Name>Color Picker...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Use this tool to identify color information.&#13;&#13;Note: depending on your system settings, you may have to adjust the color profile settings (gear icon). Recommended setting: "Device RGB".&#13;</Label>
             </Field>
@@ -48,7 +48,7 @@
     <MenuItem id="beepDevice">
         <Name>Device Beep...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to locate and select "Execute". If successful, the device will emit a beep. Note: Some devices may not respond to a beep request. Only enabled devices are displayed.</Label>
             </Field>
@@ -63,7 +63,7 @@
     <MenuItem id="deviceInventoryList">
         <Name>Device Inventory...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select from the dropdown list to print a report to the log. Some filters are not available in all Indigo versions.</Label>
             </Field>
@@ -115,7 +115,7 @@
     <MenuItem id="deviceLastComm">
         <Name>Device Last Comm</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select a display filter from the dropdown list and select "Execute". If needed, you can process as many filters as you like.</Label>
             </Field>
@@ -134,7 +134,7 @@
     <MenuItem id="pingDevice">
         <Name>Device Ping...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select the device you would like to ping and select "Send Ping". If successful, the results of the Ping will be written to the Indigo log.&#13;&#13;Note: Some devices do not support ping requests. Only enabled devices are displayed.</Label>
             </Field>
@@ -161,7 +161,7 @@
     <MenuItem id="error_inventory">
         <Name>Error Inventory...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Create an inventory of messages from Indigo log files and save a file called 'Multitool Plugin Error Inventory _#_.txt' to the active Indigo Logs folder.)</Label>
             </Field>
@@ -179,7 +179,7 @@
     <MenuItem id="lorem_ipsum">
         <Name>Lorem Ipsum</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Prints generated text to the Indigo Events Log.</Label>
             </Field>
@@ -198,7 +198,7 @@
     <MenuItem id="indigoSignature">
         <Name>Methods - Indigo Base...</Name>
         <ConfigUI>
-            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu_items</SupportURL>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
             <Field id="instructions" type="label">
                 <Label>Select an Indigo class and then select a method from within that class. When you select the method, the signature will be printed to the Indigo log. This tool exposes everything--including many things you will never have a reason to call.</Label>
             </Field>
