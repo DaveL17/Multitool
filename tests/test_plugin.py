@@ -77,7 +77,12 @@ class TestPluginActions(APIBase):
         for return_value, expected_type in cases:
             with self.subTest(return_value=return_value):
                 props       = {**base_props, "return_value": return_value}
-                result      = self._assert_response(self._execute_action("test_action_return", props=props, wait=True), f"return_value={return_value!r}")
+                result      = self._assert_response(
+                    self._execute_action(f"test_action_return",
+                                         props=props,
+                                         wait=True,
+                                         msg_id=f"test_action_return_type_{return_value}"),
+                    f"return_value={return_value!r}")
                 result_json = json.loads(result.text)
                 self.assertEqual(result.status_code, 200, f"Action call failed for return_value={return_value!r}")
                 parsed = json.loads(result_json["reply_data"]) if result_json["reply_data"] != "null" else None
@@ -89,13 +94,23 @@ class TestPluginActions(APIBase):
             "email_address": os.getenv("EMAIL_ADDRESS"),
             "email_device":  os.getenv("EMAIL_DEVICE_ID"),
         }
-        result = self._assert_response(self._execute_action("emailBatteryLevelReport", props=props, wait=True), "emailBatteryLevelReport")
+        result = self._assert_response(
+            self._execute_action("emailBatteryLevelReport",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_email_battery_level_report"),
+            "emailBatteryLevelReport")
         self.assertEqual(result.status_code, 200, "emailBatteryLevelReport action call was not successful.")
 
     def test_network_ping_device_action(self):
         """Verify networkPingDeviceAction executes successfully via the Indigo Web Server API."""
         props  = {"selected_device": os.getenv("NETWORK_PING_DEVICE_ID")}
-        result = self._assert_response(self._execute_action("networkPingDeviceAction", props=props, wait=False), "networkPingDeviceAction")
+        result = self._assert_response(
+            self._execute_action("networkPingDeviceAction",
+                                 props=props,
+                                 wait=False,
+                                 msg_id="test_network_ping_device_action"),
+            "networkPingDeviceAction")
         self.assertEqual(result.status_code, 200, "networkPingDeviceAction action call was not successful.")
 
     def test_network_quality_action(self):
@@ -108,13 +123,23 @@ class TestPluginActions(APIBase):
             "verboseOutput":      "false",
             "outputVerification": "false",
         }
-        result = self._assert_response(self._execute_action("networkQualityAction", props=props, wait=False), "networkQualityAction")
+        result = self._assert_response(
+            self._execute_action("networkQualityAction",
+                                 props=props,
+                                 wait=False,
+                                 msg_id="test_network_quality_action"),
+            "networkQualityAction")
         self.assertEqual(result.status_code, 200, "networkQualityAction action call was not successful.")
 
     def test_network_quality_device_action(self):
         """Verify networkQualityDeviceAction executes successfully via the Indigo Web Server API."""
         props  = {"selected_device": os.getenv("NETWORK_QUALITY_DEVICE_ID")}
-        result = self._assert_response(self._execute_action("networkQualityDeviceAction", props=props, wait=False), "networkQualityDeviceAction")
+        result = self._assert_response(
+            self._execute_action("networkQualityDeviceAction",
+                                 props=props,
+                                 wait=False,
+                                 msg_id="test_network_quality_device_action"),
+            "networkQualityDeviceAction")
         self.assertEqual(result.status_code, 200, "networkQualityDeviceAction action call was not successful.")
 
     def test_modify_numeric_variable(self):
@@ -123,7 +148,10 @@ class TestPluginActions(APIBase):
             "list_of_variables": os.getenv("NUMERIC_VARIABLE_ID"),
             "modifier":          "+0",
         }
-        action      = self._execute_action("modify_numeric_variable", props=props, wait=True)
+        action      = self._execute_action("modify_numeric_variable",
+                                           props=props,
+                                           wait=True,
+                                           msg_id="test_modify_numeric_variable")
         result      = self._assert_response(action, "modify_numeric_variable")
         result_json = json.loads(result.text)
         self.assertEqual(result.status_code, 200, "modify_numeric_variable action call was not successful.")
@@ -139,7 +167,10 @@ class TestPluginActions(APIBase):
             "minutes":           "0",
             "seconds":           "0",
         }
-        action      = self._execute_action("modify_time_variable", props=props, wait=True)
+        action      = self._execute_action("modify_time_variable",
+                                           props=props,
+                                           wait=True,
+                                           msg_id="test_modify_time_variable")
         result      = self._assert_response(action, "modify_time_variable")
         result_json = json.loads(result.text)
         self.assertEqual(result.status_code, 200, "modify_time_variable action call was not successful.")
@@ -259,7 +290,10 @@ class TestPluginMenuItems(APIBase):
         for key in report_keys:
             with self.subTest(report=key):
                 result = self._assert_response(
-                    self._execute_action("menu_item_reports", props={"actionMenu": key}, wait=True, msg_id=f"test-multi-tool-reports-{key}"),
+                    self._execute_action("menu_item_reports",
+                                         props={"actionMenu": key},
+                                         wait=True,
+                                         msg_id=f"test_multi-tool-reports-{key}"),
                     f"multiToolReports/{key}",
                 )
                 self.assertEqual(result.status_code, 200, f"multiToolReports/{key} was not successful.")
@@ -269,7 +303,10 @@ class TestPluginMenuItems(APIBase):
         chosen_color = "FF 00 80"
         props        = {"chosenColor": chosen_color}
         result       = self._assert_response(
-            self._execute_action("menu_item_color_picker", props=props, wait=True, msg_id="test-color-picker"),
+            self._execute_action("menu_item_color_picker",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_color-picker"),
             "pickColor",
         )
         self.assertEqual(result.status_code, 200, "pickColor was not successful.")
@@ -285,7 +322,10 @@ class TestPluginMenuItems(APIBase):
         """Verify beepDevice menu item executes successfully via the hidden menu_item_beep_device action."""
         props  = {"listOfDevices": os.getenv("BEEP_DEVICE_ID")}
         result = self._assert_response(
-            self._execute_action("menu_item_beep_device", props=props, wait=True, msg_id="test-beep-device"),
+            self._execute_action("menu_item_beep_device",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_beep-device"),
             "beepDevice",
         )
         self.assertEqual(result.status_code, 200, "beepDevice was not successful.")
@@ -294,7 +334,10 @@ class TestPluginMenuItems(APIBase):
         """Verify deviceInventoryList menu item executes successfully via the hidden menu_item_device_inventory action."""
         props  = {"typeOfThing": "indigo.relay"}
         result = self._assert_response(
-            self._execute_action("menu_item_device_inventory", props=props, wait=True, msg_id="test-device-inventory"),
+            self._execute_action("menu_item_device_inventory",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_device-inventory"),
             "deviceInventoryList",
         )
         self.assertEqual(result.status_code, 200, "deviceInventoryList was not successful.")
@@ -303,7 +346,10 @@ class TestPluginMenuItems(APIBase):
         """Verify deviceLastComm menu item executes successfully via the hidden menu_item_device_last_comm action."""
         props  = {"listOfDevices": os.getenv("GENERAL_DEVICE_ID")}
         result = self._assert_response(
-            self._execute_action("menu_item_device_last_comm", props=props, wait=True, msg_id="test-device-last-comm"),
+            self._execute_action("menu_item_device_last_comm",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_device-last-comm"),
             "deviceLastComm",
         )
         self.assertEqual(result.status_code, 200, "deviceLastComm was not successful.")
@@ -312,7 +358,10 @@ class TestPluginMenuItems(APIBase):
         """Verify pingDevice menu item executes successfully via the hidden menu_item_ping_device action."""
         props  = {"listOfDevices": os.getenv("GENERAL_DEVICE_ID"), "suppressLogging": "true"}
         result = self._assert_response(
-            self._execute_action("menu_item_ping_device", props=props, wait=False, msg_id="test-ping-device"),
+            self._execute_action("menu_item_ping_device",
+                                 props=props,
+                                 wait=False,
+                                 msg_id="test_ping-device"),
             "pingDevice",
         )
         self.assertEqual(result.status_code, 200, "pingDevice was not successful.")
@@ -321,7 +370,10 @@ class TestPluginMenuItems(APIBase):
         """Verify error_inventory menu item executes successfully via the hidden menu_item_error_inventory action."""
         props  = {"error_level": "err"}
         result = self._assert_response(
-            self._execute_action("menu_item_error_inventory", props=props, wait=True, msg_id="test-error-inventory"),
+            self._execute_action("menu_item_error_inventory",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_error-inventory"),
             "error_inventory",
         )
         self.assertEqual(result.status_code, 200, "error_inventory was not successful.")
@@ -330,7 +382,10 @@ class TestPluginMenuItems(APIBase):
         """Verify lorem_ipsum menu item executes successfully via the hidden menu_item_lorem_ipsum action."""
         props  = {"text_level": "sentence"}
         result = self._assert_response(
-            self._execute_action("menu_item_lorem_ipsum", props=props, wait=True, msg_id="test-lorem-ipsum"),
+            self._execute_action("menu_item_lorem_ipsum",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_lorem-ipsum"),
             "lorem_ipsum",
         )
         self.assertEqual(result.status_code, 200, "lorem_ipsum was not successful.")
@@ -339,7 +394,10 @@ class TestPluginMenuItems(APIBase):
         """Verify indigoSignature menu item executes successfully by passing known class and method values directly."""
         props  = {"list_of_indigo_classes": "server", "list_of_indigo_methods": "apiVersion"}
         result = self._assert_response(
-            self._execute_action("menu_item_indigo_signature", props=props, wait=True, msg_id="test-indigo-signature"),
+            self._execute_action("menu_item_indigo_signature",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_indigo-signature"),
             "indigoSignature",
         )
         self.assertEqual(result.status_code, 200, "indigoSignature was not successful.")
@@ -348,7 +406,10 @@ class TestPluginMenuItems(APIBase):
         """Verify methodSignature menu item executes successfully by passing a known method name directly."""
         props  = {"list_of_plugin_methods": "debugLog"}
         result = self._assert_response(
-            self._execute_action("menu_item_method_signature", props=props, wait=True, msg_id="test-method-signature"),
+            self._execute_action("menu_item_method_signature",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_method-signature"),
             "methodSignature",
         )
         self.assertEqual(result.status_code, 200, "methodSignature was not successful.")
@@ -357,7 +418,10 @@ class TestPluginMenuItems(APIBase):
         """Verify networkPing menu item executes successfully via the hidden menu_item_network_ping action."""
         props  = {"hostname": "8.8.8.8", "timeout": "1"}
         result = self._assert_response(
-            self._execute_action("menu_item_network_ping", props=props, wait=True, msg_id="test-network-ping"),
+            self._execute_action("menu_item_network_ping",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_network-ping"),
             "networkPing",
         )
         self.assertEqual(result.status_code, 200, "networkPing was not successful.")
@@ -373,7 +437,10 @@ class TestPluginMenuItems(APIBase):
             "outputVerification":   "false",
         }
         result = self._assert_response(
-            self._execute_action("menu_item_network_quality", props=props, wait=False, msg_id="test-network-quality-menu"),
+            self._execute_action("menu_item_network_quality",
+                                 props=props,
+                                 wait=False,
+                                 msg_id="test_network-quality-menu"),
             "networkQuality",
         )
         self.assertEqual(result.status_code, 200, "networkQuality was not successful.")
@@ -382,7 +449,10 @@ class TestPluginMenuItems(APIBase):
         """Verify printDict Print Object Dict button executes successfully for a Schedule object."""
         props  = {"classOfThing": "schedules", "thingToPrint": os.getenv("SCHEDULE_ID")}
         result = self._assert_response(
-            self._execute_action("menu_item_print_dict", props=props, wait=True, msg_id="test-print-dict"),
+            self._execute_action("menu_item_print_dict",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_print-dict"),
             "printDict/dict",
         )
         self.assertEqual(result.status_code, 200, "printDict/dict was not successful.")
@@ -391,7 +461,10 @@ class TestPluginMenuItems(APIBase):
         """Verify printDict Print Object Dir() button executes successfully for a Schedule object."""
         props  = {"classOfThing": "schedules", "thingToPrint": os.getenv("SCHEDULE_ID")}
         result = self._assert_response(
-            self._execute_action("menu_item_print_dir", props=props, wait=True, msg_id="test-print-dir"),
+            self._execute_action("menu_item_print_dir",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_print-dir"),
             "printDict/dir",
         )
         self.assertEqual(result.status_code, 200, "printDict/dir was not successful.")
@@ -400,7 +473,10 @@ class TestPluginMenuItems(APIBase):
         """Verify printDict Print Object Dependencies button executes successfully for a Schedule object."""
         props  = {"classOfThing": "schedules", "thingToPrint": os.getenv("SCHEDULE_ID")}
         result = self._assert_response(
-            self._execute_action("menu_item_print_dependencies", props=props, wait=True, msg_id="test-print-dependencies"),
+            self._execute_action("menu_item_print_dependencies",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_print-dependencies"),
             "printDict/dependencies",
         )
         self.assertEqual(result.status_code, 200, "printDict/dependencies was not successful.")
@@ -408,7 +484,9 @@ class TestPluginMenuItems(APIBase):
     def test_remove_delayed_actions(self):
         """Verify remove_all_delayed_actions menu item executes successfully via the hidden action."""
         result = self._assert_response(
-            self._execute_action("menu_item_remove_delayed_actions", wait=True, msg_id="test-remove-delayed-actions"),
+            self._execute_action("menu_item_remove_delayed_actions",
+                                 wait=True,
+                                 msg_id="test_remove-delayed-actions"),
             "remove_all_delayed_actions",
         )
         self.assertEqual(result.status_code, 200, "remove_all_delayed_actions was not successful.")
@@ -417,7 +495,10 @@ class TestPluginMenuItems(APIBase):
         """Verify embedded_scripts menu item executes successfully via the hidden menu_item_embedded_scripts action."""
         props  = {"search_string": ""}
         result = self._assert_response(
-            self._execute_action("menu_item_embedded_scripts", props=props, wait=True, msg_id="test-embedded-scripts"),
+            self._execute_action("menu_item_embedded_scripts",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_embedded-scripts"),
             "embedded_scripts",
         )
         self.assertEqual(result.status_code, 200, "embedded_scripts was not successful.")
@@ -425,7 +506,9 @@ class TestPluginMenuItems(APIBase):
     def test_linked_scripts(self):
         """Verify linked_scripts menu item executes successfully via the hidden menu_item_linked_scripts action."""
         result = self._assert_response(
-            self._execute_action("menu_item_linked_scripts", wait=True, msg_id="test-linked-scripts"),
+            self._execute_action("menu_item_linked_scripts",
+                                 wait=True,
+                                 msg_id="test_linked-scripts"),
             "linked_scripts",
         )
         self.assertEqual(result.status_code, 200, "linked_scripts was not successful.")
@@ -434,7 +517,10 @@ class TestPluginMenuItems(APIBase):
         """Verify send_status_request menu item executes successfully via the hidden action."""
         props  = {"listOfDevices": os.getenv("GENERAL_DEVICE_ID")}
         result = self._assert_response(
-            self._execute_action("menu_item_send_status_request", props=props, wait=True, msg_id="test-send-status-request"),
+            self._execute_action("menu_item_send_status_request",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_send-status-request"),
             "send_status_request",
         )
         self.assertEqual(result.status_code, 200, "send_status_request was not successful.")
@@ -443,7 +529,10 @@ class TestPluginMenuItems(APIBase):
         """Verify get_serial_ports menu item executes successfully via the hidden menu_item_get_serial_ports action."""
         props  = {"ignoreBluetooth": "true"}
         result = self._assert_response(
-            self._execute_action("menu_item_get_serial_ports", props=props, wait=True, msg_id="test-get-serial-ports"),
+            self._execute_action("menu_item_get_serial_ports",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_get-serial-ports"),
             "get_serial_ports",
         )
         self.assertEqual(result.status_code, 200, "get_serial_ports was not successful.")
@@ -452,7 +541,10 @@ class TestPluginMenuItems(APIBase):
         """Verify speak_string menu item executes successfully via the hidden menu_item_speak_string action."""
         props  = {"thingToSpeak": "test"}
         result = self._assert_response(
-            self._execute_action("menu_item_speak_string", props=props, wait=True, msg_id="test-speak-string"),
+            self._execute_action("menu_item_speak_string",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_speak-string"),
             "speak_string",
         )
         self.assertEqual(result.status_code, 200, "speak_string was not successful.")
@@ -461,7 +553,10 @@ class TestPluginMenuItems(APIBase):
         """Verify subscribeToChanges menu item executes successfully via the hidden action."""
         props  = {"enableSubscribeToChanges": "false", "subscribedDevices": ""}
         result = self._assert_response(
-            self._execute_action("menu_item_subscribe_to_changes", props=props, wait=True, msg_id="test-subscribe-to-changes"),
+            self._execute_action("menu_item_subscribe_to_changes",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_subscribe-to-changes"),
             "subscribeToChanges",
         )
         self.assertEqual(result.status_code, 200, "subscribeToChanges was not successful.")
