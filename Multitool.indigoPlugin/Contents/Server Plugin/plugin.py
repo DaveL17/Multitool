@@ -105,7 +105,7 @@ class Plugin(indigo.PluginBase):
             # Debug Logging
             self.debug_level = int(values_dict.get('showDebugLevel', "30"))
             self.indigo_log_handler.setLevel(self.debug_level)
-            indigo.server.log(f"Debugging on (Level: {DEBUG_LABELS[self.debug_level]} ({self.debug_level})")
+            indigo.server.log(f"Debugging on (Level: {DEBUG_LABELS[self.debug_level]} ({self.debug_level}))")
             self.logger.debug("Plugin prefs saved.")
 
         else:
@@ -284,6 +284,7 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     def shutdown(self) -> None:
         """ Standard Indigo shutdown method."""
+        self.cmd_queue.put(None)  # unblock the command thread so it can see the stop signal
         self.command_thread.stop()
 
     def trigger_start_processing(self, trigger: indigo.Trigger) -> None:
@@ -482,7 +483,7 @@ class Plugin(indigo.PluginBase):
         }
 
         if my_action in action_map:
-            method = getattr(self, my_action)
+            method = action_map[my_action]
             method()
             return values_dict
         else:
@@ -1089,9 +1090,9 @@ class Plugin(indigo.PluginBase):
         """
         while True:
             my_command = command_queue.get()
-            my_command = ' '.join(my_command)
             if my_command is None:  # None signals the end of command execution
                 break
+            my_command = ' '.join(my_command)
             try:
                 # Run command and log result.
                 self.logger.debug("Command line argument: [ %s ]", my_command)
@@ -1496,9 +1497,9 @@ class Plugin(indigo.PluginBase):
 
         # Calculate the test duration in seconds.
         fmt = "%Y-%m-%d %H:%M:%S.%f"
-        start = dt.datetime.strptime(results['end_date'], fmt)
-        stop = dt.datetime.strptime(results['start_date'], fmt)
-        elapsed_time = (start - stop).total_seconds()
+        start = dt.datetime.strptime(results['start_date'], fmt)
+        stop  = dt.datetime.strptime(results['end_date'], fmt)
+        elapsed_time = (stop - start).total_seconds()
         self.logger.info("Network quality test took approximately %s seconds to complete.", round(elapsed_time, 3))
 
         # Build the device states list

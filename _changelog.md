@@ -1,5 +1,9 @@
-### v 2025.2.4
+### v2025.2.4
 - Fixes bug where `subscribe to changes()` was turned on at startup.
+- Fixes bug in `execute_command` where the `None` sentinel was checked after `str.join()`, making it unreachable and causing a `TypeError` on shutdown.
+- Fixes bug in `shutdown` where the command thread was never unblocked from `Queue.get()`, causing it to hang on plugin shutdown.
+- Fixes bug in `reports_processor` where `action_map` was built but unused; dispatch now correctly calls the mapped method instead of using `getattr`.
+- Fixes bug in `network_quality_device_action` where `start` and `stop` variable names were swapped relative to their assigned dates.
 
 ### v2025.2.3
 - Adds a `pip3 freeze` report to the Reports menu.
