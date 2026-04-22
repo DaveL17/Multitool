@@ -36,7 +36,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.2.3'
+__version__   = '2025.2.4'
 
 
 # =============================================================================
@@ -264,6 +264,12 @@ class Plugin(indigo.PluginBase):
         Subscribe to Changes feature is enabled in plugin preferences.
         """
         # ================ Subscribe to Indigo Object Changes =================
+        # Migrate legacy string values to bool (stored as "true"/"false" by older plugin versions).
+        raw = self.pluginPrefs.get('enableSubscribeToChanges', False)
+        if isinstance(raw, str):
+            self.pluginPrefs['enableSubscribeToChanges'] = (raw.lower() == 'true')
+            indigo.server.savePluginPrefs()
+
         if self.pluginPrefs.get('enableSubscribeToChanges', False):
             self.logger.warning(
                 "You have subscribed to device and variable changes. Disable this feature if not in use."

@@ -29,7 +29,9 @@ def subscriber(values_dict: indigo.Dict = None) -> bool:
         restart_required = True
 
     # Save preferences to plugin config for storage
-    indigo.activePlugin.pluginPrefs['enableSubscribeToChanges'] = values_dict['enableSubscribeToChanges']
+    indigo.activePlugin.pluginPrefs['enableSubscribeToChanges'] = (
+        values_dict['enableSubscribeToChanges'] in (True, 'true', 'True')
+    )
     indigo.activePlugin.pluginPrefs['subscribedDevices'] = values_dict['subscribedDevices']
 
     if restart_required:

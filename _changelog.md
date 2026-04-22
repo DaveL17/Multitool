@@ -1,3 +1,6 @@
+### v 2025.2.4
+- Fixes bug where `subscribe to changes()` was turned on at startup.
+
 ### v2025.2.3
 - Adds a `pip3 freeze` report to the Reports menu.
 - Standardized project `.gitignore` file.
