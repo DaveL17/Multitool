@@ -1,3 +1,7 @@
+### v2025.2.7
+- Wiki revisions: corrects accuracy issues (trigger docs, throughput units, version requirements, plugin ID casing,
+  Matplotlib→Multitool label in scripting page), fixes typos, and reflows all pages to 120-character line width.
+
 ### v2025.2.6
 - Fixes incorrect guard key in `trigger_start_processing`; duplicate trigger registration was checked against
   `trigger.id` instead of the `offlineDevice` key.
