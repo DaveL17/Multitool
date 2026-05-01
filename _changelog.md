@@ -1,9 +1,31 @@
+### v2025.2.6
+- Fixes incorrect guard key in `trigger_start_processing`; duplicate trigger registration was checked against
+  `trigger.id` instead of the `offlineDevice` key.
+- Removes spurious `lastSuccessfulComm` attribute from the variable exclude list in `variableUpdated` (it is a device
+  attribute, not a variable attribute).
+- Moves the "Running network quality test" log message from the generic `execute_command` runner into `network_quality`
+  where it belongs.
+
+### v2025.2.5
+- Fixes `KeyError` in `deviceUpdated` when a device property present in `orig_dev` is absent from `new_dev`.
+- Fixes double-negative logic in `validateActionConfigUi` email validation 
+  (`not re.match(...) is not None` → `re.match(...) is None`).
+- Fixes unbounded growth of `FILTER_LIST` global in `generator_device_filter`; plugin IDs are now merged into a local 
+  set rather than appended to the module-level list.
+- Fixes `MyThread.run()` re-invoking `execute_command` after it exits on the `None` sentinel; `target` is now called 
+  once since `execute_command` owns its own loop.
+- Fixes inconsistent truthiness check in `variableUpdated` (`len(val_dict)` → `len(val_dict) > 0`).
+
 ### v2025.2.4
 - Fixes bug where `subscribe to changes()` was turned on at startup.
-- Fixes bug in `execute_command` where the `None` sentinel was checked after `str.join()`, making it unreachable and causing a `TypeError` on shutdown.
-- Fixes bug in `shutdown` where the command thread was never unblocked from `Queue.get()`, causing it to hang on plugin shutdown.
-- Fixes bug in `reports_processor` where `action_map` was built but unused; dispatch now correctly calls the mapped method instead of using `getattr`.
-- Fixes bug in `network_quality_device_action` where `start` and `stop` variable names were swapped relative to their assigned dates.
+- Fixes bug in `execute_command` where the `None` sentinel was checked after `str.join()`, making it unreachable and 
+  causing a `TypeError` on shutdown.
+- Fixes bug in `shutdown` where the command thread was never unblocked from `Queue.get()`, causing it to hang on plugin 
+  shutdown.
+- Fixes bug in `reports_processor` where `action_map` was built but unused; dispatch now correctly calls the mapped 
+  method instead of using `getattr`.
+- Fixes bug in `network_quality_device_action` where `start` and `stop` variable names were swapped relative to their 
+  assigned dates.
 
 ### v2025.2.3
 - Adds a `pip3 freeze` report to the Reports menu.

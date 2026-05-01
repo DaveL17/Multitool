@@ -4,8 +4,7 @@
 Multitool Indigo Plugin
 author: DaveL17
 
-THe Multitool plugin provides a set of tools for use in using Indigo and for use when developing
-plugins for Indigo.
+The Multitool plugin provides a set of tools for use in using Indigo and for use when developing plugins for Indigo.
 """
 
 # ================================== IMPORTS ==================================
@@ -36,7 +35,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.2.4'
+__version__   = '2025.2.6'
 
 
 # =============================================================================
@@ -182,8 +181,9 @@ class Plugin(indigo.PluginBase):
                 orig_props = dict(orig_dev.ownerProps)
                 new_props = dict(new_dev.ownerProps)
                 props_dict = {
-                    key: (orig_props[key], new_props[key]) for key in orig_props
-                    if orig_props[key] != new_props[key]
+                    key: (orig_props[key], new_props.get(key))
+                    for key in orig_props
+                    if key not in new_props or orig_props[key] != new_props[key]
                 }
 
                 # State changes
@@ -296,7 +296,7 @@ class Plugin(indigo.PluginBase):
         Args:
             trigger: The Indigo trigger object to register.
         """
-        if trigger.id not in self.my_triggers:
+        if trigger.pluginProps['offlineDevice'] not in self.my_triggers:
             self.my_triggers[trigger.pluginProps['offlineDevice']] = trigger
 
     # =============================================================================
@@ -326,7 +326,7 @@ class Plugin(indigo.PluginBase):
             if orig_var.id in subscribed_items:
 
                 # # Attribute changes
-                exclude_list = ('globalProps', 'lastChanged', 'lastSuccessfulComm')
+                exclude_list = ('globalProps', 'lastChanged')
                 attrib_dict = self.get_attrib_dict(orig_obj=orig_var, new_obj=new_var, exclude=exclude_list)
 
                 # Variable value
@@ -334,11 +334,11 @@ class Plugin(indigo.PluginBase):
                 if orig_var.value != new_var.value:
                     val_dict = {new_var.name: (orig_var.value, new_var.value)}
 
-                if len(attrib_dict) > 0 or len(val_dict):
+                if len(attrib_dict) > 0 or len(val_dict) > 0:
                     indigo.server.log(
                         f"\nVariable Changes: [{new_var.name}]\n"
                         f"{'Attr:':<8}{attrib_dict}\n"
-                        f"{'Value':<8}{val_dict}"
+                        f"{'Value:':<8}{val_dict}"
                     )
 
     # =============================================================================
@@ -366,7 +366,7 @@ class Plugin(indigo.PluginBase):
             addr_list = [self.substitute(a) for a in action_dict['email_address'].replace(' ', '').split(",")]
             for addr in addr_list:
                 pattern = r"^[\w\.-]+@[\w\.-]+\.\w+$"
-                if not re.match(pattern, addr) is not None:
+                if re.match(pattern, addr) is None:
                     error_msg_dict['email_address'] = (
                         "One or more addresses are not valid. Check address(es) and ensure there are no extra commas."
                     )
@@ -761,7 +761,8 @@ class Plugin(indigo.PluginBase):
         return self.subscribed_to_changes(values_dict=proxy)
 
     # =============================================================================
-    def _make_print_dict_proxy(self, action_group: indigo.actionGroup) -> indigo.Dict:
+    @staticmethod
+    def _make_print_dict_proxy(action_group: indigo.actionGroup) -> indigo.Dict:
         """Build a proxy ``indigo.Dict`` from the shared props used by all printDict test shims.
 
         Args:
@@ -1096,10 +1097,6 @@ class Plugin(indigo.PluginBase):
             try:
                 # Run command and log result.
                 self.logger.debug("Command line argument: [ %s ]", my_command)
-                indigo.server.log(
-                    "Running network quality test. Results will be displayed when the test is complete (may take some "
-                    "time)."
-                )
                 result = subprocess.check_output(my_command,
                                                  shell=True,
                                                  stderr=subprocess.STDOUT,
@@ -1173,13 +1170,9 @@ class Plugin(indigo.PluginBase):
         Returns:
             list: Sorted list of (filter_id, filter_label) tuples.
         """
-        # Add plugin identifiers to standard filters
-        _ = [FILTER_LIST.append((dev.pluginId, dev.pluginId))
-             for dev in indigo.devices
-             if (dev.pluginId, dev.pluginId) not in FILTER_LIST
-             ]
-        # Remove any duplicate tuples
-        unique_tuples = list(set(FILTER_LIST))
+        # Combine static filters with plugin identifiers from current devices
+        plugin_tuples = {(dev.pluginId, dev.pluginId) for dev in indigo.devices}
+        unique_tuples = set(FILTER_LIST) | plugin_tuples
 
         # Remove any empty tuples ('', '')
         filter_list = [tup for tup in unique_tuples if (len(tup[0]) + len(tup[1])) > 0]
@@ -1524,7 +1517,7 @@ class Plugin(indigo.PluginBase):
         Returns:
             bool: True if macOS 12.0 or later, False otherwise.
         """
-        # Test OS compatability
+        # Test OS compatibility
         plat_form = platform.mac_ver()[0].split('.')  # ['14', '4', '1']
         if (float(plat_form[0])) < 12.0:
             self.logger.warning("This tool requires at least MacOS 12.0 Monterey.")
@@ -1589,6 +1582,9 @@ class Plugin(indigo.PluginBase):
         if not self.network_quality_test_os():
             return False
 
+        indigo.server.log(
+            "Running network quality test. Results will be displayed when the test is complete (may take some time)."
+        )
         command = self.network_quality_flags(action_group)
         self.cmd_queue.put(command)
         return True
@@ -1840,9 +1836,6 @@ class MyThread(Thread):
         self.stop_event = True
 
     def run(self) -> None:
-        """Run the thread, invoking ``target`` repeatedly until stopped."""
-        while not self.stop_event:
-            if self.target:
-                self.target(*self.args)
-            else:
-                break
+        """Run the thread, invoking ``target`` once (target manages its own loop)."""
+        if self.target:
+            self.target(*self.args)
