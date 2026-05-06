@@ -560,3 +560,75 @@ class TestPluginMenuItems(APIBase):
             "subscribeToChanges",
         )
         self.assertEqual(result.status_code, 200, "subscribeToChanges was not successful.")
+
+    def test_find_object_by_id_known_device(self):
+        """Verify find_object_by_id runs successfully when given a known device ID."""
+        props  = {"objectIds": os.getenv("GENERAL_DEVICE_ID")}
+        result = self._assert_response(
+            self._execute_action("menu_item_find_object_by_id",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_find-object-by-id-device"),
+            "findObjectById/device",
+        )
+        self.assertEqual(result.status_code, 200, "findObjectById with known device ID was not successful.")
+
+    def test_find_object_by_id_known_schedule(self):
+        """Verify find_object_by_id runs successfully when given a known schedule ID."""
+        props  = {"objectIds": os.getenv("SCHEDULE_ID")}
+        result = self._assert_response(
+            self._execute_action("menu_item_find_object_by_id",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_find-object-by-id-schedule"),
+            "findObjectById/schedule",
+        )
+        self.assertEqual(result.status_code, 200, "findObjectById with known schedule ID was not successful.")
+
+    def test_find_object_by_id_not_found(self):
+        """Verify find_object_by_id runs successfully when the ID is not found in any collection."""
+        props  = {"objectIds": "999999999"}
+        result = self._assert_response(
+            self._execute_action("menu_item_find_object_by_id",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_find-object-by-id-not-found"),
+            "findObjectById/not-found",
+        )
+        self.assertEqual(result.status_code, 200, "findObjectById with non-existent ID was not successful.")
+
+    def test_find_object_by_id_invalid_token(self):
+        """Verify find_object_by_id runs successfully when the input is not an integer."""
+        props  = {"objectIds": "abc"}
+        result = self._assert_response(
+            self._execute_action("menu_item_find_object_by_id",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_find-object-by-id-invalid"),
+            "findObjectById/invalid",
+        )
+        self.assertEqual(result.status_code, 200, "findObjectById with non-integer token was not successful.")
+
+    def test_find_object_by_id_known_folder(self):
+        """Verify find_object_by_id correctly identifies a known folder ID."""
+        props  = {"objectIds": os.getenv("FOLDER_ID")}
+        result = self._assert_response(
+            self._execute_action("menu_item_find_object_by_id",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_find-object-by-id-folder"),
+            "findObjectById/folder",
+        )
+        self.assertEqual(result.status_code, 200, "findObjectById with known folder ID was not successful.")
+
+    def test_find_object_by_id_mixed_input(self):
+        """Verify find_object_by_id handles a mix of valid, not-found, and invalid tokens."""
+        props  = {"objectIds": "%s, 999999999, abc" % os.getenv("GENERAL_DEVICE_ID")}
+        result = self._assert_response(
+            self._execute_action("menu_item_find_object_by_id",
+                                 props=props,
+                                 wait=True,
+                                 msg_id="test_find-object-by-id-mixed"),
+            "findObjectById/mixed",
+        )
+        self.assertEqual(result.status_code, 200, "findObjectById with mixed input was not successful.")

@@ -176,6 +176,26 @@
         <CallbackMethod>error_inventory</CallbackMethod>
     </MenuItem>
 
+    <MenuItem id="findObjectById">
+      <Name>Find Object by ID</Name>
+      <ConfigUI>
+
+        <Field id="instructions" type="label" alignWithControl="true">
+          <Label>Enter one or more Indigo ID numbers, separated by commas.</Label>
+        </Field>
+
+        <Field id="objectIds" type="textfield">
+          <Label>ID Number(s)</Label>
+        </Field>
+
+        <Field id="executeButton" type="button">
+          <Title>Find</Title>
+          <CallbackMethod>find_object_by_id</CallbackMethod>
+        </Field>
+
+      </ConfigUI>
+    </MenuItem>
+
     <MenuItem id="lorem_ipsum">
         <Name>Lorem Ipsum</Name>
         <ConfigUI>
@@ -476,5 +496,7 @@
 
             </ConfigUI>
     </MenuItem>
+
+
 
 </MenuItems>

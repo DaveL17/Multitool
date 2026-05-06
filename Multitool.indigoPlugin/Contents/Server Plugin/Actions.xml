@@ -424,4 +424,15 @@
         </ConfigUI>
         <CallbackMethod>modify_time_variable</CallbackMethod>
     </Action>
+
+    <Action id="menu_item_find_object_by_id" uiPath="hidden">
+        <Name>Menu Item Find Object By ID (Test Shim)</Name>
+        <ConfigUI>
+            <Field id="objectIds" type="textfield">
+                <Label>Object IDs:</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>menu_item_find_object_by_id_action</CallbackMethod>
+    </Action>
+
 </Actions>

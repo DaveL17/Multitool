@@ -35,7 +35,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.2.7'
+__version__   = '2025.2.8'
 
 
 # =============================================================================
@@ -411,6 +411,46 @@ class Plugin(indigo.PluginBase):
             return False, action_dict, error_msg_dict
 
         return True, action_dict
+
+    # =============================================================================
+    def validateMenuItemConfigUi(self, values_dict: indigo.Dict = None, type_id: str = "") -> tuple:
+        """Standard method called to validate menu item config dialogs.
+
+        Validates that all tokens in the ``objectIds`` field are integers for
+        the ``findObjectById`` menu item.
+
+        Args:
+            values_dict: Dictionary of menu item configuration values.
+            type_id: Identifier for the menu item being validated.
+
+        Returns:
+            tuple: ``(True, values_dict)`` on success, or
+            ``(False, values_dict, error_msg_dict)`` when validation fails.
+        """
+        if type_id == "findObjectById":
+            error_msg_dict = indigo.Dict()
+            raw_tokens     = values_dict.get("objectIds", "").replace(" ", "").split(",")
+            invalid_tokens = []
+
+            for token in raw_tokens:
+                if not token:
+                    continue
+                try:
+                    int(token)
+                except ValueError:
+                    invalid_tokens.append(token)
+
+            if invalid_tokens:
+                error_msg_dict['objectIds'] = (
+                    "All IDs must be integers. Invalid value(s): %s" % ", ".join(invalid_tokens)
+                )
+                error_msg_dict['showAlertText'] = (
+                    "Configuration Errors\n\nOne or more ID values are not valid integers. "
+                    "Please enter only whole numbers separated by commas."
+                )
+                return (False, values_dict, error_msg_dict)
+
+        return (True, values_dict)
 
     # =============================================================================
     # ============================== Plugin Methods ===============================
@@ -882,6 +922,18 @@ class Plugin(indigo.PluginBase):
         proxy = indigo.Dict()
         proxy['chosenColor'] = action_group.props['chosenColor']
         return self.color_picker(values_dict=proxy)
+
+    def menu_item_find_object_by_id_action(self, action_group: indigo.actionGroup) -> None:  # noqa
+        """Bridge action callback for the hidden ``menu_item_find_object_by_id`` test-shim action.
+
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group containing ``props['objectIds']``.
+        """
+        proxy = indigo.Dict()
+        proxy['objectIds'] = action_group.props['objectIds']
+        return self.find_object_by_id(values_dict=proxy)
 
     # =============================================================================
     @staticmethod
@@ -1808,6 +1860,71 @@ class Plugin(indigo.PluginBase):
         if action.props['return_value'] == "list":
             return [None, 1, 2.0, "string", (), indigo.Dict(), indigo.List()]
         return None
+
+    # =============================================================================
+    def find_object_by_id(self, values_dict: indigo.Dict = None, type_id: str = "") -> None:
+        """Search all Indigo object collections for the provided ID number(s).
+
+        Parses a comma-separated string of ID numbers from ``values_dict``,
+        searches every Indigo object collection for each valid integer ID, and
+        prints a report to the Indigo event log regardless of debug level.
+
+        Args:
+            values_dict: Menu item configuration dict containing ``objectIds``,
+                a comma-separated string of ID numbers to look up.
+            type_id: Identifier for the originating menu item (unused).
+        """
+        object_collections = (
+            ("indigo.Device",             indigo.devices),
+            ("indigo.Device Folder",      indigo.devices.folders),
+            ("indigo.Variable",           indigo.variables),
+            ("indigo.Variable Folder",    indigo.variables.folders),
+            ("indigo.ActionGroup",        indigo.actionGroups),
+            ("indigo.ActionGroup Folder", indigo.actionGroups.folders),
+            ("indigo.ControlPage",        indigo.controlPages),
+            ("indigo.ControlPage Folder", indigo.controlPages.folders),
+            ("indigo.Trigger",            indigo.triggers),
+            ("indigo.Trigger Folder",     indigo.triggers.folders),
+            ("indigo.Schedule",           indigo.schedules),
+            ("indigo.Schedule Folder",    indigo.schedules.folders),
+        )
+
+        raw_tokens  = values_dict.get("objectIds", "").replace(" ", "").split(",")
+        valid_ids   = []
+        invalid_ids = []
+
+        for token in raw_tokens:
+            if not token:
+                continue
+            try:
+                valid_ids.append(int(token))
+            except ValueError:
+                invalid_ids.append(token)
+
+        divider      = "═" * 50
+        report_lines = ["Find Object by ID", divider]
+
+        for obj_id in valid_ids:
+            matches = []
+            for type_label, collection in object_collections:
+                try:
+                    obj = collection[obj_id]
+                    matches.append(f"{type_label}  ({obj.name})")
+                except KeyError:
+                    pass
+
+            if matches:
+                report_lines.append(f"ID {obj_id:<12}  {matches[0]}")
+                for match in matches[1:]:
+                    report_lines.append(f"{'':16}   {match}")
+            else:
+                report_lines.append(f"ID {obj_id:<12}  [not found in any object type]")
+
+        for token in invalid_ids:
+            report_lines.append(f"ID {token:<12}  [invalid — not an integer]")
+
+        report_lines.append(divider)
+        indigo.server.log("\n".join(report_lines))
 
 
 # =============================================================================

@@ -1,3 +1,9 @@
+### v2025.2.8
+- Adds _Find Object by ID_ menu item: accepts one or more comma-separated Indigo ID numbers, searches all object types
+  (Devices, Variables, Action Groups, Control Pages, Triggers, Schedules, and their folders), and prints a report to
+  the Indigo Events Log identifying which object type(s) each ID belongs to. Invalid (non-integer) tokens are flagged
+  in the report.
+
 ### v2025.2.7 [released]
 - Wiki revisions: corrects accuracy issues (trigger docs, throughput units, version requirements, plugin ID casing,
   Matplotlib→Multitool label in scripting page), fixes typos, and reflows all pages to 120-character line width.
