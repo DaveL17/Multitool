@@ -1,4 +1,4 @@
-### v2025.2.7
+### v2025.2.7 [released]
 - Wiki revisions: corrects accuracy issues (trigger docs, throughput units, version requirements, plugin ID casing,
   Matplotlib→Multitool label in scripting page), fixes typos, and reflows all pages to 120-character line width.
 
@@ -37,7 +37,7 @@
 - Removes unused variables from `tests/.env` file.
 - Removes empty plugin directories.
 
-### v2025.2.2
+### v2025.2.2 [released]
 - Fixes bug in device ping tool where it only succeeded if both Z-Wave and Insteon interfaces were present and enabled.
 
 ### v2025.2.1
