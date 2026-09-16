@@ -1,4 +1,4 @@
-### v2025.2.9
+### v2025.2.9 [released]
 - Adds _Backup Indigo Database_ action: duplicates the live Indigo database, verifies the duplicate by reading it
   twice, saves the verified copy to a user-specified folder under a dated filename (appending a sequence number if
   a backup with that name already exists), verifies the saved file against the duplicate, and prunes old backups
