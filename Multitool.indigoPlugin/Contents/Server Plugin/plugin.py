@@ -35,7 +35,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.2.8'
+__version__   = '2025.2.9'
 
 
 # =============================================================================
@@ -346,8 +346,9 @@ class Plugin(indigo.PluginBase):
         """Standard method called to validate action config dialogs.
 
         Validates email addresses for the emailBatteryLevelReport action,
-        and validates numeric/time variable values for their respective
-        modification actions.
+        validates numeric/time variable values for their respective
+        modification actions, and validates the backup folder and retention
+        count for the backup_indigo_database action.
 
         Args:
             action_dict: Dictionary of action configuration values.
@@ -402,6 +403,24 @@ class Plugin(indigo.PluginBase):
                     float(self.substitute(action_dict[val]))
                 except ValueError:
                     error_msg_dict[val] = "The value must be a real number."
+
+        # ============================ Backup Indigo Database ============================
+        if type_id == "backup_indigo_database":
+            backup_folder = action_dict.get('backup_folder', '').strip()
+            if len(backup_folder) >= 2 and backup_folder[0] == backup_folder[-1] and backup_folder[0] in "\"'`":
+                backup_folder = backup_folder[1:-1].strip()
+            action_dict['backup_folder'] = backup_folder
+
+            if not self.substitute(backup_folder):
+                error_msg_dict['backup_folder'] = "Please specify a folder to save backups to."
+
+            try:
+                if int(action_dict.get('retain_count', '')) <= 0:
+                    raise ValueError
+            except ValueError:
+                error_msg_dict['retain_count'] = (
+                    "The number of backups to retain must be a whole number greater than zero."
+                )
 
         if len(error_msg_dict) > 0:
             error_msg_dict['showAlertText'] = (
@@ -1445,6 +1464,20 @@ class Plugin(indigo.PluginBase):
             Result of modify_time_variable.modify.
         """
         return modify_time_variable.modify(action_group)
+
+    # =============================================================================
+    @staticmethod
+    def backup_indigo_database(action_group: indigo.actionGroup) -> Any:
+        """Shim to call the database_backup.backup method.
+
+        Args:
+            action_group: Indigo action group containing the backup_folder
+                and retain_count in its props.
+
+        Returns:
+            Result of database_backup.backup.
+        """
+        return database_backup.backup(action_group)
 
     # =============================================================================
     @staticmethod

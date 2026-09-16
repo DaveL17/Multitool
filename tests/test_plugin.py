@@ -1,10 +1,13 @@
 """
 
 """
+import datetime as dt
 import dotenv
 import httpx
 import json
 import os
+import shutil
+import tempfile
 from tests.shared import APIBase # noqa
 from tests.shared.utils import run_host_script
 import textwrap
@@ -175,6 +178,51 @@ class TestPluginActions(APIBase):
         result_json = json.loads(result.text)
         self.assertEqual(result.status_code, 200, "modify_time_variable action call was not successful.")
         self.assertEqual(result_json["reply_data"], "true", "modify_time_variable returned False.")
+
+    def test_backup_indigo_database(self):
+        """Verify backup_indigo_database executes successfully and produces a verified backup file."""
+        backup_folder = tempfile.mkdtemp(prefix="multitool_db_backup_test_")
+        try:
+            props  = {
+                "backup_folder": backup_folder,
+                "retain_count":  "5",
+            }
+            action      = self._execute_action("backup_indigo_database",
+                                               props=props,
+                                               wait=True,
+                                               msg_id="test_backup_indigo_database")
+            result      = self._assert_response(action, "backup_indigo_database")
+            result_json = json.loads(result.text)
+            self.assertEqual(result.status_code, 200, "backup_indigo_database action call was not successful.")
+            self.assertEqual(result_json["reply_data"], "true", "backup_indigo_database returned False.")
+
+            today   = dt.datetime.now().strftime("%Y %m %d")
+            created = [f for f in os.listdir(backup_folder) if "backup" in f and today in f]
+            self.assertTrue(created, f"No backup file matching today's date was found in {backup_folder}.")
+        finally:
+            shutil.rmtree(backup_folder, ignore_errors=True)
+
+    def test_backup_indigo_database_invalid_retain_count(self):
+        """Verify backup_indigo_database fails gracefully when retain_count is not a positive integer."""
+        backup_folder = tempfile.mkdtemp(prefix="multitool_db_backup_test_")
+        try:
+            props  = {
+                "backup_folder": backup_folder,
+                "retain_count":  "0",
+            }
+            action      = self._execute_action("backup_indigo_database",
+                                               props=props,
+                                               wait=True,
+                                               msg_id="test_backup_indigo_database_invalid_retain_count")
+            result      = self._assert_response(action, "backup_indigo_database")
+            result_json = json.loads(result.text)
+            self.assertEqual(result.status_code, 200, "backup_indigo_database action call was not successful.")
+            self.assertEqual(
+                result_json["reply_data"], "false", "backup_indigo_database should fail for retain_count=0."
+            )
+            self.assertEqual(os.listdir(backup_folder), [], "No backup file should have been created.")
+        finally:
+            shutil.rmtree(backup_folder, ignore_errors=True)
 
 
 class TestPluginEvents(APIBase):

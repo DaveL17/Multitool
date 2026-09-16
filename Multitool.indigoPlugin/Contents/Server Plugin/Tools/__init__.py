@@ -5,6 +5,7 @@ __all__ = [
     "about_indigo",
     "battery_level",
     "color_picker",
+    "database_backup",
     "device_beep",
     "device_inventory",
     "device_last_successful_comm",

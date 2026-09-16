@@ -425,6 +425,27 @@
         <CallbackMethod>modify_time_variable</CallbackMethod>
     </Action>
 
+    <Action id="backup_indigo_database" uiPath="Database Actions">
+        <Name>Backup Indigo Database</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/actions</SupportURL>
+
+            <Field id="instructions" type="label">
+                <Label>Duplicates the current Indigo database, verifies its integrity, and saves it under a dated filename. "Backup Folder" is where backup files are saved (created automatically if it doesn't exist; supports Indigo substitutions). "Backups to Retain" is the number of backup files to keep (whole number greater than zero).</Label>
+            </Field>
+
+            <Field id="backup_folder" type="textfield" tooltip="Folder to save backups to. Supports Indigo variable/device substitution.">
+                <Label>Backup Folder:</Label>
+            </Field>
+
+            <Field id="retain_count" type="textfield" defaultValue="5" tooltip="Number of backup files to keep. Must be a whole number greater than zero.">
+                <Label>Backups to Retain:</Label>
+            </Field>
+
+        </ConfigUI>
+        <CallbackMethod>backup_indigo_database</CallbackMethod>
+    </Action>
+
     <Action id="menu_item_find_object_by_id" uiPath="hidden">
         <Name>Menu Item Find Object By ID (Test Shim)</Name>
         <ConfigUI>

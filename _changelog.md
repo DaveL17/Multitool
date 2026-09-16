@@ -1,4 +1,10 @@
-### v2025.2.8
+### v2025.2.9
+- Adds _Backup Indigo Database_ action: duplicates the live Indigo database, verifies the duplicate by reading it
+  twice, saves the verified copy to a user-specified folder under a dated filename (appending a sequence number if
+  a backup with that name already exists), verifies the saved file against the duplicate, and prunes old backups
+  beyond a configurable retention count. The original database file is only ever read, never modified.
+
+### v2025.2.8 [released]
 - Adds _Find Object by ID_ menu item: accepts one or more comma-separated Indigo ID numbers, searches all object types
   (Devices, Variables, Action Groups, Control Pages, Triggers, Schedules, and their folders), and prints a report to
   the Indigo Events Log identifying which object type(s) each ID belongs to. Invalid (non-integer) tokens are flagged
