@@ -1,3 +1,9 @@
+### v2025.2.10
+- Adds _Backup Indigo Database_ menu item: a developer-focused, one-click version of the _Backup Indigo Database_
+  action that saves a verified backup to the desktop (no destination folder to configure, and no retention pruning,
+  so every ad hoc backup made during a development cycle is kept). Shares the same duplicate/verify/save/verify
+  logic as the action.
+
 ### v2025.2.9 [released]
 - Adds _Backup Indigo Database_ action: duplicates the live Indigo database, verifies the duplicate by reading it
   twice, saves the verified copy to a user-specified folder under a dated filename (appending a sequence number if

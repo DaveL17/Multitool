@@ -680,3 +680,28 @@ class TestPluginMenuItems(APIBase):
             "findObjectById/mixed",
         )
         self.assertEqual(result.status_code, 200, "findObjectById with mixed input was not successful.")
+
+    def test_backup_indigo_database_menu_item(self):
+        """Verify backup_indigo_database_menu_item executes and saves a verified backup to the desktop."""
+        desktop_folder = os.path.join(os.path.expanduser("~"), "Desktop")
+        today   = dt.datetime.now().strftime("%Y %m %d")
+        before  = {f for f in os.listdir(desktop_folder) if "backup" in f and today in f}
+        created = set()
+        try:
+            result = self._assert_response(
+                self._execute_action("menu_item_backup_indigo_database",
+                                     wait=True,
+                                     msg_id="test_backup-indigo-database-menu-item"),
+                "backup_indigo_database_menu_item",
+            )
+            self.assertEqual(result.status_code, 200, "backup_indigo_database_menu_item was not successful.")
+
+            after   = {f for f in os.listdir(desktop_folder) if "backup" in f and today in f}
+            created = after - before
+            self.assertTrue(
+                created,
+                f"No new backup file matching today's date was found on the desktop ({desktop_folder})."
+            )
+        finally:
+            for filename in created:
+                os.remove(os.path.join(desktop_folder, filename))

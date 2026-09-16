@@ -1,11 +1,13 @@
 """
 Creates a verified backup copy of the live Indigo database.
 
-The backup method duplicates the current Indigo database to a temporary location, verifies the duplicate is stable
-by reading it twice and comparing the results, saves the verified copy to a user-specified folder under a dated
-filename, verifies the saved file against the in-memory duplicate, and finally prunes old backups beyond the
-configured retention count. The live database file is only ever opened for reading (via `shutil.copy2`) and is never
-modified.
+The backup function duplicates the current Indigo database to a temporary location, verifies the duplicate is
+stable by reading it twice and comparing the results, saves the verified copy to a folder under a dated filename,
+verifies the saved file against the in-memory duplicate, and (optionally) prunes old backups beyond a retention
+count. The live database file is only ever opened for reading (via `shutil.copy2`) and is never modified.
+
+backup_from_action and backup_to_desktop are the two entry points used by the plugin's action and menu item,
+respectively; both call the shared backup function.
 """
 import datetime as dt
 import glob
@@ -13,6 +15,7 @@ import logging
 import os
 import shutil
 import tempfile
+from typing import Optional
 import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
@@ -66,22 +69,23 @@ def _prune_old_backups(backup_folder: str, basename: str, ext: str, retain_count
             LOGGER.critical("Error removing old database backup: %s", stale_path, exc_info=True)
 
 
-def backup(action_group: indigo.actionGroup = None) -> bool:
+def backup(backup_folder: str, retain_count: Optional[int] = None) -> bool:
     """
     Create a verified backup of the live Indigo database.
 
-    :param indigo.actionGroup action_group: Indigo action group containing the backup_folder and retain_count props.
+    :param str backup_folder: Destination folder to save the backup to (created automatically if it doesn't exist).
+    :param Optional[int] retain_count: Number of backup files to keep for this database. Must be a whole number
+        greater than zero. If None, old backups are never pruned.
     :return: True on a fully verified, successful backup; False otherwise.
     """
     try:
-        backup_folder = indigo.activePlugin.substitute(action_group.props['backup_folder']).strip()
-        retain_count  = int(action_group.props['retain_count'])
+        backup_folder = backup_folder.strip()
 
         if not backup_folder:
             LOGGER.critical("Database backup aborted: no backup folder specified.")
             return False
 
-        if retain_count <= 0:
+        if retain_count is not None and retain_count <= 0:
             LOGGER.critical("Database backup aborted: retain_count must be a whole number greater than zero.")
             return False
 
@@ -128,10 +132,36 @@ def backup(action_group: indigo.actionGroup = None) -> bool:
         # logging level.
         indigo.server.log(f"Database backup saved to: {target_path}")
 
-        _prune_old_backups(backup_folder, basename, ext, retain_count)
+        if retain_count is not None:
+            _prune_old_backups(backup_folder, basename, ext, retain_count)
 
         return True
 
     except Exception:
         LOGGER.critical("Error creating database backup: ", exc_info=True)
         return False
+
+
+def backup_from_action(action_group: indigo.actionGroup = None) -> bool:
+    """
+    Create a verified backup of the live Indigo database using an action's configured folder and retention count.
+
+    :param indigo.actionGroup action_group: Indigo action group containing the backup_folder and retain_count props.
+    :return: True on a fully verified, successful backup; False otherwise.
+    """
+    backup_folder = indigo.activePlugin.substitute(action_group.props['backup_folder']).strip()
+    retain_count  = int(action_group.props['retain_count'])
+    return backup(backup_folder, retain_count)
+
+
+def backup_to_desktop() -> bool:
+    """
+    Create a verified backup of the live Indigo database on the user's desktop, with no retention pruning.
+
+    Intended for developers who want to create ad hoc backups (e.g. during a development cycle) without needing
+    older desktop backups automatically cleaned up.
+
+    :return: True on a fully verified, successful backup; False otherwise.
+    """
+    desktop_folder = os.path.join(os.path.expanduser("~"), "Desktop")
+    return backup(desktop_folder, retain_count=None)

@@ -456,4 +456,9 @@
         <CallbackMethod>menu_item_find_object_by_id_action</CallbackMethod>
     </Action>
 
+    <Action id="menu_item_backup_indigo_database" uiPath="hidden">
+        <Name>Menu Item Backup Indigo Database (Test Shim)</Name>
+        <CallbackMethod>menu_item_backup_indigo_database_action</CallbackMethod>
+    </Action>
+
 </Actions>

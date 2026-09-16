@@ -31,6 +31,17 @@
 
     <MenuItem id="separator2" type="separator"/>
 
+    <MenuItem id="backupIndigoDatabase">
+        <Name>Backup Indigo Database...</Name>
+        <ConfigUI>
+            <SupportURL>https://github.com/DaveL17/Multitool/wiki/menu-items</SupportURL>
+            <Field id="instructions" type="label">
+                <Label>This tool creates a verified backup of the current database and saves it to the desktop. It double-checks the backup's soundness and manages file names to avoid overwriting existing files.</Label>
+            </Field>
+        </ConfigUI>
+        <CallbackMethod>backup_indigo_database_menu_item</CallbackMethod>
+    </MenuItem>
+
     <MenuItem id="pickColor">
         <Name>Color Picker...</Name>
         <ConfigUI>

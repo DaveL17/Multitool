@@ -35,7 +35,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.2.9'
+__version__   = '2025.2.10'
 
 
 # =============================================================================
@@ -1468,16 +1468,46 @@ class Plugin(indigo.PluginBase):
     # =============================================================================
     @staticmethod
     def backup_indigo_database(action_group: indigo.actionGroup) -> Any:
-        """Shim to call the database_backup.backup method.
+        """Shim to call the database_backup.backup_from_action method.
 
         Args:
             action_group: Indigo action group containing the backup_folder
                 and retain_count in its props.
 
         Returns:
-            Result of database_backup.backup.
+            Result of database_backup.backup_from_action.
         """
-        return database_backup.backup(action_group)
+        return database_backup.backup_from_action(action_group)
+
+    # =============================================================================
+    def menu_item_backup_indigo_database_action(self, action_group: indigo.actionGroup) -> tuple[bool, indigo.Dict]:  # noqa
+        """Bridge action callback for the hidden ``menu_item_backup_indigo_database`` test-shim action.
+
+        This menu item requires no props, so an empty proxy is passed.
+        See ``menu_item_reports_action`` for an explanation of why bridge methods are needed.
+
+        Args:
+            action_group: Indigo action group (no props required).
+
+        Returns:
+            tuple: Forwarded return value from ``backup_indigo_database_menu_item``.
+        """
+        return self.backup_indigo_database_menu_item(values_dict=indigo.Dict())
+
+    # =============================================================================
+    @staticmethod
+    def backup_indigo_database_menu_item(values_dict: indigo.Dict = None, type_id: str = "") -> tuple[bool, indigo.Dict]:  # noqa
+        """Shim to call the database_backup.backup_to_desktop method.
+
+        Args:
+            values_dict: Dialog values dictionary passed to the tool.
+            type_id: Menu item type identifier (unused).
+
+        Returns:
+            tuple: ``(True, values_dict)``
+        """
+        database_backup.backup_to_desktop()
+        return True, values_dict
 
     # =============================================================================
     @staticmethod
