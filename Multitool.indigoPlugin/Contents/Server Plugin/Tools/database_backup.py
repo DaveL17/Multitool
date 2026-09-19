@@ -89,7 +89,11 @@ def backup(backup_folder: str, retain_count: Optional[int] = None) -> bool:
             LOGGER.critical("Database backup aborted: retain_count must be a whole number greater than zero.")
             return False
 
-        os.makedirs(backup_folder, exist_ok=True)
+        try:
+            os.makedirs(backup_folder, exist_ok=True)
+        except OSError as ex:
+            LOGGER.critical("Database backup aborted: could not create backup folder '%s' (%s).", backup_folder, ex)
+            return False
 
         # The original database is only ever read from -- never opened for writing.
         original_db_path = indigo.server.getDbFilePath()
@@ -114,8 +118,12 @@ def backup(backup_folder: str, retain_count: Optional[int] = None) -> bool:
 
             # ================================ Save Copy ================================
             target_path = _build_target_path(backup_folder, basename, ext)
-            with open(target_path, 'wb') as outfile:
-                outfile.write(first_read)
+            try:
+                with open(target_path, 'wb') as outfile:
+                    outfile.write(first_read)
+            except OSError as ex:
+                LOGGER.critical("Database backup aborted: could not write backup file '%s' (%s).", target_path, ex)
+                return False
 
             # ============================== Verify Saved File ==============================
             with open(target_path, 'rb') as infile:
