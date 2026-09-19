@@ -1,4 +1,4 @@
-### v2025.2.12
+### v2025.2.12 [released]
 - Fixes _Backup Indigo Database_ error handling so that a backup folder that can't be created or written to (e.g.
   an unmounted volume or a permissions issue) logs a clear, single-line message instead of a full traceback.
 
