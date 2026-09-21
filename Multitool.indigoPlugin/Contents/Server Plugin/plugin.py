@@ -1899,6 +1899,20 @@ class Plugin(indigo.PluginBase):
         Acts as a test endpoint for other plugins to verify how they handle
         various return types from executeAction calls.
 
+        This action is only meant to be invoked in-process via
+        ``indigo.executeAction()`` (as the test harness in tests/test_plugin.py
+        does), with ``props`` set directly by the caller, e.g.
+        ``props={'return_value': 'int'}``. It is NOT wired up to handle calls
+        made through the IWS ``/message/PLUGINID/ACTIONID/`` web API: IWS only
+        injects ``incoming_request_method``, ``headers``, ``body_params`` or
+        ``url_query_args``, ``request_body``, and ``file_path`` into
+        ``action.props`` for that path, so a ``return_value`` key is never
+        present and the bare ``action.props['return_value']`` lookup below
+        raises a ``KeyError`` (surfaced by IWS as a generic "unexpected error").
+        Hitting this action over HTTP requires first extracting and parsing
+        the payload from ``action.props['url_query_args']`` or
+        ``action.props['request_body']``, which this method does not do.
+
         Args:
             action: Indigo action object; ``action.props['return_value']`` must
                 be one of ``''``, ``None``, ``'int'``, ``'float'``, ``'str'``,
