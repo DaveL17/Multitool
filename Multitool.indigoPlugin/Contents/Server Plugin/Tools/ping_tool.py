@@ -6,7 +6,7 @@ calls block, the timeout is limited to 5 seconds.
 """
 
 import logging
-import os
+import subprocess
 from datetime import datetime as dt
 import indigo  # noqa
 
@@ -15,6 +15,21 @@ LOGGER = logging.getLogger("Plugin")
 
 def __init__():
     pass
+
+
+def _parse_timeout(raw_timeout, default: int = 5) -> int:
+    """
+    Parse a user-supplied timeout value, falling back to a default on bad input.
+
+    :param raw_timeout: The raw (string) timeout value from an action/device prop.
+    :param int default: Value to use if raw_timeout is missing or not a valid integer.
+    :return: A valid timeout in seconds.
+    """
+    try:
+        return int(raw_timeout)
+    except (TypeError, ValueError):
+        LOGGER.warning("Invalid ping timeout value %r; using default of %s seconds.", raw_timeout, default)
+        return default
 
 
 def do_the_ping(action, menu_call: bool = False, no_log: bool = False):
@@ -34,7 +49,7 @@ def do_the_ping(action, menu_call: bool = False, no_log: bool = False):
     # Ping requested from plugin menu
     if menu_call:
         hostname = action['hostname']
-        timeout = int(action.get('timeout', '5'))
+        timeout = _parse_timeout(action.get('timeout', '5'))
         # Limit timeouts to 5 seconds.
         if timeout > 5:
             LOGGER.warning("Pings from the plugin menu are limited to 5 seconds.")
@@ -48,14 +63,21 @@ def do_the_ping(action, menu_call: bool = False, no_log: bool = False):
         dev = indigo.devices[dev_id]  # the ping device
         if dev.enabled and dev.configured:
             hostname = dev.ownerProps['hostname']
-            timeout = int(dev.ownerProps.get('timeout', '5'))
+            timeout = _parse_timeout(dev.ownerProps.get('timeout', '5'))
         else:
             indigo.server.log("The ping device must be enabled and configured.", level=logging.WARNING)
             return
 
     # Do the ping
+    # Note: hostname is passed as a separate argv element (no shell) so it can never be interpreted as
+    # shell syntax, regardless of what characters a user puts in the device/menu hostname field.
     check_time = int(dt.now().timestamp())
-    response = os.system(f"/sbin/ping -c 1 -t {timeout} {hostname}")
+    response = subprocess.run(
+        ["/sbin/ping", "-c", "1", "-t", str(timeout), hostname],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False
+    ).returncode
 
     # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current logging
     # level.

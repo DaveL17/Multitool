@@ -1,3 +1,31 @@
+### v2025.2.13
+- Fixes _Network Ping Device Offline_ trigger not firing due to a misnamed internal method.
+- Fixes deleted/disabled offline-ping triggers leaving a stale reference behind.
+- Fixes _Network Quality_ menu item never logging its results due to a misnamed internal method.
+- Fixes _Network Ping_ device/menu item executing the hostname field as a shell command instead of a plain ping target.
+- Fixes _Network Ping_ device/menu item crashing when the timeout field is blank or non-numeric.
+- Fixes _Pip Freeze Report_ failing on any Python version other than 3.13.
+- Fixes _Modify Numeric Variable_ crashing (instead of showing a validation message) on formulas like division by zero.
+- Fixes _Subscribe to Changes_ triggering an unnecessary plugin restart on every save.
+- Fixes _Backup Indigo Database_ action crashing when the retention count field is blank.
+- Fixes _Email Battery Level Report_ crashing when no Email+ device is configured.
+- Fixes plugin startup/prefs failing if the debug level preference is ever corrupted.
+- Fixes _Battery Level Report_ silently omitting devices at 0% battery.
+- Fixes _Installed Plugins_ report crashing on a server that's never disabled a plugin.
+- Fixes _Error Message Inventory_ aborting on a non-UTF-8 log file, and adds report retention.
+- Fixes _Device Last Successful Comm_ report crashing on a device that's never communicated, and fixes its tie-break sort order.
+- Fixes silent error-swallowing and missing validation in several "print selected object" tools.
+- Fixes shared mutable state that made several tools unsafe to call concurrently.
+- Removes unused, never-wired-up "Substitution Generator" code.
+- Removes a leftover, unused default-prefs stub.
+- Fixes _Subscribe to Changes_ crashing on a corrupted device/variable ID list.
+- Fixes _Object Dictionary_/_Object Directory_ tools crashing when nothing is selected.
+- Fixes version-number comparisons that could misorder on future Indigo releases.
+- Fixes the _Network Ping Device Offline_ trigger's device picker allowing an incompatible device type.
+- Fixes an inaccurate validation message on _Modify Time Variable_.
+- Corrects a stale claim that python-dotenv ships with the plugin (it's test-only).
+- Minor cleanup: dead code, stale comments, incorrect log formatting, and XML markup.
+
 ### v2025.2.12 [released]
 - Fixes _Backup Indigo Database_ error handling so that a backup folder that can't be created or written to (e.g.
   an unmounted volume or a permissions issue) logs a clear, single-line message instead of a full traceback.

@@ -6,6 +6,7 @@ communication with each Indigo device to the Indigo events log.
 
 """
 import logging
+from datetime import datetime as dt
 import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
@@ -37,9 +38,11 @@ def report_comms(values_dict: indigo.Dict = None, menu_item: str = "", no_log: b
     if len(table) == 0:
         table = [("No devices for the selected filter", " ", " ")]
 
-    # Sort the data from newest to oldest
-    # table = sorted(table, key=lambda (dev_id, name, comm): comm, reverse=True)
-    table = sorted(table, key=lambda t: t[::-1], reverse=True)
+    # Sort the data newest-first by last successful comm; devices that have never communicated
+    # (comm is None) sort last. Ties are broken by device name, ascending. Relies on sort() being
+    # stable: sorting by name first, then by comm, preserves the name order within each comm group.
+    table.sort(key=lambda t: t[1])
+    table.sort(key=lambda t: t[2] or dt.min, reverse=True)
 
     # Find the length of the longest device name
     length = 0

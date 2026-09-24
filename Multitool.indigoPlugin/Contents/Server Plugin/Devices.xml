@@ -100,7 +100,6 @@
                 <Field id="timeout" type="textfield" defaultValue="5" tooltip="Time in seconds to wait for a response (5).">
                     <Label>Timeout:</Label>
                 </Field>
-                <Field id="sep_1" type="separator"/>
             </ConfigUI>
         <States>
 

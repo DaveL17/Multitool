@@ -25,8 +25,12 @@ def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: b
     :return:
     """
     dep_dict = {}
-    obj_id = int(values_dict['thingToPrint'])
-    thing = getattr(indigo, values_dict['classOfThing'])[int(values_dict['thingToPrint'])]
+    try:
+        obj_id = int(values_dict['thingToPrint'])
+        thing = getattr(indigo, values_dict['classOfThing'])[obj_id]
+    except (AttributeError, KeyError, TypeError, ValueError):
+        LOGGER.warning("No object selected, or the selected object no longer exists.")
+        return
 
     try:
         # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current

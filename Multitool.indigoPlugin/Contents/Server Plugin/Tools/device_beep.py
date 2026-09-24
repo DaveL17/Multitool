@@ -8,7 +8,6 @@ import logging
 import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
-ERR_MSG_DICT = indigo.Dict()
 
 
 def __init__():
@@ -32,6 +31,7 @@ def beeper(values_dict: indigo.Dict = None):
         return True
 
     except ValueError:
-        ERR_MSG_DICT['listOfDevices'] = "You must select a device to receive the beep request"
-        ERR_MSG_DICT['showAlertText'] = "Beep Error.\n\nReason: No device selected."
-        return False, values_dict, ERR_MSG_DICT
+        err_msg_dict = indigo.Dict()
+        err_msg_dict['listOfDevices'] = "You must select a device to receive the beep request"
+        err_msg_dict['showAlertText'] = "Beep Error.\n\nReason: No device selected."
+        return False, values_dict, err_msg_dict

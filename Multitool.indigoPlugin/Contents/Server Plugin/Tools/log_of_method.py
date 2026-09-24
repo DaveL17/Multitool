@@ -22,9 +22,14 @@ def display_inspection(values_dict: indigo.Dict = None) -> None:
     :param indigo.Dict values_dict:
     :return:
     """
+    try:
+        method_to_call = getattr(indigo, values_dict['list_of_indigo_classes'])
+        method_to_call = getattr(method_to_call, values_dict['list_of_indigo_methods'])
+    except (AttributeError, KeyError, TypeError):
+        LOGGER.warning("No class/method selected, or the selection is no longer valid.")
+        return
+
     # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
     # logging level.
-    method_to_call = getattr(indigo, values_dict['list_of_indigo_classes'])
-    method_to_call = getattr(method_to_call, values_dict['list_of_indigo_methods'])
     inspector = inspect.getdoc(method_to_call)
     indigo.server.log(f"\nindigo.{values_dict['list_of_indigo_classes']}.{inspector}")

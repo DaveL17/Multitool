@@ -15,7 +15,6 @@ __all__ = [
     "error_inventory",
     "find_embedded_scripts",
     "find_linked_scripts",
-    # "generator_substitutions",
     "indigo_classes",
     "indigo_inventory",
     "indigo_methods",
@@ -23,7 +22,6 @@ __all__ = [
     "installed_plugins",
     "log_of_method",
     "lorem_ipsum",
-    # "man_page",
     "modify_numeric_variable",
     "modify_time_variable",
     "object_dependencies",
@@ -37,6 +35,5 @@ __all__ = [
     "send_status_request",
     "serial_ports",
     "speak_string",
-    "subscribe_to_changes",
-    "substitution_generator"
+    "subscribe_to_changes"
 ]

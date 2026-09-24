@@ -8,7 +8,6 @@ import logging
 import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
-ERR_MSG_DICT = indigo.Dict()
 
 
 def __init__():
@@ -26,8 +25,9 @@ def speaker(values_dict: indigo.Dict = None):
 
     # If 'thingToSpeak' is an empty string
     if not text:
-        ERR_MSG_DICT['thingToSpeak'] = "Required"
-        return values_dict, ERR_MSG_DICT
+        err_msg_dict = indigo.Dict()
+        err_msg_dict['thingToSpeak'] = "Required"
+        return values_dict, err_msg_dict
 
     try:
         # Validate substitution string
@@ -44,7 +44,8 @@ def speaker(values_dict: indigo.Dict = None):
 
     except Exception as err:
         LOGGER.critical("Error speaking string. %s", err)
-        ERR_MSG_DICT['thingToSpeak'] = "String to speak is invalid."
-        return_value = (values_dict, ERR_MSG_DICT)
+        err_msg_dict = indigo.Dict()
+        err_msg_dict['thingToSpeak'] = "String to speak is invalid."
+        return_value = (values_dict, err_msg_dict)
 
     return return_value

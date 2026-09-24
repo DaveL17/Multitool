@@ -27,10 +27,17 @@ def display_docstring(values_dict: indigo.Dict = None) -> None:
     :param indigo.Dict values_dict:
     :return:
     """
+    try:
+        method = getattr(indigo.activePlugin, values_dict['list_of_plugin_methods'])
+    except (AttributeError, KeyError, TypeError):
+        LOGGER.warning("No method selected, or the selected method no longer exists.")
+        return
+
     # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
     # logging level.
-    method = getattr(indigo.activePlugin, values_dict['list_of_plugin_methods'])
-    signature = inspect.getfullargspec(method)
+    try:
+        signature = inspect.getfullargspec(method)
+    except TypeError:
+        signature = "(signature unavailable for this method)"
     indigo.server.log(f"self.{values_dict['list_of_plugin_methods']}: {signature}")
-    doc_string = getattr(indigo.activePlugin, values_dict['list_of_plugin_methods']).__doc__
-    indigo.server.log(f"Docstring: {doc_string}", isError=False)
+    indigo.server.log(f"Docstring: {method.__doc__}", isError=False)

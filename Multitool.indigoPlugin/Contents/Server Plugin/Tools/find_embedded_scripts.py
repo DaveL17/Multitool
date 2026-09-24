@@ -7,7 +7,6 @@ import indigo  # noqa
 
 LOGGER = logging.getLogger("Plugin")
 SPACER = f"{'':35}"
-obj_list = []  # Container for objects with embedded scripts [(obj.id, obj.name), ...]
 
 
 def __init__():
@@ -24,15 +23,15 @@ def sort_obj_list(ob_list: list) -> str:
     new_ob_list = sorted(ob_list, key=lambda item: item[1])
     for obj in new_ob_list:
         result += f"{SPACER}{obj[0]:<10} - {obj[1]}\n"
-    obj_list.clear()
     return result
 
 
-def build_report(header: str) -> str:
+def build_report(header: str, obj_list: list) -> str:
     """
     Add payload objects to the report
 
     :param str header: header string
+    :param list obj_list: objects with embedded scripts found in this section [(obj.id, obj.name), ...]
     """
     report = f"\n{SPACER}{' ' + header + ' ':=^60}\n"
     count_dict = defaultdict(int)
@@ -79,15 +78,17 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
     result += f"\n{SPACER}Search Filter: [ {search_string or 'None'} ]"
 
     # ====================== Action Groups =======================
+    obj_list = []
     for action_group in indigo.rawServerRequest("GetActionGroupList"):
         for step in action_group['ActionSteps']:
             if step.get('ScriptSource', None):
                 if search_string in step['ScriptSource']:
                     obj_list.append((action_group['ID'], action_group['Name']))
     if obj_list:
-        result += build_report("Action Groups")  # Only if there are results to return
+        result += build_report("Action Groups", obj_list)  # Only if there are results to return
 
     # ====================== Control Pages =======================
+    obj_list = []
     for page in indigo.rawServerRequest("GetControlPageList"):
         for elem in page['PageElemList']:
             for action in elem['ActionGroup']['ActionSteps']:
@@ -95,25 +96,27 @@ def make_report(values_dict: indigo.Dict, no_log: bool = False):
                     if search_string in action['ScriptSource']:
                         obj_list.append((page['ID'], page['Name']))
     if obj_list:
-        result += build_report("Control Pages")  # Only if there are results to return
+        result += build_report("Control Pages", obj_list)  # Only if there are results to return
 
     # ======================== Schedules =========================
+    obj_list = []
     for schedule in indigo.rawServerRequest("GetEventScheduleList"):
         for action in schedule['ActionGroup']['ActionSteps']:
             if action.get('ScriptSource', None):
                 if search_string in action['ScriptSource']:
                     obj_list.append((schedule['ID'], schedule['Name']))
     if obj_list:
-        result += build_report("Schedules")  # Only if there are results to return
+        result += build_report("Schedules", obj_list)  # Only if there are results to return
 
     # ========================= Triggers =========================
+    obj_list = []
     for trigger in indigo.rawServerRequest("GetEventTriggerList"):
         for event in trigger['ActionGroup']['ActionSteps']:
             if event.get('ScriptSource', None):
                 if search_string in event['ScriptSource']:
                     obj_list.append((trigger['ID'], trigger['Name']))
     if obj_list:
-        result += build_report("Triggers")  # Only if there are results to return
+        result += build_report("Triggers", obj_list)  # Only if there are results to return
 
     if not no_log:
         result += f"{SPACER}" + "=" * 60 + "\n"

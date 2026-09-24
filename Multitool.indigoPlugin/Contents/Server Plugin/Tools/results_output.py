@@ -23,7 +23,11 @@ def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: b
     :param bool no_log: If True, no output is logged.
     :return:
     """
-    thing = getattr(indigo, values_dict['classOfThing'])[int(values_dict['thingToPrint'])]
+    try:
+        thing = getattr(indigo, values_dict['classOfThing'])[int(values_dict['thingToPrint'])]
+    except (AttributeError, KeyError, TypeError, ValueError):
+        LOGGER.warning("No object selected, or the selected object no longer exists.")
+        return
 
     if not no_log:
         # We write to `indigo.server.log` to ensure that the output is visible regardless of the plugin's current
@@ -31,7 +35,7 @@ def display_results(values_dict: indigo.Dict = None, caller: str = "", no_log: b
         indigo.server.log(f"{' ' + thing.name + ' ':{'='}^80}")
         try:
             indigo.server.log(f"\n{dict(thing)}")
-        except:
+        except (TypeError, ValueError):
             indigo.server.log(f"\n{thing}")
 
         indigo.server.log("=" * 80 + "\n")

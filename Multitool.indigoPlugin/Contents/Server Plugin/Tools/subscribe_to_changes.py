@@ -22,16 +22,15 @@ def subscriber(values_dict: indigo.Dict = None) -> bool:
     :param indigo.Dict values_dict:
     :return:
     """
-    # If user changes subscription preference, set flag for plugin restart (see __init__)
-    if indigo.activePlugin.pluginPrefs['enableSubscribeToChanges'] == values_dict['enableSubscribeToChanges']:
-        restart_required = False
-    else:
-        restart_required = True
+    # If user changes subscription preference, set flag for plugin restart (see __init__).
+    # Both sides are normalized to bool before comparing: the stored pref is already a bool (see
+    # plugin.py's startup() migration), but the dialog's raw value may be a string like "true"/"false".
+    new_pref = values_dict['enableSubscribeToChanges'] in (True, 'true', 'True')
+    current_pref = indigo.activePlugin.pluginPrefs.get('enableSubscribeToChanges', False)
+    restart_required = bool(current_pref) != new_pref
 
     # Save preferences to plugin config for storage
-    indigo.activePlugin.pluginPrefs['enableSubscribeToChanges'] = (
-        values_dict['enableSubscribeToChanges'] in (True, 'true', 'True')
-    )
+    indigo.activePlugin.pluginPrefs['enableSubscribeToChanges'] = new_pref
     indigo.activePlugin.pluginPrefs['subscribedDevices'] = values_dict['subscribedDevices']
 
     if restart_required:

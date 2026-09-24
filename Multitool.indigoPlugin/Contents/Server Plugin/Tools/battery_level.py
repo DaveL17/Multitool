@@ -26,7 +26,7 @@ def report(no_log: bool = False) -> str:
 
     # Gather all battery-powered devices and their battery levels
     for dev in indigo.devices.iter("indigo.zwave"):
-        if dev.batteryLevel:
+        if dev.batteryLevel is not None:
             collection[dev.name] = dev.batteryLevel
 
     if len(collection) == 0:

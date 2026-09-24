@@ -26,7 +26,11 @@ def get_list(no_log: bool = False) -> None:
     indigo_install_path = indigo.server.getInstallFolderPath()
 
     for plugin_folder in ('Plugins', 'Plugins (Disabled)'):
-        plugins_list = os.listdir(indigo_install_path + '/' + plugin_folder)
+        try:
+            plugins_list = os.listdir(indigo_install_path + '/' + plugin_folder)
+        except FileNotFoundError:
+            # E.g. "Plugins (Disabled)" won't exist on a server that's never disabled a plugin.
+            plugins_list = []
 
         for plugin in plugins_list:
 
@@ -40,8 +44,6 @@ def get_list(no_log: bool = False) -> None:
                     plug_list = plistlib.load(p_list)
 
                 cf_bundle_identifier = plug_list["CFBundleIdentifier"]
-
-                # Don't include self (i.e. this plugin) in the plugin list
                 cf_bundle_display_name = plug_list["CFBundleDisplayName"]
 
                 # if disabled plugins folder, append 'Disabled' to name

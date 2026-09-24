@@ -158,7 +158,11 @@ def backup_from_action(action_group: indigo.actionGroup = None) -> bool:
     :return: True on a fully verified, successful backup; False otherwise.
     """
     backup_folder = indigo.activePlugin.substitute(action_group.props['backup_folder']).strip()
-    retain_count  = int(action_group.props['retain_count'])
+    try:
+        retain_count = int(action_group.props['retain_count'])
+    except (TypeError, ValueError):
+        LOGGER.critical("Database backup aborted: retain_count must be a whole number greater than zero.")
+        return False
     return backup(backup_folder, retain_count)
 
 

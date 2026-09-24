@@ -9,7 +9,7 @@ object ID, name, folder ID, and folder name.
 import logging
 import indigo  # noqa
 
-LOGGER = logging.getLogger()
+LOGGER = logging.getLogger("Plugin")
 
 
 def __init__():
@@ -105,10 +105,10 @@ def show_inventory(no_log: bool = False) -> None:
         col_2 += [item[2] for item in inventory[key]]
         col_3 += [item[3] for item in inventory[key]]
 
-    col0 = max(len(f"{item}") for item in col_0) + 2
-    col1 = max(len(f"{item}") for item in col_1) + 2
-    col2 = max(len(f"{item}") for item in col_2) + 2
-    col3 = max(len(f"{item}") for item in col_3) + 2
+    col0 = max((len(f"{item}") for item in col_0), default=0) + 2
+    col1 = max((len(f"{item}") for item in col_1), default=0) + 2
+    col2 = max((len(f"{item}") for item in col_2), default=0) + 2
+    col3 = max((len(f"{item}") for item in col_3), default=0) + 2
 
     table_width = sum([col0, col1, col2, col3])
 

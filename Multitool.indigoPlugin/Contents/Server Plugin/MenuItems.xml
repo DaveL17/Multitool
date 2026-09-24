@@ -341,7 +341,7 @@
                 <Label>Select the class and item from the class.</Label>
             </Field>
 
-            <Field id="classOfThing" type="menu" method="dict_to_print">
+            <Field id="classOfThing" type="menu">
                 <Label>Class:</Label>
                 <List>
                     <Option value="actionGroups">Action</Option>

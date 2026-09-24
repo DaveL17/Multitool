@@ -25,8 +25,11 @@ def print_dict(values_dict: indigo.Dict = None) -> list:
     if not values_dict:
         return_value = [("none", "None")]
     else:
-        return_value = [
-            (thing.id, thing.name) for thing in getattr(indigo, values_dict['classOfThing'])
-        ]
+        try:
+            return_value = [
+                (thing.id, thing.name) for thing in getattr(indigo, values_dict['classOfThing'])
+            ]
+        except (AttributeError, TypeError):
+            return_value = []
 
     return return_value

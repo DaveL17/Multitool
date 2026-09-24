@@ -26,7 +26,6 @@ import indigo  # noqa
 # My modules
 import DLFramework.DLFramework as Dave  # noqa
 from constants import DEBUG_LABELS, FILTER_LIST
-from plugin_defaults import kDefaultPluginPrefs  # noqa
 from Tools import *
 
 # =================================== HEADER ==================================
@@ -35,7 +34,7 @@ __copyright__ = Dave.__copyright__
 __license__   = Dave.__license__
 __build__     = Dave.__build__
 __title__     = 'Multitool Plugin for the Indigo Smart Home Software Platform'
-__version__   = '2025.2.12'
+__version__   = '2025.2.13'
 
 
 # =============================================================================
@@ -58,7 +57,12 @@ class Plugin(indigo.PluginBase):
         self.my_triggers = {}  # Master dict of triggers
 
         # =============================== Debug Logging ================================
-        self.debug_level: int = int(self.pluginPrefs.get('showDebugLevel', '30'))
+        try:
+            self.debug_level: int = int(self.pluginPrefs.get('showDebugLevel', '30'))
+            if self.debug_level not in DEBUG_LABELS:
+                raise ValueError(self.debug_level)
+        except ValueError:
+            self.debug_level = 30
         self.plugin_file_handler.setFormatter(logging.Formatter(Dave.LOG_FORMAT, datefmt='%Y-%m-%d %H:%M:%S'))
         self.indigo_log_handler.setLevel(self.debug_level)
 
@@ -102,7 +106,12 @@ class Plugin(indigo.PluginBase):
                 self.pluginPrefs[k] = values_dict[k]
 
             # Debug Logging
-            self.debug_level = int(values_dict.get('showDebugLevel', "30"))
+            try:
+                self.debug_level = int(values_dict.get('showDebugLevel', "30"))
+                if self.debug_level not in DEBUG_LABELS:
+                    raise ValueError(self.debug_level)
+            except ValueError:
+                self.debug_level = 30
             self.indigo_log_handler.setLevel(self.debug_level)
             indigo.server.log(f"Debugging on (Level: {DEBUG_LABELS[self.debug_level]} ({self.debug_level}))")
             self.logger.debug("Plugin prefs saved.")
@@ -159,10 +168,7 @@ class Plugin(indigo.PluginBase):
         if self.pluginPrefs.get('enableSubscribeToChanges', False):
 
             track_list = self.pluginPrefs.get('subscribedDevices', '')
-            if track_list == '':
-                subscribed_items = []
-            else:
-                subscribed_items = [int(_) for _ in track_list.replace(' ', '').split(',')]
+            subscribed_items = self._parse_id_list(track_list) if track_list else []
 
             # If beeper id in list of tracked items
             if orig_dev.id in subscribed_items:
@@ -201,9 +207,34 @@ class Plugin(indigo.PluginBase):
                         f"{'States:':<8}{state_dict}"
                     )
 
+    def _parse_id_list(self, raw: str) -> list[int]:
+        """Parse a comma-separated string of object IDs, ignoring any malformed tokens.
+
+        Args:
+            raw: Comma-separated ID string (e.g. from a subscribedDevices pref value).
+
+        Returns:
+            list: Parsed integer IDs. Tokens that aren't valid integers are skipped
+            (and logged) rather than raising, since this is read from a pref value
+            that could in principle be corrupted or hand-edited.
+        """
+        items = []
+        for token in raw.replace(' ', '').split(','):
+            if not token:
+                continue
+            try:
+                items.append(int(token))
+            except ValueError:
+                self.logger.warning("Ignoring invalid subscribed item ID: %r", token)
+        return items
+
     @staticmethod
     def get_device_list(filter: str = "", type_id: str = "", values_dict: indigo.Dict = None, target_id: int = 0) -> list[tuple[int, str]]:  # noqa
-        """Return a list of (id, name) tuples for all plugin-owned devices.
+        """Return a list of (id, name) tuples for this plugin's Network Ping devices.
+
+        Used to populate the "Network Ping Device Offline" trigger's device picker.
+        Restricted to the "networkPing" device type so a user can't select a Network
+        Quality device, which has no offline concept this trigger can act on.
 
         Args:
             filter: Device type filter string (unused).
@@ -214,7 +245,7 @@ class Plugin(indigo.PluginBase):
         Returns:
             list: List of (device_id, device_name) tuples.
         """
-        return [(dev.id, dev.name) for dev in indigo.devices.iter(filter="self")]
+        return [(dev.id, dev.name) for dev in indigo.devices.iter(filter="self.networkPing")]
 
     # =============================================================================
     def getMenuActionConfigUiValues(self, menu_id: str = "") -> indigo.Dict:  # noqa
@@ -287,7 +318,7 @@ class Plugin(indigo.PluginBase):
         self.cmd_queue.put(None)  # unblock the command thread so it can see the stop signal
         self.command_thread.stop()
 
-    def trigger_start_processing(self, trigger: indigo.Trigger) -> None:
+    def triggerStartProcessing(self, trigger: indigo.Trigger) -> None:  # noqa
         """Standard Indigo method called when a trigger starts processing.
 
         Registers the trigger in the local trigger dictionary, keyed by the
@@ -298,6 +329,20 @@ class Plugin(indigo.PluginBase):
         """
         if trigger.pluginProps['offlineDevice'] not in self.my_triggers:
             self.my_triggers[trigger.pluginProps['offlineDevice']] = trigger
+
+    # =============================================================================
+    def triggerStopProcessing(self, trigger: indigo.Trigger) -> None:  # noqa
+        """Standard Indigo method called when a trigger stops processing.
+
+        Removes the trigger from the local trigger dictionary so that a
+        deleted or disabled trigger doesn't leave a stale entry behind.
+
+        Args:
+            trigger: The Indigo trigger object to unregister.
+        """
+        offline_device = trigger.pluginProps.get('offlineDevice')
+        if self.my_triggers.get(offline_device) is trigger:
+            del self.my_triggers[offline_device]
 
     # =============================================================================
     def variableUpdated(self, orig_var: indigo.Variable, new_var: indigo.Variable) -> None:  # noqa
@@ -317,10 +362,7 @@ class Plugin(indigo.PluginBase):
         if self.pluginPrefs.get('enableSubscribeToChanges', False):
 
             track_list = self.pluginPrefs.get('subscribedDevices', '')
-            if track_list == '':
-                subscribed_items = []
-            else:
-                subscribed_items = [int(_) for _ in track_list.replace(' ', '').split(',')]
+            subscribed_items = self._parse_id_list(track_list) if track_list else []
 
             # If var id in list of tracked items
             if orig_var.id in subscribed_items:
@@ -384,7 +426,7 @@ class Plugin(indigo.PluginBase):
 
             try:
                 self.Eval.eval_expr(var.value + expr)
-            except (SyntaxError, TypeError):
+            except Exception:  # noqa broad-except: arbitrary user-supplied formula text
                 error_msg_dict['modifier'] = (
                     "Please enter a valid formula. Click the help icon below (?) for details."
                 )
@@ -396,7 +438,9 @@ class Plugin(indigo.PluginBase):
             try:
                 dt.datetime.strptime(var.value, "%Y-%m-%d %H:%M:%S.%f")
             except ValueError:
-                error_msg_dict['list_of_variables'] = "The variable value must be a POSIX timestamp."
+                error_msg_dict['list_of_variables'] = (
+                    "The variable value must be a timestamp in the format YYYY-MM-DD HH:MM:SS.ffffff."
+                )
 
             for val in ('days', 'hours', 'minutes', 'seconds'):
                 try:
@@ -1057,7 +1101,11 @@ class Plugin(indigo.PluginBase):
         """
         # Generate list of address(es)
         address_list = action_group.props['email_address'].replace(' ', '').split(",")
-        email_device = int(action_group.props['email_device'])
+        try:
+            email_device = int(action_group.props['email_device'])
+        except (TypeError, ValueError):
+            self.logger.critical("Email battery report aborted: no Email+ device is configured.")
+            return False
 
         # Generate battery health report
         message = battery_level.report(no_log=True)
@@ -1287,31 +1335,6 @@ class Plugin(indigo.PluginBase):
         return self.Fogbert.deviceAndVariableListClean()
 
     # =============================================================================
-    def generator_state_or_value(self, fltr: str = "", values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0) -> list[tuple[str, str]]:  # noqa
-        """Shim to call the Fogbert.generatorStateOrValue utility method.
-
-        Returns state keys for a selected device or the value for a selected
-        variable, depending on what is selected in the ``devVarMenu`` control.
-
-        Args:
-            fltr: Filter string (unused).
-            values_dict: Dialog values dictionary; ``devVarMenu`` key is read.
-            type_id: Action type identifier (unused).
-            target_id: Target identifier (unused).
-
-        Returns:
-            list: List of (state_key, label) tuples for the selected object.
-        """
-        return self.Fogbert.generatorStateOrValue(values_dict.get('devVarMenu', ""))
-
-    # =============================================================================
-    # @staticmethod
-    # def generator_substitutions(values_dict: indigo.Dict = None, type_id: str = "", target_id: int = 0):  # noqa
-    #     """ Placeholder """
-    #     return generator_substitutions.return_substitution(values_dict)
-
-    # =============================================================================
-
     @staticmethod
     def get_serial_ports(values_dict: indigo.Dict = None, type_id: str = "", no_log: bool = False) -> bool:  # noqa
         """Shim to call the serial_ports.show_ports method.
@@ -1734,7 +1757,7 @@ class Plugin(indigo.PluginBase):
         return remove_delayed_actions.remove_actions()
 
     # =============================================================================
-    def run_concurrent_thread(self) -> None:
+    def runConcurrentThread(self) -> None:  # noqa
         """Standard Indigo concurrent thread; drains the network quality result queue.
 
         Runs continuously, sleeping one second per iteration. Logs any pending
@@ -1886,12 +1909,6 @@ class Plugin(indigo.PluginBase):
         return subscribe_to_changes.subscriber(values_dict)
 
     # =============================================================================
-    # @staticmethod
-    # def substitution_generator(values_dict: indigo.Dict = None, type_id: str = ""):  # noqa
-    #     """ Placeholder """
-    #     return substitution_generator.get_substitute(values_dict)
-
-    # =============================================================================
     @staticmethod
     def test_action_return(action: indigo.actionGroup):
         """Dummy action that returns a typed value for testing plugin.executeAction() callers.
@@ -2021,13 +2038,15 @@ class MyThread(Thread):
         super().__init__()
         self.target = target
         self.args = args
-        self.stop_event = False
         self.logger = logging.getLogger("Plugin")
 
     def stop(self) -> None:
-        """Signal the thread to stop on its next iteration (e.g. on plugin shutdown)."""
+        """Log that the thread is being stopped.
+
+        The actual stop signal is the ``None`` sentinel `shutdown()` puts on
+        ``cmd_queue``, which unblocks ``execute_command``'s ``queue.get()``.
+        """
         self.logger.debug("Stopping command thread.")
-        self.stop_event = True
 
     def run(self) -> None:
         """Run the thread, invoking ``target`` once (target manages its own loop)."""

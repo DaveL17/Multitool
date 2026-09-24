@@ -8,7 +8,6 @@ Further, only enabled objects are available for a status request.
 import logging
 import indigo  # noqa
 
-ERR_MSG_DICT = indigo.Dict()
 LOGGER = logging.getLogger("Plugin")
 
 
@@ -32,6 +31,7 @@ def get_status(values_dict: indigo.Dict = None):
 
     except Exception as err:
         LOGGER.critical("Error sending status Request.")
-        ERR_MSG_DICT['listOfDevices'] = "Problem communicating with the device."
-        ERR_MSG_DICT['showAlertText'] = f"Status Request Error.\n\nReason: {err}"
-        return False, values_dict, ERR_MSG_DICT
+        err_msg_dict = indigo.Dict()
+        err_msg_dict['listOfDevices'] = "Problem communicating with the device."
+        err_msg_dict['showAlertText'] = f"Status Request Error.\n\nReason: {err}"
+        return False, values_dict, err_msg_dict

@@ -27,7 +27,7 @@ def modify(action_group: indigo.actionGroup = None) -> bool:
         indigo.variable.updateValue(var_id, f"{answer}")
         return_value = True
 
-    except SyntaxError:
+    except Exception:  # noqa broad-except: arbitrary user-supplied formula text
         LOGGER.debug("Error: ", exc_info=True)
         LOGGER.critical("Error modifying variable %s.", var.name)
         return_value = False
