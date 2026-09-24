@@ -1,4 +1,4 @@
-### v2025.2.13
+### v2025.2.13 [released]
 - Fixes _Network Ping Device Offline_ trigger not firing due to a misnamed internal method.
 - Fixes deleted/disabled offline-ping triggers leaving a stale reference behind.
 - Fixes _Network Quality_ menu item never logging its results due to a misnamed internal method.
